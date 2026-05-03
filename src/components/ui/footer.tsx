@@ -4,10 +4,10 @@ const NAV_LINKS = [
   {
     heading: "Tienda",
     items: [
-      { label: "Lechugas verdes", href: "https://yayamariana.com/tienda/" },
-      { label: "Lechugas rojas", href: "https://yayamariana.com/tienda/" },
-      { label: "Hoja de Roble", href: "https://yayamariana.com/tienda/" },
-      { label: "Packs mixtos", href: "https://yayamariana.com/tienda/" },
+      { label: "Fresa Mágnum", href: "/checkout" },
+      { label: "Fresa Dream", href: "/checkout" },
+      { label: "Fresa Variedad 1525", href: "/checkout" },
+      { label: "Ver todos los productos", href: "/checkout" },
     ],
   },
   {
@@ -83,7 +83,7 @@ const SOCIALS = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f2210] text-white pt-16 pb-8 px-6">
+    <footer className="bg-[#2d0a0a] text-white pt-16 pb-8 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Top row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
@@ -98,7 +98,7 @@ export default function Footer() {
               unoptimized
             />
             <p className="text-sm text-white/50 leading-relaxed max-w-[18ch]">
-              Lechugas hidropónicas frescas cultivadas con amor desde Badalona.
+              Frutas y verduras frescas del Maresme, cultivadas con amor y sin pesticidas.
             </p>
             <div className="flex items-center gap-3 mt-5">
               {SOCIALS.map(({ label, href, icon }) => (
@@ -108,7 +108,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#2d7a2d] flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#c0392b] flex items-center justify-center transition-colors duration-200"
                 >
                   {icon}
                 </a>

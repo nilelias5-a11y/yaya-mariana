@@ -62,17 +62,17 @@ export default function Contact() {
   }
 
   return (
-    <section id="contacto" className="bg-[#f5f9f0] py-20 px-6">
+    <section id="contacto" className="bg-[#fdf6f5] py-20 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14">
         {/* Info */}
         <div>
-          <span className="inline-block text-[#2d7a2d] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+          <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             Hablemos
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl text-[#0e1e0e] leading-[1.1] mb-4">
+          <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
             Contacta con nosotros
           </h2>
-          <p className="text-[#2a4a2a]/65 text-[0.9375rem] leading-relaxed mb-10">
+          <p className="text-[#7a3a3a]/65 text-[0.9375rem] leading-relaxed mb-10">
             ¿Tienes preguntas sobre nuestros productos, envíos o quieres hacer un pedido
             especial? Estamos aquí para ayudarte.
           </p>
@@ -80,22 +80,22 @@ export default function Contact() {
           <div className="space-y-6">
             {CONTACT_INFO.map(({ icon, label, value, href }) => (
               <div key={label} className="flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[#eaf7ea] flex items-center justify-center text-[#2d7a2d] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0">
                   {icon}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-[#2a4a2a]/50 uppercase tracking-wide mb-0.5">
+                  <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase tracking-wide mb-0.5">
                     {label}
                   </p>
                   {href ? (
                     <a
                       href={href}
-                      className="text-[0.9375rem] text-[#1a3d1a] font-medium hover:text-[#2d7a2d] transition-colors whitespace-pre-line"
+                      className="text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] transition-colors whitespace-pre-line"
                     >
                       {value}
                     </a>
                   ) : (
-                    <p className="text-[0.9375rem] text-[#1a3d1a] font-medium whitespace-pre-line">
+                    <p className="text-[0.9375rem] text-[#7a3a3a] font-medium whitespace-pre-line">
                       {value}
                     </p>
                   )}
@@ -109,16 +109,16 @@ export default function Contact() {
         <div className="bg-white rounded-2xl p-8 shadow-sm">
           {sent ? (
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-[#eaf7ea] flex items-center justify-center text-3xl">
+              <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-3xl">
                 ✅
               </div>
-              <h3 className="font-serif text-2xl text-[#0e1e0e]">¡Mensaje enviado!</h3>
-              <p className="text-[#2a4a2a]/65 text-sm max-w-xs">
+              <h3 className="font-serif text-2xl text-[#1a0808]">¡Mensaje enviado!</h3>
+              <p className="text-[#7a3a3a]/65 text-sm max-w-xs">
                 Gracias por contactarnos. Te responderemos en menos de 24 horas.
               </p>
               <button
                 onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
-                className="text-sm font-semibold text-[#2d7a2d] hover:text-[#4caf50] transition-colors mt-2"
+                className="text-sm font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors mt-2"
               >
                 Enviar otro mensaje
               </button>
@@ -127,7 +127,7 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="name" className="block text-xs font-semibold text-[#2a4a2a]/60 uppercase tracking-wide mb-1.5">
+                  <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                     Nombre *
                   </label>
                   <input
@@ -138,11 +138,11 @@ export default function Contact() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Tu nombre"
-                    className="w-full border border-[#d1e8d1] rounded-xl px-4 py-2.5 text-sm text-[#1a3d1a] placeholder:text-[#2a4a2a]/35 focus:outline-none focus:ring-2 focus:ring-[#4caf50]/40 focus:border-[#4caf50] transition-colors bg-[#f9fdf9]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-xs font-semibold text-[#2a4a2a]/60 uppercase tracking-wide mb-1.5">
+                  <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                     Email *
                   </label>
                   <input
@@ -153,12 +153,12 @@ export default function Contact() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
-                    className="w-full border border-[#d1e8d1] rounded-xl px-4 py-2.5 text-sm text-[#1a3d1a] placeholder:text-[#2a4a2a]/35 focus:outline-none focus:ring-2 focus:ring-[#4caf50]/40 focus:border-[#4caf50] transition-colors bg-[#f9fdf9]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
                 </div>
               </div>
               <div>
-                <label htmlFor="subject" className="block text-xs font-semibold text-[#2a4a2a]/60 uppercase tracking-wide mb-1.5">
+                <label htmlFor="subject" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                   Asunto *
                 </label>
                 <input
@@ -169,11 +169,11 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder="¿En qué podemos ayudarte?"
-                  className="w-full border border-[#d1e8d1] rounded-xl px-4 py-2.5 text-sm text-[#1a3d1a] placeholder:text-[#2a4a2a]/35 focus:outline-none focus:ring-2 focus:ring-[#4caf50]/40 focus:border-[#4caf50] transition-colors bg-[#f9fdf9]"
+                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-xs font-semibold text-[#2a4a2a]/60 uppercase tracking-wide mb-1.5">
+                <label htmlFor="message" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                   Mensaje
                 </label>
                 <textarea
@@ -183,14 +183,14 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder="Escribe tu mensaje aquí..."
-                  className="w-full border border-[#d1e8d1] rounded-xl px-4 py-2.5 text-sm text-[#1a3d1a] placeholder:text-[#2a4a2a]/35 focus:outline-none focus:ring-2 focus:ring-[#4caf50]/40 focus:border-[#4caf50] transition-colors bg-[#f9fdf9] resize-none"
+                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5] resize-none"
                 />
               </div>
               <button
                 type="submit"
                 className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
                 style={{
-                  background: "linear-gradient(135deg, #2d7a2d 0%, #4caf50 100%)",
+                  background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
                 }}
               >
                 Enviar mensaje

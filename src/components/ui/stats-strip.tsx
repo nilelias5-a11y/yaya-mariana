@@ -1,7 +1,12 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "framer-motion";
+
 const stats = [
   {
-    value: "90%",
-    label: "menos agua vs. cultivo tradicional",
+    value: "100%",
+    label: "Cultivo propio",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
         <path d="M12 2C6 9 4 13 4 16a8 8 0 0 0 16 0c0-3-2-7-8-14z" />
@@ -10,7 +15,7 @@ const stats = [
   },
   {
     value: "0",
-    label: "pesticidas ni químicos añadidos",
+    label: "Pesticidas",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
         <circle cx="12" cy="12" r="9" />
@@ -19,17 +24,17 @@ const stats = [
     ),
   },
   {
-    value: "6",
-    label: "variedades de lechuga fresca",
+    value: "24h",
+    label: "Del campo a tu mesa",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
-        <path d="M12 22V12M12 12C12 7 7 4 3 3c1 4 3 8 9 9zM12 12c0-5 5-8 9-9-1 4-3 8-9 9z" />
+        <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
       </svg>
     ),
   },
   {
-    value: "24h",
-    label: "envío fresco a toda la península",
+    value: "+",
+    label: "Productos frescos",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
         <rect x="2" y="7" width="14" height="11" rx="1" />
@@ -41,14 +46,48 @@ const stats = [
   },
 ];
 
+function AnimatedValue({ raw }: { raw: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [display, setDisplay] = useState("0");
+
+  useEffect(() => {
+    const match = raw.match(/^(\d+)(.*)$/);
+    if (!match) {
+      setDisplay(raw);
+      return;
+    }
+    if (!inView) return;
+
+    const [, numStr, suffix] = match;
+    const target = parseInt(numStr, 10);
+    const duration = 1400;
+    const startTime = Date.now();
+
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      setDisplay(Math.round(eased * target) + suffix);
+      if (progress >= 1) clearInterval(timer);
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [inView, raw]);
+
+  return <span ref={ref}>{display}</span>;
+}
+
 export default function StatsStrip() {
   return (
-    <section className="bg-[#1a3d1a] text-white py-14 px-6">
+    <section className="bg-[#5c1a1a] text-white py-14 px-6">
       <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
         {stats.map(({ value, label, icon }) => (
-          <div key={value} className="flex flex-col items-center text-center gap-2">
-            <div className="text-[#4caf50]">{icon}</div>
-            <span className="font-serif text-[3.25rem] font-bold leading-none mt-1">{value}</span>
+          <div key={label} className="flex flex-col items-center text-center gap-2">
+            <div className="text-[#e74c3c]">{icon}</div>
+            <span className="font-serif text-[3.25rem] font-bold leading-none mt-1">
+              <AnimatedValue raw={value} />
+            </span>
             <span className="text-sm text-white/65 leading-snug max-w-[14ch]">{label}</span>
           </div>
         ))}

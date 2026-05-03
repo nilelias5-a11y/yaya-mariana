@@ -6,6 +6,7 @@ import Values from "@/components/ui/values";
 import CTA from "@/components/ui/cta";
 import Contact from "@/components/ui/contact";
 import Footer from "@/components/ui/footer";
+import Cart from "@/components/ui/cart";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <CTA />
       <Contact />
       <Footer />
+      <Cart />
     </>
   );
 }
