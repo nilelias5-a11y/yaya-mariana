@@ -152,7 +152,7 @@ export default function Hero() {
         <MeshGradient
           colors={["#f5d0c8", "#e8a090", "#f0b8a8", "#ffd0c0", "#e89888"]}
           speed={0.5}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 1, pointerEvents: "none" }}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         />
 
       {/* Hero — 2 columnas */}
