@@ -130,3 +130,7 @@
     scroll-behavior: smooth;
   }
 }
+
+.logo-blend {
+  mix-blend-mode: multiply;
+}

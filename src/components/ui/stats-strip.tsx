@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
+import { useLanguage } from "@/context/language-context";
 
-const stats = [
+const STATS = [
   {
     value: "100%",
-    label: "Cultivo propio",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
         <path d="M12 2C6 9 4 13 4 16a8 8 0 0 0 16 0c0-3-2-7-8-14z" />
@@ -15,7 +15,6 @@ const stats = [
   },
   {
     value: "0",
-    label: "Pesticidas",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
         <circle cx="12" cy="12" r="9" />
@@ -25,7 +24,6 @@ const stats = [
   },
   {
     value: "24h",
-    label: "Del campo a tu mesa",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
         <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
@@ -34,7 +32,6 @@ const stats = [
   },
   {
     value: "+",
-    label: "Productos frescos",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
         <rect x="2" y="7" width="14" height="11" rx="1" />
@@ -79,16 +76,20 @@ function AnimatedValue({ raw }: { raw: string }) {
 }
 
 export default function StatsStrip() {
+  const { t } = useLanguage();
+
   return (
     <section className="bg-[#5c1a1a] text-white py-14 px-6">
       <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
-        {stats.map(({ value, label, icon }) => (
-          <div key={label} className="flex flex-col items-center text-center gap-2">
+        {STATS.map(({ value, icon }, i) => (
+          <div key={i} className="flex flex-col items-center text-center gap-2">
             <div className="text-[#e74c3c]">{icon}</div>
             <span className="font-serif text-[3.25rem] font-bold leading-none mt-1">
               <AnimatedValue raw={value} />
             </span>
-            <span className="text-sm text-white/65 leading-snug max-w-[14ch]">{label}</span>
+            <span className="text-sm text-white/65 leading-snug max-w-[14ch]">
+              {t.stats.labels[i]}
+            </span>
           </div>
         ))}
       </div>

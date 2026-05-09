@@ -1,34 +1,7 @@
-import Image from "next/image";
+"use client";
 
-const NAV_LINKS = [
-  {
-    heading: "Tienda",
-    items: [
-      { label: "Fresa Mágnum", href: "/checkout" },
-      { label: "Fresa Dream", href: "/checkout" },
-      { label: "Fresa Variedad 1525", href: "/checkout" },
-      { label: "Ver todos los productos", href: "/checkout" },
-    ],
-  },
-  {
-    heading: "Empresa",
-    items: [
-      { label: "Sobre nosotros", href: "#sobre-nosotros" },
-      { label: "Blog", href: "https://yayamariana.com/blog/" },
-      { label: "Envíos", href: "https://yayamariana.com/envios/" },
-      { label: "Contacto", href: "#contacto" },
-    ],
-  },
-  {
-    heading: "Legal",
-    items: [
-      { label: "Política de privacidad", href: "https://yayamariana.com/politica-de-privacidad/" },
-      { label: "Política de devolución", href: "https://yayamariana.com/politica-de-devolucion/" },
-      { label: "Aviso legal", href: "https://yayamariana.com/aviso-legal/" },
-      { label: "Mi cuenta", href: "https://yayamariana.com/mi-cuenta/" },
-    ],
-  },
-];
+import Image from "next/image";
+import { useLanguage } from "@/context/language-context";
 
 const SOCIALS = [
   {
@@ -82,6 +55,38 @@ const SOCIALS = [
 ];
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const navLinks = [
+    {
+      heading: t.footer.shop,
+      items: [
+        { label: "Fresa Mágnum", href: "/checkout" },
+        { label: "Fresa Dream", href: "/checkout" },
+        { label: "Fresa Variedad 1525", href: "/checkout" },
+        { label: t.footer.viewAllProducts, href: "/checkout" },
+      ],
+    },
+    {
+      heading: t.footer.company,
+      items: [
+        { label: t.footer.aboutUs, href: "#sobre-nosotros" },
+        { label: t.footer.blog, href: "https://yayamariana.com/blog/" },
+        { label: t.footer.shipping, href: "https://yayamariana.com/envios/" },
+        { label: t.footer.contact, href: "#contacto" },
+      ],
+    },
+    {
+      heading: t.footer.legal,
+      items: [
+        { label: t.footer.privacy, href: "https://yayamariana.com/politica-de-privacidad/" },
+        { label: t.footer.returns, href: "https://yayamariana.com/politica-de-devolucion/" },
+        { label: t.footer.legalNotice, href: "https://yayamariana.com/aviso-legal/" },
+        { label: t.footer.myAccount, href: "https://yayamariana.com/mi-cuenta/" },
+      ],
+    },
+  ];
+
   return (
     <footer className="bg-[#2d0a0a] text-white pt-16 pb-8 px-6">
       <div className="max-w-6xl mx-auto">
@@ -98,7 +103,7 @@ export default function Footer() {
               unoptimized
             />
             <p className="text-sm text-white/50 leading-relaxed max-w-[18ch]">
-              Frutas y verduras frescas del Maresme, cultivadas con amor y sin pesticidas.
+              {t.footer.description}
             </p>
             <div className="flex items-center gap-3 mt-5">
               {SOCIALS.map(({ label, href, icon }) => (
@@ -117,7 +122,7 @@ export default function Footer() {
           </div>
 
           {/* Nav columns */}
-          {NAV_LINKS.map(({ heading, items }) => (
+          {navLinks.map(({ heading, items }) => (
             <div key={heading}>
               <h4 className="text-xs font-bold uppercase tracking-[0.18em] text-white/40 mb-4">
                 {heading}
@@ -140,9 +145,9 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-7 text-xs text-white/35">
-          <p>© {new Date().getFullYear()} Yaya Mariana. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} Yaya Mariana. {t.footer.rights}</p>
           <p>
-            Diseño por{" "}
+            {t.footer.designBy}{" "}
             <a
               href="https://okawa.es"
               target="_blank"

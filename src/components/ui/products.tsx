@@ -4,17 +4,15 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useCart } from "@/context/cart-context";
+import { useLanguage } from "@/context/language-context";
 
-const CATEGORIES = ["Todas", "Premium"] as const;
-type Category = (typeof CATEGORIES)[number];
+type Category = "all" | "Premium";
 
-const PRODUCTS = [
+const PRODUCTS_BASE = [
   {
     name: "Fresa Mágnum",
     category: "Premium" as const,
     price: 7.5,
-    description:
-      "Fresa de gran tamaño y sabor intenso, cultivada en el Maresme. Recogida en su punto óptimo de madurez, sin pesticidas.",
     images: [
       "/fresas/magnum/magnum-10.jpeg",
       "/fresas/magnum/magnum-07.jpeg",
@@ -26,8 +24,6 @@ const PRODUCTS = [
     name: "Fresa Dream",
     category: "Premium" as const,
     price: 7.5,
-    description:
-      "Variedad Dream de sabor dulce y textura firme. Cultivo propio del Maresme, directa del campo a tu mesa.",
     images: [
       "/fresas/dream/dream-07.jpeg",
       "/fresas/dream/dream-12.jpeg",
@@ -39,8 +35,6 @@ const PRODUCTS = [
     name: "Fresa Variedad 1525",
     category: "Premium" as const,
     price: 7.5,
-    description:
-      "Variedad exclusiva 1525, seleccionada por su calidad y dulzura excepcional. Sin químicos ni pesticidas.",
     images: [
       "/fresas/variedad1525/variedad1525-10.jpeg",
       "/fresas/variedad1525/variedad1525-11.jpeg",
@@ -205,9 +199,15 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
 function ProductCard({
   product,
   index,
+  addToCartLabel,
+  addedLabel,
+  viewMoreLabel,
 }: {
-  product: (typeof PRODUCTS)[0];
+  product: (typeof PRODUCTS_BASE)[0] & { description: string };
   index: number;
+  addToCartLabel: string;
+  addedLabel: string;
+  viewMoreLabel: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -287,7 +287,7 @@ function ProductCard({
               rel="noopener noreferrer"
               className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[#c0392b]/70 hover:text-[#c0392b] transition-colors duration-200"
             >
-              Ver más
+              {viewMoreLabel}
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1">
                 <path d="M3 8h10M9 4l4 4-4 4" />
               </svg>
@@ -307,10 +307,10 @@ function ProductCard({
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                   <path d="M3 8l4 4 6-6" />
                 </svg>
-                Añadido
+                {addedLabel}
               </span>
             ) : (
-              "Añadir al carrito"
+              addToCartLabel
             )}
           </button>
         </div>
@@ -350,9 +350,15 @@ function TypewriterHeading({ text }: { text: string }) {
 }
 
 export default function Products() {
-  const [active, setActive] = useState<Category>("Todas");
-  const filtered =
-    active === "Todas" ? PRODUCTS : PRODUCTS.filter((p) => p.category === active);
+  const { t } = useLanguage();
+  const [active, setActive] = useState<Category>("all");
+
+  const products = PRODUCTS_BASE.map((p, i) => ({
+    ...p,
+    description: t.products.items[i].description,
+  }));
+
+  const filtered = active === "all" ? products : products.filter((p) => p.category === active);
 
   return (
     <section
@@ -375,9 +381,9 @@ export default function Products() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Nuestra cosecha
+            {t.products.eyebrow}
           </motion.span>
-          <TypewriterHeading text="Nuestras fresas" />
+          <TypewriterHeading text={t.products.title} />
           <motion.p
             className="mt-3 text-[#7a3a3a]/65 max-w-md mx-auto text-[0.9375rem] leading-relaxed"
             initial={{ opacity: 0 }}
@@ -385,14 +391,13 @@ export default function Products() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.55 }}
           >
-            Cultivadas sin pesticidas en el Maresme. Directas del campo a tu mesa,
-            siempre en su punto.
+            {t.products.subtitle}
           </motion.p>
         </div>
 
         {/* Filter tabs */}
         <div className="flex justify-center gap-2 mb-10 flex-wrap">
-          {CATEGORIES.map((cat) => (
+          {(["all", "Premium"] as Category[]).map((cat) => (
             <button
               key={cat}
               onClick={() => setActive(cat)}
@@ -402,7 +407,7 @@ export default function Products() {
                   : "border-[#c0392b]/30 text-[#c0392b] hover:border-[#c0392b] bg-white/60"
               }`}
             >
-              {cat}
+              {cat === "all" ? t.products.all : cat}
             </button>
           ))}
         </div>
@@ -411,7 +416,14 @@ export default function Products() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filtered.map((p, i) => (
-              <ProductCard key={p.name} product={p} index={i} />
+              <ProductCard
+                key={p.name}
+                product={p}
+                index={i}
+                addToCartLabel={t.products.addToCart}
+                addedLabel={t.products.added}
+                viewMoreLabel={t.products.viewMore}
+              />
             ))}
           </AnimatePresence>
         </div>

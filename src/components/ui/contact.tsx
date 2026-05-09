@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/language-context";
 
 type FormState = {
   name: string;
@@ -9,41 +10,28 @@ type FormState = {
   message: string;
 };
 
-const CONTACT_INFO = [
-  {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-        <circle cx="12" cy="9" r="2.5" />
-      </svg>
-    ),
-    label: "Dirección",
-    value: "C/ Electrónica, 19, Planta 10, oficina D\n08915, Badalona, España",
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-        <polyline points="22,6 12,13 2,6" />
-      </svg>
-    ),
-    label: "Email",
-    value: "info@yaya-mariana.com",
-    href: "mailto:info@yaya-mariana.com",
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.4 2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.09 6.09l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-      </svg>
-    ),
-    label: "Teléfono",
-    value: "+34 666 777 888",
-    href: "tel:+34666777888",
-  },
-];
+const ADDRESS_ICON = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+    <circle cx="12" cy="9" r="2.5" />
+  </svg>
+);
+
+const EMAIL_ICON = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+    <polyline points="22,6 12,13 2,6" />
+  </svg>
+);
+
+const PHONE_ICON = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.4 2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.09 6.09l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+  </svg>
+);
 
 export default function Contact() {
+  const { t } = useLanguage();
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -51,6 +39,26 @@ export default function Contact() {
     message: "",
   });
   const [sent, setSent] = useState(false);
+
+  const contactInfo = [
+    {
+      icon: ADDRESS_ICON,
+      label: t.contact.addressLabel,
+      value: "C/ Electrónica, 19, Planta 10, oficina D\n08915, Badalona, España",
+    },
+    {
+      icon: EMAIL_ICON,
+      label: t.contact.emailLabel,
+      value: "info@yaya-mariana.com",
+      href: "mailto:info@yaya-mariana.com",
+    },
+    {
+      icon: PHONE_ICON,
+      label: t.contact.phoneLabel,
+      value: "+34 666 777 888",
+      href: "tel:+34666777888",
+    },
+  ];
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -67,18 +75,17 @@ export default function Contact() {
         {/* Info */}
         <div>
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
-            Hablemos
+            {t.contact.eyebrow}
           </span>
           <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
-            Contacta con nosotros
+            {t.contact.title}
           </h2>
           <p className="text-[#7a3a3a]/65 text-[0.9375rem] leading-relaxed mb-10">
-            ¿Tienes preguntas sobre nuestros productos, envíos o quieres hacer un pedido
-            especial? Estamos aquí para ayudarte.
+            {t.contact.subtitle}
           </p>
 
           <div className="space-y-6">
-            {CONTACT_INFO.map(({ icon, label, value, href }) => (
+            {contactInfo.map(({ icon, label, value, href }) => (
               <div key={label} className="flex gap-4">
                 <div className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0">
                   {icon}
@@ -112,15 +119,15 @@ export default function Contact() {
               <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-3xl">
                 ✅
               </div>
-              <h3 className="font-serif text-2xl text-[#1a0808]">¡Mensaje enviado!</h3>
+              <h3 className="font-serif text-2xl text-[#1a0808]">{t.contact.sent}</h3>
               <p className="text-[#7a3a3a]/65 text-sm max-w-xs">
-                Gracias por contactarnos. Te responderemos en menos de 24 horas.
+                {t.contact.sentSubtitle}
               </p>
               <button
                 onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
                 className="text-sm font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors mt-2"
               >
-                Enviar otro mensaje
+                {t.contact.sendAnother}
               </button>
             </div>
           ) : (
@@ -128,7 +135,7 @@ export default function Contact() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
-                    Nombre *
+                    {t.contact.nameLabel} *
                   </label>
                   <input
                     id="name"
@@ -137,13 +144,13 @@ export default function Contact() {
                     required
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Tu nombre"
+                    placeholder={t.contact.namePlaceholder}
                     className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
-                    Email *
+                    {t.contact.emailLabel} *
                   </label>
                   <input
                     id="email"
@@ -159,7 +166,7 @@ export default function Contact() {
               </div>
               <div>
                 <label htmlFor="subject" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
-                  Asunto *
+                  {t.contact.subjectLabel} *
                 </label>
                 <input
                   id="subject"
@@ -168,13 +175,13 @@ export default function Contact() {
                   required
                   value={form.subject}
                   onChange={handleChange}
-                  placeholder="¿En qué podemos ayudarte?"
+                  placeholder={t.contact.subjectPlaceholder}
                   className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                 />
               </div>
               <div>
                 <label htmlFor="message" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
-                  Mensaje
+                  {t.contact.messageLabel}
                 </label>
                 <textarea
                   id="message"
@@ -182,7 +189,7 @@ export default function Contact() {
                   rows={4}
                   value={form.message}
                   onChange={handleChange}
-                  placeholder="Escribe tu mensaje aquí..."
+                  placeholder={t.contact.messagePlaceholder}
                   className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5] resize-none"
                 />
               </div>
@@ -193,7 +200,7 @@ export default function Contact() {
                   background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
                 }}
               >
-                Enviar mensaje
+                {t.contact.send}
               </button>
             </form>
           )}
