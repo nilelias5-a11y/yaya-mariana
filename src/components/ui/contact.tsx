@@ -1,7 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
+
+function FocusField({ children }: { children: React.ReactNode }) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <motion.div
+      animate={{ scale: focused ? 1.01 : 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={() => setFocused(false)}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 type FormState = {
   name: string;
@@ -73,7 +88,12 @@ export default function Contact() {
     <section id="contacto" className="bg-[#fdf6f5] py-20 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14">
         {/* Info */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: -80 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        >
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.contact.eyebrow}
           </span>
@@ -110,10 +130,16 @@ export default function Contact() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Form */}
-        <div className="bg-white rounded-2xl p-8 shadow-sm">
+        <motion.div
+          className="bg-white rounded-2xl p-8 shadow-sm"
+          initial={{ opacity: 0, x: 80 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        >
           {sent ? (
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center py-12">
               <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-3xl">
@@ -133,7 +159,7 @@ export default function Contact() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
+                <FocusField>
                   <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                     {t.contact.nameLabel} *
                   </label>
@@ -147,8 +173,8 @@ export default function Contact() {
                     placeholder={t.contact.namePlaceholder}
                     className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
-                </div>
-                <div>
+                </FocusField>
+                <FocusField>
                   <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                     {t.contact.emailLabel} *
                   </label>
@@ -162,9 +188,9 @@ export default function Contact() {
                     placeholder="tu@email.com"
                     className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
-                </div>
+                </FocusField>
               </div>
-              <div>
+              <FocusField>
                 <label htmlFor="subject" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                   {t.contact.subjectLabel} *
                 </label>
@@ -178,8 +204,8 @@ export default function Contact() {
                   placeholder={t.contact.subjectPlaceholder}
                   className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                 />
-              </div>
-              <div>
+              </FocusField>
+              <FocusField>
                 <label htmlFor="message" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
                   {t.contact.messageLabel}
                 </label>
@@ -192,7 +218,7 @@ export default function Contact() {
                   placeholder={t.contact.messagePlaceholder}
                   className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5] resize-none"
                 />
-              </div>
+              </FocusField>
               <button
                 type="submit"
                 className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
@@ -204,7 +230,7 @@ export default function Contact() {
               </button>
             </form>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
 const STATS = [
@@ -82,7 +82,16 @@ export default function StatsStrip() {
     <section className="bg-[#5c1a1a] text-white py-14 px-6">
       <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
         {STATS.map(({ value, icon }, i) => (
-          <div key={i} className="flex flex-col items-center text-center gap-2">
+          <motion.div
+            key={i}
+            className="flex flex-col items-center text-center gap-2"
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.75, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ scale: 1.08, filter: "brightness(1.3)" }}
+            style={{ cursor: "default" }}
+          >
             <div className="text-[#e74c3c]">{icon}</div>
             <span className="font-serif text-[3.25rem] font-bold leading-none mt-1">
               <AnimatedValue raw={value} />
@@ -90,7 +99,7 @@ export default function StatsStrip() {
             <span className="text-sm text-white/65 leading-snug max-w-[14ch]">
               {t.stats.labels[i]}
             </span>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

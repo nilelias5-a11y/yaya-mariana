@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
 export default function CTA() {
@@ -13,31 +14,50 @@ export default function CTA() {
       }}
     >
       <div className="max-w-2xl mx-auto">
-        <span className="inline-block text-[#f5c6c2] text-xs font-bold uppercase tracking-[0.18em] mb-4">
-          {t.cta.eyebrow}
-        </span>
-        <h2 className="font-serif text-4xl md:text-5xl leading-[1.1] mb-4" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
-          {t.cta.title}<br />
-          <em className="italic text-[#f5c6c2]">{t.cta.titleEm}</em>
-        </h2>
-        <p className="text-white/70 text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto">
-          {t.cta.subtitle}
-        </p>
+          <span className="inline-block text-[#f5c6c2] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+            {t.cta.eyebrow}
+          </span>
+          <motion.h2
+            className="font-serif text-4xl md:text-5xl leading-[1.1] mb-4"
+            style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}
+            initial={{ opacity: 0, scale: 0.85 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {t.cta.title}<br />
+            <em className="italic text-[#f5c6c2]">{t.cta.titleEm}</em>
+          </motion.h2>
+          <motion.p
+            className="text-white/70 text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {t.cta.subtitle}
+          </motion.p>
         <div className="flex items-center justify-center gap-4 flex-wrap">
-          <a
+          <motion.a
             href="/checkout"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white text-[#c0392b] text-sm font-bold px-8 py-3.5 rounded-full hover:bg-[#fdf0ef] transition-colors shadow-lg"
+            className="inline-flex items-center gap-2 bg-white text-[#c0392b] text-sm font-bold px-8 py-3.5 rounded-full shadow-lg"
+            whileHover={{ scale: 1.04, boxShadow: "0 12px 32px rgba(0,0,0,0.25)" }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             {t.cta.buyNow}
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="#sobre-nosotros"
-            className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3.5 rounded-full hover:bg-white/10 transition-colors"
+            className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3.5 rounded-full"
+            whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.12)" }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             {t.cta.ourStory}
-          </a>
+          </motion.a>
         </div>
 
         {/* Trust badges */}

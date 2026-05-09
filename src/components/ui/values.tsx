@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
 const ICONS = [
@@ -55,16 +56,22 @@ export default function Values() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {t.values.benefits.map(({ title, description }, i) => (
-            <div
+            <motion.div
               key={title}
               className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 group"
+              initial={{ opacity: 0, y: 60, scale: 0.92 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.75, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -6, boxShadow: "0 12px 32px rgba(192,57,43,0.18)", transition: { duration: 0.2, ease: "easeOut" } }}
+              whileTap={{ scale: 0.98 }}
             >
-              <div className="w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-[10deg] transition-transform duration-200">
                 {ICONS[i]}
               </div>
               <h3 className="font-serif text-xl text-[#1a0808] mb-2">{title}</h3>
               <p className="text-sm text-[#7a3a3a]/65 leading-relaxed">{description}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

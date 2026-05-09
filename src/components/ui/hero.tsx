@@ -116,13 +116,23 @@ export default function Hero() {
         <ul className="hidden md:flex items-center list-none m-0 p-0">
           {navLinks.map(({ label, href }, i, arr) => (
             <li key={href} className="flex items-center">
-              <a
+              <motion.a
                 href={href}
-                className="font-sans font-medium transition-colors duration-200 hover:text-[#c0392b]"
-                style={{ fontSize: 14, color: "#1a0808" }}
+                className="relative font-sans font-medium pb-[3px]"
+                style={{ fontSize: 14 }}
+                variants={{ rest: { y: 0, color: "#1a0808" }, hover: { y: -2, color: "#c0392b" } }}
+                initial="rest"
+                whileHover="hover"
+                transition={{ duration: 0.2, ease: "easeOut" }}
               >
                 {label}
-              </a>
+                <motion.span
+                  className="absolute bottom-0 left-0 h-[2px] bg-[#c0392b] w-full block"
+                  variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  style={{ transformOrigin: "left" }}
+                />
+              </motion.a>
               {i < arr.length - 1 && (
                 <span aria-hidden className="select-none" style={{ color: "#c8b8b8", padding: "0 14px" }}>·</span>
               )}
@@ -133,18 +143,24 @@ export default function Hero() {
         {/* Derecha: idioma + botón */}
         <div className="flex items-center gap-5">
           <LanguageSelector />
-          <a
+          <motion.a
             href="/checkout"
-            className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white transition-colors duration-200 hover:bg-[#a93226]"
-            style={{
-              backgroundColor: "#c0392b",
-              borderRadius: 6,
-              padding: "10px 20px",
-              fontSize: 14,
-            }}
+            className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white overflow-hidden"
+            style={{ backgroundColor: "#c0392b", borderRadius: 6, padding: "10px 20px", fontSize: 14 }}
+            variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(192,57,43,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(192,57,43,0.35)", backgroundColor: "#a93226" } }}
+            initial="rest"
+            whileHover="hover"
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            {t.nav.menu.verTienda}
-          </a>
+            <motion.span
+              className="flex items-center gap-1"
+              variants={{ rest: { x: 0 }, hover: { x: 3 } }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              {t.nav.menu.verTienda}
+            </motion.span>
+          </motion.a>
         </div>
       </nav>
 
@@ -213,31 +229,38 @@ export default function Hero() {
           <div className="flex items-center gap-5 flex-wrap">
             <motion.a
               href="#productos"
-              className="inline-flex items-center justify-center text-sm font-semibold text-white"
-              style={{
-                backgroundColor: "#c0392b",
-                borderRadius: 8,
-                paddingLeft: 28,
-                paddingRight: 28,
-                paddingTop: 13,
-                paddingBottom: 13,
-                boxShadow: "0 0 0 0px rgba(192,57,43,0)",
-                transition: "background-color 0.2s, box-shadow 0.25s",
-              }}
-              whileHover={{
-                backgroundColor: "#a93226",
-                boxShadow: "0 0 0 4px rgba(192,57,43,0.22)",
-              }}
+              className="inline-flex items-center justify-center text-sm font-semibold text-white overflow-hidden"
+              style={{ backgroundColor: "#c0392b", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
+              variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(192,57,43,0)" }, hover: { scale: 1.04, boxShadow: "0 8px 24px rgba(192,57,43,0.4)", backgroundColor: "#a93226" } }}
+              initial="rest"
+              whileHover="hover"
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
             >
-              {t.hero.btn1}
+              <motion.span
+                className="flex items-center gap-1.5"
+                variants={{ rest: { x: 0 }, hover: { x: 4 } }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                {t.hero.btn1}
+                <motion.span
+                  variants={{ rest: { opacity: 0, x: -8 }, hover: { opacity: 1, x: 0 } }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >→</motion.span>
+              </motion.span>
             </motion.a>
-            <a
+            <motion.a
               href="#sobre-nosotros"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold transition-opacity duration-200 hover:opacity-70"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold"
               style={{ color: "#c0392b" }}
+              variants={{ rest: { x: 0, opacity: 1 }, hover: { x: 4, opacity: 0.8 } }}
+              initial="rest"
+              whileHover="hover"
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {t.hero.btn2} →
-            </a>
+            </motion.a>
           </div>
         </motion.div>
 

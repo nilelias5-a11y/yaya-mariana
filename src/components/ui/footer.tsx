@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
 const SOCIALS = [
@@ -94,6 +95,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
           {/* Brand */}
           <div className="md:col-span-1">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            >
             <Image
               src="https://yayamariana.com/wp-content/uploads/2024/11/YAYA_MARIANA_VECTORIAL-01.png"
               alt="Yaya Mariana"
@@ -102,6 +109,7 @@ export default function Footer() {
               className="h-[38px] w-auto brightness-0 invert mb-4"
               unoptimized
             />
+            </motion.div>
             <p className="text-sm text-white/50 leading-relaxed max-w-[18ch]">
               {t.footer.description}
             </p>
@@ -122,24 +130,32 @@ export default function Footer() {
           </div>
 
           {/* Nav columns */}
-          {navLinks.map(({ heading, items }) => (
-            <div key={heading}>
+          {navLinks.map(({ heading, items }, colIdx) => (
+            <motion.div
+              key={heading}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.75, delay: colIdx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
               <h4 className="text-xs font-bold uppercase tracking-[0.18em] text-white/40 mb-4">
                 {heading}
               </h4>
               <ul className="space-y-2.5">
                 {items.map(({ label, href }) => (
                   <li key={label}>
-                    <a
+                    <motion.a
                       href={href}
-                      className="text-sm text-white/65 hover:text-white transition-colors duration-200"
+                      className="text-sm text-white/65 inline-block"
+                      whileHover={{ x: 4, color: "#c0392b" }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
                     >
                       {label}
-                    </a>
+                    </motion.a>
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
         </div>
 

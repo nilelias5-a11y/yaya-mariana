@@ -10,10 +10,10 @@ export default function AboutUs() {
     <section id="sobre-nosotros" className="bg-white py-20 px-6">
       <div className="max-w-[720px] mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, x: -60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.about.eyebrow}
@@ -37,20 +37,34 @@ export default function AboutUs() {
           </blockquote>
 
           <div className="mt-8 flex items-center gap-4">
-            <a
+            <motion.a
               href="/checkout"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#c0392b] text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-[#a93226] transition-colors"
+              className="inline-flex items-center gap-2 bg-[#c0392b] text-white text-sm font-semibold px-6 py-3 rounded-full"
+              whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(192,57,43,0.35)" }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {t.about.viewStore}
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="#contacto"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors"
+              className="relative inline-flex items-center gap-2 text-sm font-semibold text-[#c0392b] pb-[3px]"
+              variants={{ rest: { x: 0 }, hover: { x: 4 } }}
+              initial="rest"
+              whileHover="hover"
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {t.about.contact}
-            </a>
+              <motion.span
+                className="absolute bottom-0 left-0 h-[2px] bg-[#c0392b] w-full block"
+                variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                style={{ transformOrigin: "left" }}
+              />
+            </motion.a>
           </div>
         </motion.div>
       </div>
