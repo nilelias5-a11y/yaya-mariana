@@ -5,10 +5,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
+import { useLanguage } from "@/context/language-context";
 
 export default function Cart() {
   const [open, setOpen] = useState(false);
   const { items, count, total, removeFromCart, updateQuantity } = useCart();
+  const { t } = useLanguage();
   const router = useRouter();
 
   function handleCheckout() {
@@ -25,7 +27,7 @@ export default function Cart() {
         whileTap={{ scale: 0.95 }}
         className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
         style={{ background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)" }}
-        aria-label="Abrir carrito"
+        aria-label={t.cart.ariaOpen}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
           <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -72,7 +74,7 @@ export default function Cart() {
             >
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#f5c6c2]/60">
-                <h2 className="font-serif text-xl text-[#1a0808]">Tu cesta</h2>
+                <h2 className="font-serif text-xl text-[#1a0808]">{t.cart.title}</h2>
                 <button
                   onClick={() => setOpen(false)}
                   className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#fdf0ef] transition-colors text-[#7a3a3a]"
@@ -92,7 +94,7 @@ export default function Cart() {
                       <line x1="6" y1="12" x2="42" y2="12" />
                       <path d="M32 20a8 8 0 01-16 0" />
                     </svg>
-                    <p className="text-sm">La cesta está vacía</p>
+                    <p className="text-sm">{t.cart.empty}</p>
                   </div>
                 ) : (
                   items.map((item) => (
@@ -135,7 +137,7 @@ export default function Cart() {
                           onClick={() => removeFromCart(item.name)}
                           className="text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#c0392b] transition-colors mt-0.5"
                         >
-                          Eliminar
+                          {t.cart.remove}
                         </button>
                       </div>
                     </motion.div>
@@ -147,19 +149,19 @@ export default function Cart() {
               {items.length > 0 && (
                 <div className="px-5 py-4 border-t border-[#f5c6c2]/60 space-y-3">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#7a3a3a]/70">Subtotal</span>
+                    <span className="text-[#7a3a3a]/70">{t.cart.subtotal}</span>
                     <span className="font-bold text-[#1a0808]">{total.toFixed(2)}€</span>
                   </div>
                   <div className="flex items-center justify-between text-xs text-[#7a3a3a]/50">
-                    <span>Envío</span>
-                    <span>Calculado al pagar</span>
+                    <span>{t.cart.shipping}</span>
+                    <span>{t.cart.shippingNote}</span>
                   </div>
                   <button
                     onClick={handleCheckout}
                     className="w-full py-3 rounded-full text-white text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
                     style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
                   >
-                    Ir a pagar · {total.toFixed(2)}€
+                    {t.cart.checkout} · {total.toFixed(2)}€
                   </button>
                 </div>
               )}

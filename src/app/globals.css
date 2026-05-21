@@ -1,136 +1,314 @@
+/* ============================================================
+   YAYA MARIANA — globals.css
+   Design System · Fase 3 · design-system-manager
+   Dirección B "En su Punto" · rojo A "#962a1f"
+   Modo AUDIT — tokeniza la paleta ratificada sobre el build existente.
+   ============================================================ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-playfair);
-  --font-mono: ui-monospace, monospace;
-  --font-heading: var(--font-playfair);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-}
-
+/* ============================================================
+   1. PRIMITIVE TOKENS — Nivel 1
+   ============================================================ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* --- Canvas / neutros cálidos --- */
+  --cream-100: #fdf6f5;
+  --cream-200: #fdf0ef;
+  --cream-300: #ead7d4;
+  --cream-400: #d8b8b4;
+  --white:     #ffffff;
+
+  /* --- Marca: strawberry-red (1 matiz, 3 luminosidades) --- */
+  --strawberry-500: #b5341f;
+  --strawberry-600: #962a1f;
+  --strawberry-700: #7a1f17;
+
+  /* --- Superficies oscuras (mismo rojo, extremo oscuro) --- */
+  --maroon-800: #5c1a1a;
+  --maroon-900: #2d0a0a;
+
+  /* --- Tinta cálida (texto) --- */
+  --ink-900: #1a0808;
+  --ink-600: #5a2a2a;
+  --ink-500: #6e3232;
+
+  /* --- Semánticos de estado (primitivos) --- */
+  --green-700: #15803d;  --green-50: #e7f3ea;
+  --amber-800: #92400e;  --amber-50: #f6ecdf;
+  --red-700:   #b91c1c;  --red-50:   #f7e3e3;
+  --blue-700:  #1d4ed8;  --blue-50:  #e4eafc;
+
+  /* --- Espaciado — escala base-4 --- */
+  --space-1:  0.25rem;  --space-2:  0.5rem;   --space-3:  0.75rem;
+  --space-4:  1rem;     --space-5:  1.25rem;  --space-6:  1.5rem;
+  --space-8:  2rem;     --space-10: 2.5rem;   --space-12: 3rem;
+  --space-16: 4rem;     --space-20: 5rem;     --space-24: 6rem;
+
+  /* --- Tipografía (raw) — fuentes vía next/font en layout.tsx --- */
+  --primitive-font-sans:  var(--font-inter), system-ui, -apple-system, sans-serif;
+  --primitive-font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --primitive-font-mono:  ui-monospace, "SF Mono", Menlo, monospace;
+
+  --fs-overline: 0.6875rem; --fs-caption: 0.75rem;  --fs-sm: 0.8125rem;
+  --fs-body: 0.9375rem;     --fs-body-lg: 1.0625rem; --fs-h4: 1.25rem;
+  --fs-h3: 1.5rem;          --fs-h2: 2rem;           --fs-h1: 2.5rem;
+  --fs-display: 3rem;
+
+  --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700;
+
+  /* --- Radios --- */
+  --primitive-radius-sm:   0.375rem;
+  --primitive-radius-md:   0.5rem;
+  --primitive-radius-lg:   0.75rem;
+  --primitive-radius-xl:   1rem;
+  --primitive-radius-full: 9999px;
+
+  /* --- Sombras — cálidas, restraint --- */
+  --primitive-shadow-xs: 0 1px 2px rgba(26, 8, 8, 0.05);
+  --primitive-shadow-sm: 0 2px 12px rgba(150, 42, 31, 0.06), 0 1px 3px rgba(26, 8, 8, 0.04);
+  --primitive-shadow-md: 0 8px 28px rgba(150, 42, 31, 0.10), 0 2px 8px rgba(26, 8, 8, 0.05);
+  --primitive-shadow-lg: 0 20px 48px rgba(150, 42, 31, 0.14), 0 6px 18px rgba(26, 8, 8, 0.07);
+
+  /* --- Motion --- */
+  --primitive-duration-instant: 120ms;
+  --primitive-duration-fast:    200ms;
+  --primitive-duration-normal:  320ms;
+  --primitive-duration-slow:    560ms;
+  --primitive-ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --primitive-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+/* ============================================================
+   2. SEMANTIC TOKENS — Nivel 2 (light, único modo)
+   ============================================================ */
+:root {
+  --color-bg-base:    var(--cream-100);
+  --color-bg-subtle:  var(--cream-200);
+  --color-bg-surface: var(--white);
+  --color-bg-deep:    var(--maroon-800);
+  --color-bg-footer:  var(--maroon-900);
+
+  /* texto — todos SÓLIDOS (prohibido aplicarles opacidad, G-1) */
+  --color-text-primary:   var(--ink-900);
+  --color-text-secondary: var(--ink-600);
+  --color-text-muted:     var(--ink-500);
+  --color-text-on-brand:  var(--white);
+  --color-text-on-deep:   var(--cream-100);
+
+  --color-brand-primary: var(--strawberry-600);
+  --color-brand-hover:   var(--strawberry-500);
+  --color-brand-pressed: var(--strawberry-700);
+
+  --color-border-subtle:  var(--cream-300);
+  --color-border-default: var(--cream-400);
+  --color-border-focus:   var(--strawberry-600);
+
+  --color-success: var(--green-700);  --color-success-surface: var(--green-50);
+  --color-warning: var(--amber-800);  --color-warning-surface: var(--amber-50);
+  --color-error:   var(--red-700);    --color-error-surface:   var(--red-50);
+  --color-info:    var(--blue-700);   --color-info-surface:    var(--blue-50);
+
+  --font-body:    var(--primitive-font-sans);
+  --font-heading: var(--primitive-font-serif);
+  --font-mono:    var(--primitive-font-mono);
+  --text-body:    var(--fs-body);
+
+  --space-component-pad-x: var(--space-5);
+  --space-component-pad-y: var(--space-3);
+  --space-content-gap:     var(--space-4);
+  --space-section-gap:     var(--space-20);
+  --space-container-pad:   var(--space-6);
+
+  --radius-button: var(--primitive-radius-md);   /* 8px — decisión #3, todos los botones */
+  --radius-card:   var(--primitive-radius-xl);
+  --radius-input:  var(--primitive-radius-lg);
+  --radius-badge:  var(--primitive-radius-full);
+  --radius-pill:   var(--primitive-radius-full);
+
+  --shadow-card:        var(--primitive-shadow-sm);
+  --shadow-card-raised: var(--primitive-shadow-md);
+  --shadow-modal:       var(--primitive-shadow-lg);
+  --shadow-dropdown:    var(--primitive-shadow-md);
+  --shadow-nav:         0 2px 8px rgba(26, 8, 8, 0.06);
+
+  --duration-fast:   var(--primitive-duration-fast);
+  --duration-normal: var(--primitive-duration-normal);
+  --duration-slow:   var(--primitive-duration-slow);
+  --easing-default:  var(--primitive-ease-out);
+  --easing-in-out:   var(--primitive-ease-in-out);
+
+  --container-max: 72rem; /* 1152px — coincide con max-w-6xl ya usado */
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+/* ============================================================
+   3. TAILWIND v4 / shadcn BRIDGE  (modo AUDIT)
+   Re-mapea los tokens shadcn a tokens de marca, de modo que las
+   utilidades existentes (bg-primary, text-foreground) queden
+   correctas sin reescribir componentes.
+   ============================================================ */
+@theme inline {
+  --color-background:         var(--color-bg-base);
+  --color-foreground:         var(--color-text-primary);
+  --color-card:               var(--color-bg-surface);
+  --color-card-foreground:    var(--color-text-primary);
+  --color-popover:            var(--color-bg-surface);
+  --color-popover-foreground: var(--color-text-primary);
+  --color-primary:            var(--color-brand-primary);
+  --color-primary-foreground: var(--color-text-on-brand);
+  --color-secondary:          var(--color-bg-subtle);
+  --color-secondary-foreground: var(--color-text-primary);
+  --color-muted:              var(--color-bg-subtle);
+  --color-muted-foreground:   var(--color-text-muted);
+  --color-accent:             var(--color-bg-subtle);
+  --color-accent-foreground:  var(--color-brand-primary);
+  --color-destructive:        var(--color-error);
+  --color-border:             var(--color-border-subtle);
+  --color-input:              var(--color-border-default);
+  --color-ring:               var(--color-border-focus);
+
+  --font-sans:    var(--font-body);
+  --font-serif:   var(--font-heading);
+  --font-mono:    var(--font-mono);
+  --font-heading: var(--font-heading);
+
+  --radius-sm: var(--primitive-radius-sm);
+  --radius-md: var(--primitive-radius-md);
+  --radius-lg: var(--primitive-radius-lg);
+  --radius-xl: var(--primitive-radius-xl);
+}
+
+/* DARK MODE: NO se especifica (decisión menor ratificada por Nil).
+   El @custom-variant dark y el bloque .dark{} del shadcn neutro se
+   RETIRAN — eran tema muerto. Si en el futuro se pide dark mode, se
+   añade aquí re-mapeando SOLO tokens de color de Nivel 2. */
+
+/* ============================================================
+   4. CSS RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; tab-size: 4; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img, video, svg, canvas { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: none; }
+p, h1, h2, h3, h4, h5, h6, li, blockquote { overflow-wrap: break-word; }
+ul, ol { list-style: none; }
+::selection { background-color: var(--color-brand-primary); color: var(--color-text-on-brand); }
+
+/* ============================================================
+   5. TYPOGRAPHY UTILITIES — Playfair (heading) + Inter (body)
+   Yellowtail ELIMINADA del sistema (retirar de layout.tsx).
+   ============================================================ */
+.text-display {
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 5vw, var(--fs-display));
+  font-weight: var(--fw-bold); line-height: 1.08; letter-spacing: -0.01em;
+}
+.text-h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4.5vw, var(--fs-h1));
+  font-weight: var(--fw-bold); line-height: 1.12; letter-spacing: -0.01em;
+}
+.text-h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 4vw, var(--fs-h2));
+  font-weight: var(--fw-semibold); line-height: 1.18;
+}
+.text-h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 2.5vw, var(--fs-h3));
+  font-weight: var(--fw-semibold); line-height: 1.25;
+}
+.text-h4 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h4); font-weight: var(--fw-medium); line-height: 1.3;
+}
+.text-quote {
+  font-family: var(--font-heading); font-style: italic;
+  font-size: clamp(1.75rem, 4vw, var(--fs-display));
+  font-weight: var(--fw-regular); line-height: 1.3;
+}
+.text-body-lg { font-size: var(--fs-body-lg); line-height: 1.6; }
+.text-body    { font-size: var(--fs-body);    line-height: 1.65; }
+.text-sm      { font-size: var(--fs-sm);      line-height: 1.6; }
+.text-caption { font-size: var(--fs-caption); line-height: 1.5; }
+.text-overline {
+  font-family: var(--font-body); font-size: var(--fs-overline);
+  font-weight: var(--fw-semibold); letter-spacing: 0.18em; text-transform: uppercase;
+}
+
+/* ============================================================
+   6. LAYOUT UTILITIES
+   ============================================================ */
+.container {
+  width: 100%; max-width: var(--container-max);
+  margin-inline: auto; padding-inline: var(--space-container-pad);
+}
+.section { padding-block: var(--space-section-gap); }
+.surface-card {
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* ============================================================
+   7. FOCUS & ACCESSIBILITY
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px; border-radius: var(--primitive-radius-sm);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+}
+
+.skip-link {
+  position: absolute; left: var(--space-2); top: -3rem; z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-on-brand); border-radius: var(--radius-button);
+  transition: top var(--duration-fast) var(--easing-default);
+}
+.skip-link:focus { top: var(--space-2); }
+
+.tap-target { min-width: 44px; min-height: 44px; }
+
+/* ============================================================
+   8. REDUCED MOTION  (NUEVO — hoy ausente en el build)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-    scroll-behavior: smooth;
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-normal: 0.01ms;
+    --duration-slow: 0.01ms;
   }
 }
 
-.logo-blend {
-  mix-blend-mode: multiply;
-}
+/* ============================================================
+   9. UTILIDAD DE INTEGRACIÓN HEREDADA
+   ============================================================ */
+.logo-blend { mix-blend-mode: multiply; }

@@ -15,34 +15,42 @@ export default function AboutUs() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+          <span className="inline-block text-[var(--color-brand-primary)] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.about.eyebrow}
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-6">
+          <h2 className="font-serif text-4xl md:text-5xl text-[var(--color-text-primary)] leading-[1.1] mb-6">
             {t.about.title}{" "}
-            <em className="text-[#c0392b] not-italic italic">{t.about.titleEm}</em>
+            <em className="italic text-[var(--color-brand-primary)]">{t.about.titleEm}</em>
           </h2>
-          <div className="space-y-4 text-[#7a3a3a]/72 text-[0.9375rem] leading-relaxed">
+          <div className="space-y-4 text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed">
             <p>{t.about.p1}</p>
             <p>{t.about.p2}</p>
           </div>
 
-          <blockquote className="mt-8 pl-5 border-l-[3px] border-[#e74c3c]">
-            <p className="italic text-[#7a3a3a] text-base leading-relaxed">
-              "{t.about.quote}"
-            </p>
-            <footer className="mt-2 text-sm text-[#7a3a3a]/50 not-italic">
-              — {t.about.quoteAuthor}
-            </footer>
-          </blockquote>
+          {/* Bloque tributo — slot de retrato + cita.
+              Slot de retrato: tratamiento tipográfico (Path fallback).
+              Foto de archivo familiar pendiente; NUNCA imagen IA de Mariana. */}
+          <div className="mt-8 flex flex-col sm:flex-row items-stretch gap-5">
+            <div className="shrink-0 w-full sm:w-[160px] h-[150px] sm:h-auto flex items-center justify-center bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] px-5 py-6">
+              <span className="font-serif italic text-[1.75rem] leading-tight text-[var(--color-brand-primary)]">
+                Mariana
+              </span>
+            </div>
+            <blockquote className="flex-1 pl-5 border-l-[3px] border-[var(--color-brand-primary)] flex flex-col justify-center">
+              <p className="font-serif italic text-[var(--color-text-primary)] text-lg leading-relaxed">
+                &ldquo;{t.about.quote}&rdquo;
+              </p>
+              <footer className="mt-2 text-sm text-[var(--color-text-secondary)] not-italic">
+                — {t.about.quoteAuthor}
+              </footer>
+            </blockquote>
+          </div>
 
           <div className="mt-8 flex items-center gap-4">
             <motion.a
               href="/checkout"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#c0392b] text-white text-sm font-semibold px-6 py-3 rounded-full"
-              whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(192,57,43,0.35)" }}
+              className="inline-flex items-center gap-2 bg-[var(--color-brand-primary)] text-white text-sm font-semibold px-6 py-3 rounded-full"
+              whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(150,42,31,0.35)" }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
@@ -50,7 +58,7 @@ export default function AboutUs() {
             </motion.a>
             <motion.a
               href="#contacto"
-              className="relative inline-flex items-center gap-2 text-sm font-semibold text-[#c0392b] pb-[3px]"
+              className="relative inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-brand-primary)] pb-[3px]"
               variants={{ rest: { x: 0 }, hover: { x: 4 } }}
               initial="rest"
               whileHover="hover"
@@ -59,7 +67,7 @@ export default function AboutUs() {
             >
               {t.about.contact}
               <motion.span
-                className="absolute bottom-0 left-0 h-[2px] bg-[#c0392b] w-full block"
+                className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-brand-primary)] w-full block"
                 variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 style={{ transformOrigin: "left" }}
