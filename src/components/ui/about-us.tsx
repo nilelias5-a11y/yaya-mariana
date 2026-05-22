@@ -7,8 +7,9 @@ export default function AboutUs() {
   const { t } = useLanguage();
 
   return (
-    <section id="sobre-nosotros" className="bg-white py-20 px-6">
-      <div className="max-w-[720px] mx-auto">
+    /* TANDA 1 — ritmo .section; ancho editorial .container-prose (720px). */
+    <section id="sobre-nosotros" className="section bg-white">
+      <div className="container-prose">
         <motion.div
           initial={{ opacity: 0, x: -60 }}
           whileInView={{ opacity: 1, x: 0 }}

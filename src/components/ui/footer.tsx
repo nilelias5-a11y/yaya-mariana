@@ -91,8 +91,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#2d0a0a] text-white pt-16 pb-8 px-6">
-      <div className="max-w-6xl mx-auto">
+    /* TANDA 1 — paddingTop alineado al ritmo de banda oscura; pb-8 (cierre) se mantiene. */
+    <footer
+      className="bg-[#2d0a0a] text-white pb-8"
+      style={{ paddingTop: "var(--space-section-gap-deep)" }}
+    >
+      <div className="container">
         {/* Top row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
           {/* Brand */}

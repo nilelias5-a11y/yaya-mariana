@@ -40,7 +40,7 @@ function InSeasonCTA() {
         <motion.a
           href="/checkout"
           /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-          className="inline-flex items-center gap-2 bg-white text-[#962a1f] text-sm font-bold px-8 py-3.5 rounded-md shadow-lg"
+          className="inline-flex items-center gap-2 bg-white text-[#962a1f] text-sm font-bold px-8 py-3 rounded-md shadow-lg"
           whileHover={{ scale: 1.04, boxShadow: "0 12px 32px rgba(0,0,0,0.25)" }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
@@ -49,7 +49,7 @@ function InSeasonCTA() {
         </motion.a>
         <motion.a
           href="#sobre-nosotros"
-          className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3.5 rounded-md"
+          className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3 rounded-md"
           whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.12)" }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
@@ -183,13 +183,14 @@ function OffSeasonCTA() {
 
 export default function CTA() {
   return (
+    /* TANDA 1 — banda oscura: ritmo .section-deep; ancho editorial .container-prose. */
     <section
-      className="py-20 px-6 text-white text-center"
+      className="section-deep text-white text-center"
       style={{
         background: "linear-gradient(135deg, #5c1a1a 0%, #962a1f 50%, #7a1f17 100%)",
       }}
     >
-      <div className="max-w-2xl mx-auto">
+      <div className="container-prose">
         {season.isOffSeason ? <OffSeasonCTA /> : <InSeasonCTA />}
       </div>
     </section>

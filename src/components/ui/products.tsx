@@ -332,7 +332,7 @@ function ProductCard({
       </div>
 
       {/* Body */}
-      <div className="p-5 flex flex-col gap-3.5">
+      <div className="p-6 flex flex-col gap-4">
         <div>
           <h3 className="font-serif text-[1.25rem] text-[#1a0808] leading-snug mb-2">
             {product.name}
@@ -417,7 +417,7 @@ export default function Products() {
   return (
     <section
       id="productos"
-      className="py-20 px-6 relative"
+      className="section relative"
       style={{
         backgroundColor: "#fdf6f5",
         backgroundImage:
@@ -425,11 +425,11 @@ export default function Products() {
         backgroundSize: "22px 22px",
       }}
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="container">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-12">
           <motion.span
-            className="inline-block text-[#962a1f] text-xs font-bold uppercase tracking-[0.18em] mb-3"
+            className="inline-block text-[#962a1f] text-xs font-bold uppercase tracking-[0.18em] mb-4"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -467,7 +467,7 @@ export default function Products() {
               aria-pressed={active === f}
               onClick={() => setActive(f)}
               /* min-h 44px → tap target (L2); rounded-md = 8px (decisión #3). */
-              className={`inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] rounded-md text-sm font-semibold border-2 transition-all duration-200 cursor-pointer ${
+              className={`inline-flex items-center justify-center px-5 py-3 min-h-[44px] rounded-md text-sm font-semibold border-2 transition-all duration-200 cursor-pointer ${
                 active === f
                   ? "bg-[#962a1f] border-[#962a1f] text-white shadow-sm"
                   : "border-[#962a1f]/30 text-[#962a1f] hover:border-[#962a1f] bg-white/60"

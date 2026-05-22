@@ -253,7 +253,8 @@ export default function Hero() {
         />
 
       {/* Hero — 2 columnas */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 pt-16 pb-20 min-h-[calc(100vh-72px)]">
+      {/* TANDA 1 — padding vertical simétrico (antes pt-16/pb-20 asimétrico). */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 py-20 min-h-[calc(100vh-72px)]">
 
         {/* Columna izquierda */}
         <motion.div

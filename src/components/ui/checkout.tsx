@@ -202,7 +202,7 @@ function CheckoutForm() {
               <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
                 Datos de pago
               </legend>
-              <div className="rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3.5 focus-within:border-[#962a1f] transition-colors">
+              <div className="rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3 focus-within:border-[#962a1f] transition-colors">
                 <CardElement options={CARD_STYLE} />
               </div>
               <p className="text-[0.72rem] text-[#7a3a3a]/50 flex items-center gap-1.5">

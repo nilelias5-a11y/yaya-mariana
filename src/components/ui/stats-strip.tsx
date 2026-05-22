@@ -84,8 +84,9 @@ export default function StatsStrip() {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-[#5c1a1a] text-white py-14 px-6">
-      <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
+    /* TANDA 1 — banda oscura: ritmo .section-deep (56→72px); ancho .container. */
+    <section className="section-deep bg-[#5c1a1a] text-white">
+      <div className="container grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
         {STATS.map(({ value, icon }, i) => (
           <motion.div
             key={i}

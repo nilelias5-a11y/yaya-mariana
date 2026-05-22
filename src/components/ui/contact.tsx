@@ -85,8 +85,8 @@ export default function Contact() {
   }
 
   return (
-    <section id="contacto" className="bg-[#fdf6f5] py-20 px-6">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14">
+    <section id="contacto" className="section bg-[#fdf6f5]">
+      <div className="container grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Info */}
         <motion.div
           initial={{ opacity: 0, x: -80 }}
@@ -182,7 +182,7 @@ export default function Contact() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t.contact.namePlaceholder}
-                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                   />
                 </FocusField>
                 <FocusField>
@@ -197,7 +197,7 @@ export default function Contact() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
-                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                   />
                 </FocusField>
               </div>
@@ -213,7 +213,7 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder={t.contact.subjectPlaceholder}
-                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                 />
               </FocusField>
               <FocusField>
@@ -227,7 +227,7 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}
-                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white resize-none"
+                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white resize-none"
                 />
               </FocusField>
               <button

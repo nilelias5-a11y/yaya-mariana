@@ -118,7 +118,10 @@
   --space-component-pad-x: var(--space-5);
   --space-component-pad-y: var(--space-3);
   --space-content-gap:     var(--space-4);
-  --space-section-gap:     var(--space-20);
+  /* Fase 4.5 · TANDA 1 — ritmo entre secciones fluido (confident-whitespace).
+     Antes var(--space-20)=80px plano; ahora 80→112px. Bandas oscuras: 56→72px. */
+  --space-section-gap:      clamp(5rem, 8vw, 7rem);
+  --space-section-gap-deep: clamp(3.5rem, 6vw, 4.5rem);
   --space-container-pad:   var(--space-6);
 
   --radius-button: var(--primitive-radius-md);   /* 8px — decisión #3, todos los botones */
@@ -139,7 +142,8 @@
   --easing-default:  var(--primitive-ease-out);
   --easing-in-out:   var(--primitive-ease-in-out);
 
-  --container-max: 72rem; /* 1152px — coincide con max-w-6xl ya usado */
+  --container-max:   72rem; /* 1152px — coincide con max-w-6xl ya usado */
+  --container-prose: 45rem; /* 720px — ancho editorial de lectura: AboutUs, CTA (Fase 4.5 TANDA 1) */
 }
 
 /* ============================================================
@@ -259,7 +263,14 @@ ul, ol { list-style: none; }
   width: 100%; max-width: var(--container-max);
   margin-inline: auto; padding-inline: var(--space-container-pad);
 }
+/* Ancho editorial estrecho — columna de lectura íntima (Fase 4.5 TANDA 1). */
+.container-prose {
+  width: 100%; max-width: var(--container-prose);
+  margin-inline: auto; padding-inline: var(--space-container-pad);
+}
 .section { padding-block: var(--space-section-gap); }
+/* Banda oscura de quiebre — menos aire vertical por diseño (StatsStrip, CTA). */
+.section-deep { padding-block: var(--space-section-gap-deep); }
 .surface-card {
   background-color: var(--color-bg-surface);
   border-radius: var(--radius-card);

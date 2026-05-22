@@ -40,10 +40,10 @@ export default function Values() {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-[#fdf0ef] py-20 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section className="section bg-[#fdf0ef]">
+      <div className="container">
         <div className="text-center mb-12">
-          <span className="inline-block text-[#962a1f] text-xs font-bold uppercase tracking-[0.18em] mb-3">
+          <span className="inline-block text-[#962a1f] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.values.eyebrow}
           </span>
           <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808]">
