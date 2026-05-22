@@ -49,7 +49,8 @@ export default function AboutUs() {
           <div className="mt-8 flex items-center gap-4">
             <motion.a
               href="/checkout"
-              className="inline-flex items-center gap-2 bg-[var(--color-brand-primary)] text-white text-sm font-semibold px-6 py-3 rounded-full"
+              /* rounded-md = 8px — radio de botones unificado (decisión #3). */
+              className="inline-flex items-center gap-2 bg-[var(--color-brand-primary)] text-white text-sm font-semibold px-6 py-3 rounded-md"
               whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(150,42,31,0.35)" }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2, ease: "easeOut" }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 export type CartProduct = {
   name: string;
@@ -22,8 +22,50 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | null>(null);
 
+// L8 — clave de persistencia de la cesta en localStorage.
+const STORAGE_KEY = "yaya-mariana-cart";
+
 export function CartProvider({ children }: { children: ReactNode }) {
+  // Estado inicial vacío: coincide con el render del servidor → sin desajuste
+  // de hidratación. La cesta guardada se carga en un efecto tras montar.
   const [items, setItems] = useState<CartItem[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+
+  // L8 — rehidratación: leer la cesta guardada una vez en el cliente.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed: unknown = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          const valid = (parsed as CartItem[]).filter(
+            (i) =>
+              !!i &&
+              typeof i.name === "string" &&
+              typeof i.price === "number" &&
+              typeof i.image === "string" &&
+              typeof i.quantity === "number" &&
+              i.quantity > 0,
+          );
+          if (valid.length) setItems(valid);
+        }
+      }
+    } catch {
+      /* localStorage no disponible o JSON corrupto → se ignora, cesta vacía. */
+    }
+    setHydrated(true);
+  }, []);
+
+  // L8 — persistencia: guardar tras cada cambio, pero solo una vez hidratado
+  // (evita que el array vacío inicial pise la cesta guardada).
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch {
+      /* cuota excedida o storage bloqueado → se ignora. */
+    }
+  }, [items, hydrated]);
 
   const addToCart = useCallback((product: CartProduct) => {
     setItems((prev) => {

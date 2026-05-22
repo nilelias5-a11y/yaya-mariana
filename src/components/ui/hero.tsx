@@ -36,7 +36,8 @@ function LanguageSelector() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="flex items-center gap-1 cursor-pointer select-none transition-colors duration-200 hover:text-[#962a1f]"
+        /* L2 — selector de idioma con tap target ≥44px de alto. */
+        className="flex items-center gap-1 min-h-[44px] px-1 cursor-pointer select-none transition-colors duration-200 hover:text-[#962a1f]"
         style={{ fontSize: 13, fontWeight: 500, color: "#1a0808" }}
       >
         <span>{lang.toUpperCase()}</span>
@@ -62,7 +63,8 @@ function LanguageSelector() {
                 role="option"
                 aria-selected={lang === code}
                 onClick={() => { setLang(code); setOpen(false); }}
-                className="w-full px-3 py-2 text-left transition-colors duration-150 cursor-pointer hover:bg-[#fdf0ef]"
+                /* L2 — cada opción del desplegable con alto de toque ≥44px. */
+                className="w-full px-3 min-h-[44px] flex items-center text-left transition-colors duration-150 cursor-pointer hover:bg-[#fdf0ef]"
                 style={{ fontSize: 13, fontWeight: 500, color: lang === code ? "#962a1f" : "#1a0808" }}
               >
                 {label}
@@ -97,7 +99,8 @@ function MobileNav({
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         aria-label={menuLabel}
-        className="md:hidden flex items-center justify-center w-9 h-9 -mr-1 cursor-pointer"
+        /* L2 — tap target ≥44px (antes w-9 h-9 = 36px). */
+        className="md:hidden flex items-center justify-center w-11 h-11 -mr-1.5 cursor-pointer"
         style={{ color: "#1a0808" }}
       >
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-5 h-5">
@@ -121,7 +124,8 @@ function MobileNav({
                 key={href}
                 href={href}
                 onClick={() => setOpen(false)}
-                className="font-sans font-medium py-2.5"
+                /* L2 — cada enlace del panel móvil con alto de toque ≥44px. */
+                className="font-sans font-medium flex items-center min-h-[44px]"
                 style={{ fontSize: 15, color: "#1a0808" }}
               >
                 {label}
@@ -131,7 +135,8 @@ function MobileNav({
               href="/checkout"
               onClick={() => setOpen(false)}
               className="mt-3 inline-flex items-center justify-center font-sans font-semibold text-white"
-              style={{ backgroundColor: "#962a1f", borderRadius: 8, padding: "11px 20px", fontSize: 14 }}
+              /* L2 — minHeight 44px garantiza el tap target del CTA móvil. */
+              style={{ backgroundColor: "#962a1f", borderRadius: 8, padding: "11px 20px", minHeight: 44, fontSize: 14 }}
             >
               {verTienda}
             </a>
@@ -167,14 +172,15 @@ export default function Hero() {
       >
         {/* Logo */}
         <a href="/" className="shrink-0">
+          {/* L1 — sin `unoptimized`: el logo pasa por el optimizador y se
+              sirve en AVIF/WebP. `priority` se mantiene (única imagen
+              above-the-fold); `loading="eager"` era redundante con priority. */}
           <Image
             src="/logo-nuevo.jpg"
             alt="Yaya Mariana"
             width={254}
             height={56}
             priority
-            loading="eager"
-            unoptimized
             className="w-auto"
             style={{ height: 56 }}
           />
@@ -214,7 +220,8 @@ export default function Hero() {
           <motion.a
             href="/checkout"
             className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white overflow-hidden"
-            style={{ backgroundColor: "#962a1f", borderRadius: 6, padding: "10px 20px", fontSize: 14 }}
+            /* Radio de botones unificado a 8px (decisión #3 — antes 6px). */
+            style={{ backgroundColor: "#962a1f", borderRadius: 8, padding: "10px 20px", fontSize: 14 }}
             variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(150,42,31,0.35)", backgroundColor: "#7a1f17" } }}
             initial="rest"
             whileHover="hover"

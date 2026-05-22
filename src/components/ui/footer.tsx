@@ -158,9 +158,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-7 text-xs text-white/35">
-          <p>© {new Date().getFullYear()} Yaya Mariana. {t.footer.rights}</p>
-          <p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-7">
+          {/* L3 — Capa B: la línea de tributo «En memoria de Mariana» acompaña
+              al copyright. Hilo del homenaje — presente, pero discreto. */}
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <p className="text-xs text-white/35">
+              © {new Date().getFullYear()} Yaya Mariana. {t.footer.rights}
+            </p>
+            <p className="font-serif italic text-[0.8125rem] text-[#e8c4bf]">
+              {t.footer.inMemory}
+            </p>
+          </div>
+          <p className="text-xs text-white/35">
             {t.footer.designBy}{" "}
             <a
               href="https://okawa.es"

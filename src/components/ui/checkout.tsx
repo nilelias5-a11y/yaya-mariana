@@ -97,7 +97,7 @@ function CheckoutForm() {
           </p>
           <button
             onClick={() => router.push("/")}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-bold shadow-lg"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-md text-white font-bold shadow-lg"
             style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
           >
             Volver al inicio
@@ -222,7 +222,8 @@ function CheckoutForm() {
             <button
               type="submit"
               disabled={!stripe || loading}
-              className="w-full py-4 rounded-full text-white font-bold text-base shadow-xl hover:shadow-2xl transition-shadow disabled:opacity-60 disabled:cursor-not-allowed"
+              /* rounded-md = 8px — radio de botones unificado (decisión #3). */
+              className="w-full py-4 rounded-md text-white font-bold text-base shadow-xl hover:shadow-2xl transition-shadow disabled:opacity-60 disabled:cursor-not-allowed"
               style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
             >
               {loading ? (

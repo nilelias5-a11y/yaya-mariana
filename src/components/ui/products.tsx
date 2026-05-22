@@ -48,34 +48,6 @@ const PRODUCTS_BASE = [
   },
 ];
 
-function useTypewriter(text: string, speed = 55, startDelay = 250) {
-  const [displayed, setDisplayed] = useState("");
-  const reduceMotion = useReducedMotion();
-  useEffect(() => {
-    // prefers-reduced-motion: salta el tecleo, muestra el texto completo.
-    if (reduceMotion) {
-      setDisplayed(text);
-      return;
-    }
-    setDisplayed("");
-    if (!text) return;
-    let i = 0;
-    let interval: ReturnType<typeof setInterval>;
-    const timer = setTimeout(() => {
-      interval = setInterval(() => {
-        i++;
-        setDisplayed(text.slice(0, i));
-        if (i >= text.length) clearInterval(interval);
-      }, speed);
-    }, startDelay);
-    return () => {
-      clearTimeout(timer);
-      clearInterval(interval);
-    };
-  }, [text, speed, startDelay, reduceMotion]);
-  return displayed;
-}
-
 // M7 — detección de dispositivo sin hover (táctil). useSyncExternalStore:
 // reactivo, SSR-safe (snapshot de servidor = false), sin setState en efecto.
 function useIsTouch() {
@@ -179,7 +151,7 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
           e.preventDefault();
           prev();
         }}
-        className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-all duration-200 ${controlsVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-1 pointer-events-none"}`}
+        className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-all duration-200 ${controlsVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-1 pointer-events-none"}`}
       >
         <svg
           viewBox="0 0 16 16"
@@ -200,7 +172,7 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
           e.preventDefault();
           next();
         }}
-        className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-all duration-200 ${controlsVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-1 pointer-events-none"}`}
+        className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-all duration-200 ${controlsVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-1 pointer-events-none"}`}
       >
         <svg
           viewBox="0 0 16 16"
@@ -215,18 +187,23 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
         </svg>
       </button>
 
-      {/* Dot indicators */}
-      <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+      {/* Dot indicators — L2: la barra visible se mantiene fina, pero cada
+          punto vive dentro de un botón de 44px de alto (tap target). */}
+      <div className="absolute inset-x-0 bottom-0 h-11 flex items-center justify-center gap-1.5 z-10">
         {images.map((_, i) => (
           <button
             key={i}
             type="button"
             aria-label={`Ir a la foto ${i + 1}`}
             onClick={() => setCurrent(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === current ? "w-4 bg-white" : "w-1.5 bg-white/50 hover:bg-white/80"
-            }`}
-          />
+            className="group/dot flex h-11 items-center px-1"
+          >
+            <span
+              className={`block h-1.5 rounded-full transition-all duration-300 ${
+                i === current ? "w-4 bg-white" : "w-1.5 bg-white/50 group-hover/dot:bg-white/80"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>
@@ -253,6 +230,34 @@ function ProductCard({
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
+  // L4 — easter egg: hover (escritorio) o pulsación larga (táctil) sobre la
+  // imagen de la fresa Mágnum hace caer un único pétalo, 1s, una sola vez.
+  // Bajo prefers-reduced-motion no se arma ni se dispara.
+  const reduceMotion = useReducedMotion();
+  const isMagnum = product.variety === "Mágnum";
+  const [petal, setPetal] = useState(false);
+  const petalFired = useRef(false);
+  const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function firePetal() {
+    if (reduceMotion || petalFired.current) return;
+    petalFired.current = true;
+    setPetal(true);
+  }
+  function startPress() {
+    if (!isMagnum || reduceMotion || petalFired.current) return;
+    pressTimer.current = setTimeout(firePetal, 460);
+  }
+  function cancelPress() {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  }
+  useEffect(() => () => {
+    if (pressTimer.current) clearTimeout(pressTimer.current);
+  }, []);
+
   function handleAddToCart() {
     addToCart({ name: product.name, price: product.price, image: product.images[0] });
     setAdded(true);
@@ -277,8 +282,31 @@ function ProductCard({
       }}
     >
       {/* Carousel */}
-      <div className="relative">
+      <div
+        className="relative overflow-hidden rounded-t-2xl"
+        onMouseEnter={isMagnum ? firePetal : undefined}
+        onTouchStart={isMagnum ? startPress : undefined}
+        onTouchEnd={isMagnum ? cancelPress : undefined}
+        onTouchMove={isMagnum ? cancelPress : undefined}
+        onTouchCancel={isMagnum ? cancelPress : undefined}
+      >
         <ProductCarousel images={product.images} name={product.name} />
+
+        {/* L4 — pétalo del easter egg Mágnum: cae una vez, 1s, y se desmonta. */}
+        {petal && (
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-0 z-30"
+            initial={{ y: -16, x: -8, rotate: -12, opacity: 0 }}
+            animate={{ y: 250, x: 18, rotate: 78, opacity: [0, 1, 1, 0] }}
+            transition={{ duration: 1, ease: "easeIn" }}
+            onAnimationComplete={() => setPetal(false)}
+          >
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 2C16 7 16 14 11 20C6 14 6 7 11 2Z" fill="#e8a090" />
+            </svg>
+          </motion.div>
+        )}
 
         {/* Badge de variedad (M3 — sustituye al genérico "Premium") */}
         <div className="absolute top-3 left-3 z-20">
@@ -342,7 +370,8 @@ function ProductCard({
           </div>
           <button
             onClick={handleAddToCart}
-            className={`w-full py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+            /* py-3 → alto de toque ≥44px (L2); rounded-md = 8px (decisión #3). */
+            className={`w-full py-3 rounded-md text-sm font-bold transition-all duration-300 ${
               added
                 ? "bg-green-500 text-white"
                 : "text-white hover:shadow-lg"
@@ -371,28 +400,6 @@ function ProductCard({
         }}
       />
     </motion.div>
-  );
-}
-
-function TypewriterHeading({ text }: { text: string }) {
-  const ref = useRef<HTMLHeadingElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-  const displayed = useTypewriter(inView ? text : "", 55, 200);
-
-  return (
-    <h2
-      ref={ref}
-      className="font-serif text-4xl md:text-5xl text-[#1a0808] min-h-[1.2em]"
-    >
-      {displayed}
-      {inView && displayed.length < text.length && (
-        <motion.span
-          className="inline-block w-[2px] h-[0.85em] bg-[#962a1f] ml-0.5 align-middle"
-          animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.55, repeat: Infinity, repeatType: "reverse" }}
-        />
-      )}
-    </h2>
   );
 }
 
@@ -430,13 +437,22 @@ export default function Products() {
           >
             {t.products.eyebrow}
           </motion.span>
-          <TypewriterHeading text={t.products.title} />
+          {/* Decisión #2 (gate Fase 3): typewriter retirado → fade-up estándar. */}
+          <motion.h2
+            className="font-serif text-4xl md:text-5xl text-[#1a0808]"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {t.products.title}
+          </motion.h2>
           <motion.p
             className="mt-3 text-[#7a3a3a]/65 max-w-md mx-auto text-[0.9375rem] leading-relaxed"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.55 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
           >
             {t.products.subtitle}
           </motion.p>
@@ -450,7 +466,8 @@ export default function Products() {
               type="button"
               aria-pressed={active === f}
               onClick={() => setActive(f)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold border-2 transition-all duration-200 cursor-pointer ${
+              /* min-h 44px → tap target (L2); rounded-md = 8px (decisión #3). */
+              className={`inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] rounded-md text-sm font-semibold border-2 transition-all duration-200 cursor-pointer ${
                 active === f
                   ? "bg-[#962a1f] border-[#962a1f] text-white shadow-sm"
                   : "border-[#962a1f]/30 text-[#962a1f] hover:border-[#962a1f] bg-white/60"

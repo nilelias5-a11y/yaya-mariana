@@ -182,7 +182,7 @@ export default function Contact() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t.contact.namePlaceholder}
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                   />
                 </FocusField>
                 <FocusField>
@@ -197,7 +197,7 @@ export default function Contact() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                   />
                 </FocusField>
               </div>
@@ -213,7 +213,7 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder={t.contact.subjectPlaceholder}
-                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5]"
+                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                 />
               </FocusField>
               <FocusField>
@@ -227,12 +227,13 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}
-                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5] resize-none"
+                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white resize-none"
                 />
               </FocusField>
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
+                /* rounded-md = 8px — radio de botones unificado (decisión #3). */
+                className="w-full py-3 rounded-md text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
                 style={{
                   background: "linear-gradient(135deg, #962a1f 0%, #b5341f 100%)",
                 }}

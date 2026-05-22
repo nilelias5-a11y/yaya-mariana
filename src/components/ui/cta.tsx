@@ -39,7 +39,8 @@ function InSeasonCTA() {
       <div className="flex items-center justify-center gap-4 flex-wrap">
         <motion.a
           href="/checkout"
-          className="inline-flex items-center gap-2 bg-white text-[#962a1f] text-sm font-bold px-8 py-3.5 rounded-full shadow-lg"
+          /* rounded-md = 8px — radio de botones unificado (decisión #3). */
+          className="inline-flex items-center gap-2 bg-white text-[#962a1f] text-sm font-bold px-8 py-3.5 rounded-md shadow-lg"
           whileHover={{ scale: 1.04, boxShadow: "0 12px 32px rgba(0,0,0,0.25)" }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
@@ -48,7 +49,7 @@ function InSeasonCTA() {
         </motion.a>
         <motion.a
           href="#sobre-nosotros"
-          className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3.5 rounded-full"
+          className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3.5 rounded-md"
           whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.12)" }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
@@ -159,7 +160,8 @@ function OffSeasonCTA() {
           />
           <button
             type="submit"
-            className="inline-flex items-center justify-center bg-white text-[#962a1f] text-sm font-bold px-7 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+            /* rounded-md = 8px — radio de botones unificado (decisión #3). */
+            className="inline-flex items-center justify-center bg-white text-[#962a1f] text-sm font-bold px-7 py-3 rounded-md shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
           >
             {o.notify}
           </button>

@@ -77,7 +77,8 @@ export default function Cart() {
                 <h2 className="font-serif text-xl text-[#1a0808]">{t.cart.title}</h2>
                 <button
                   onClick={() => setOpen(false)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#fdf0ef] transition-colors text-[#7a3a3a]"
+                  /* L2 — tap target ≥44px (antes w-8 h-8 = 32px). */
+                  className="w-11 h-11 -mr-2 rounded-full flex items-center justify-center hover:bg-[#fdf0ef] transition-colors text-[#7a3a3a]"
                 >
                   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="w-4 h-4">
                     <path d="M4 4l12 12M16 4L4 16" />
@@ -112,20 +113,25 @@ export default function Cart() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-[#1a0808] truncate">{item.name}</p>
                         <p className="text-xs text-[#7a3a3a]/60">500g · {item.price.toFixed(2)}€</p>
-                        {/* Quantity controls */}
-                        <div className="flex items-center gap-2 mt-1.5">
+                        {/* Quantity controls — L2: el botón es un tap target
+                            de 44px; el círculo visible (32px) va dentro. */}
+                        <div className="flex items-center gap-1 mt-1 -ml-1.5">
                           <button
                             onClick={() => updateQuantity(item.name, -1)}
-                            className="w-6 h-6 rounded-full border border-[#962a1f]/30 flex items-center justify-center text-[#962a1f] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
+                            className="group/qty flex h-11 w-11 items-center justify-center"
                           >
-                            −
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#962a1f]/30 text-[#962a1f] text-sm leading-none transition-colors group-hover/qty:bg-[#fdf0ef]">
+                              −
+                            </span>
                           </button>
                           <span className="text-sm font-semibold text-[#1a0808] w-4 text-center">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.name, +1)}
-                            className="w-6 h-6 rounded-full border border-[#962a1f]/30 flex items-center justify-center text-[#962a1f] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
+                            className="group/qty flex h-11 w-11 items-center justify-center"
                           >
-                            +
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#962a1f]/30 text-[#962a1f] text-sm leading-none transition-colors group-hover/qty:bg-[#fdf0ef]">
+                              +
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -135,7 +141,8 @@ export default function Cart() {
                         </p>
                         <button
                           onClick={() => removeFromCart(item.name)}
-                          className="text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#962a1f] transition-colors mt-0.5"
+                          /* py-1.5 amplía el área de toque del enlace de borrado (L2). */
+                          className="text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#962a1f] transition-colors mt-0.5 py-1.5"
                         >
                           {t.cart.remove}
                         </button>
@@ -158,7 +165,8 @@ export default function Cart() {
                   </div>
                   <button
                     onClick={handleCheckout}
-                    className="w-full py-3 rounded-full text-white text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
+                    /* rounded-md = 8px — radio de botones unificado (decisión #3). */
+                    className="w-full py-3 rounded-md text-white text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
                     style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
                   >
                     {t.cart.checkout} · {total.toFixed(2)}€

@@ -66,7 +66,7 @@ export const translations = {
         "Cada fresa que cultivamos lleva consigo nutrición, sabor y compromiso con el medio ambiente.",
       benefits: [
         { title: "Vitamina C natural", description: "Nuestras fresas son una fuente excepcional de vitamina C, antioxidantes y ácido fólico que refuerzan el sistema inmunológico." },
-        { title: "Hidratación máxima", description: "Con un 90% de contenido en agua, las fresas te ayudan a mantenerte hidratado y a cuidar tu piel desde dentro." },
+        { title: "Pura jugosidad", description: "Las fresas son casi todo agua. Por eso resultan tan jugosas y ligeras, y refrescan con cada bocado." },
         { title: "Cero pesticidas", description: "Cultivadas sin ningún tipo de pesticida ni químico artificial. Solo agua, luz y el cuidado que merece cada fruta." },
         { title: "Huella mínima", description: "Nuestro sistema de cultivo controlado minimiza el impacto ambiental y reduce drásticamente el uso de recursos hídricos." },
         { title: "Antioxidantes", description: "Alto contenido en antocianinas y polifenoles que protegen las células del estrés oxidativo y favorecen la salud cardiovascular." },
@@ -138,6 +138,7 @@ export const translations = {
       myAccount: "Mi cuenta",
       rights: "Todos los derechos reservados.",
       designBy: "Diseño por",
+      inMemory: "En memoria de Mariana",
     },
     cart: {
       title: "Tu cesta",
@@ -216,7 +217,7 @@ export const translations = {
         "Cada maduixa que cultivem porta nutrició, sabor i compromís amb el medi ambient.",
       benefits: [
         { title: "Vitamina C natural", description: "Les nostres maduixes són una font excepcional de vitamina C, antioxidants i àcid fòlic que reforcen el sistema immunològic." },
-        { title: "Hidratació màxima", description: "Amb un 90% de contingut en aigua, les maduixes t'ajuden a mantenir-te hidratat i a cuidar la teva pell des de dins." },
+        { title: "Pura sucositat", description: "Les maduixes són gairebé tot aigua. Per això resulten tan sucoses i lleugeres, i refresquen a cada mossegada." },
         { title: "Zero pesticides", description: "Cultivades sense cap tipus de pesticida ni químic artificial. Només aigua, llum i la cura que mereix cada fruita." },
         { title: "Petjada mínima", description: "El nostre sistema de cultiu controlat minimitza l'impacte ambiental i redueix dràsticament l'ús de recursos hídrics." },
         { title: "Antioxidants", description: "Alt contingut en antocianines i polifenols que protegeixen les cèl·lules de l'estrès oxidatiu i afavoreixen la salut cardiovascular." },
@@ -288,6 +289,7 @@ export const translations = {
       myAccount: "El meu compte",
       rights: "Tots els drets reservats.",
       designBy: "Disseny per",
+      inMemory: "En memòria de la Mariana",
     },
     cart: {
       title: "La teva cistella",
@@ -366,7 +368,7 @@ export const translations = {
         "Every strawberry we grow carries nutrition, flavour and a commitment to the environment.",
       benefits: [
         { title: "Natural Vitamin C", description: "Our strawberries are an exceptional source of vitamin C, antioxidants and folic acid that strengthen the immune system." },
-        { title: "Maximum hydration", description: "With 90% water content, strawberries help you stay hydrated and care for your skin from within." },
+        { title: "Pure juiciness", description: "Strawberries are almost all water. That's what makes them so juicy and light — refreshing with every bite." },
         { title: "Zero pesticides", description: "Grown without any pesticides or artificial chemicals. Just water, sunlight and the care each fruit deserves." },
         { title: "Minimal footprint", description: "Our controlled cultivation system minimises environmental impact and drastically reduces water usage." },
         { title: "Antioxidants", description: "High content of anthocyanins and polyphenols that protect cells from oxidative stress and support cardiovascular health." },
@@ -438,6 +440,7 @@ export const translations = {
       myAccount: "My account",
       rights: "All rights reserved.",
       designBy: "Design by",
+      inMemory: "In memory of Mariana",
     },
     cart: {
       title: "Your basket",
