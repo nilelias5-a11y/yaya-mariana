@@ -49,7 +49,7 @@ export default function Values() {
           <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808]">
             {t.values.title}
           </h2>
-          <p className="mt-3 text-[#7a3a3a]/65 max-w-md mx-auto text-[0.9375rem] leading-relaxed">
+          <p className="mt-3 text-[var(--color-text-secondary)] max-w-md mx-auto text-[0.9375rem] leading-relaxed">
             {t.values.subtitle}
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function Values() {
                 {ICONS[i]}
               </div>
               <h3 className="font-serif text-xl text-[#1a0808] mb-2">{title}</h3>
-              <p className="text-sm text-[#7a3a3a]/65 leading-relaxed">{description}</p>
+              <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{description}</p>
             </motion.div>
           ))}
         </div>

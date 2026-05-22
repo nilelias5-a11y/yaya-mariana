@@ -112,7 +112,7 @@ export default function Footer() {
                 Yaya Mariana
               </span>
             </motion.div>
-            <p className="text-sm text-white/50 leading-relaxed max-w-[18ch]">
+            <p className="text-sm text-[var(--color-text-on-deep)] leading-relaxed max-w-[18ch]">
               {t.footer.description}
             </p>
             <div className="flex items-center gap-3 mt-5">
@@ -140,7 +140,7 @@ export default function Footer() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.75, delay: colIdx * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h4 className="text-xs font-bold uppercase tracking-[0.18em] text-white/40 mb-4">
+              <h4 className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-text-on-deep)] mb-4">
                 {heading}
               </h4>
               <ul className="space-y-2.5">
@@ -148,7 +148,7 @@ export default function Footer() {
                   <li key={label}>
                     <motion.a
                       href={href}
-                      className="text-sm text-white/65 inline-block"
+                      className="text-sm text-[var(--color-text-on-deep)] inline-block"
                       whileHover={{ x: 4, color: "#962a1f" }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
                     >
@@ -166,20 +166,20 @@ export default function Footer() {
           {/* L3 — Capa B: la línea de tributo «En memoria de Mariana» acompaña
               al copyright. Hilo del homenaje — presente, pero discreto. */}
           <div className="flex flex-col items-center sm:items-start gap-1">
-            <p className="text-xs text-white/35">
+            <p className="text-xs text-[var(--color-text-on-deep)]">
               © {new Date().getFullYear()} Yaya Mariana. {t.footer.rights}
             </p>
             <p className="font-serif italic text-[0.8125rem] text-[#e8c4bf]">
               {t.footer.inMemory}
             </p>
           </div>
-          <p className="text-xs text-white/35">
+          <p className="text-xs text-[var(--color-text-on-deep)]">
             {t.footer.designBy}{" "}
             <a
               href="https://okawa.es"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white/60 transition-colors"
+              className="hover:text-white transition-colors"
             >
               Okawa
             </a>

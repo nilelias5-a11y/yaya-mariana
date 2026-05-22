@@ -100,7 +100,7 @@ export default function Contact() {
           <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
             {t.contact.title}
           </h2>
-          <p className="text-[#7a3a3a]/65 text-[0.9375rem] leading-relaxed mb-10">
+          <p className="text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed mb-10">
             {t.contact.subtitle}
           </p>
 
@@ -111,7 +111,7 @@ export default function Contact() {
                   {icon}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase tracking-wide mb-0.5">
+                  <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide mb-0.5">
                     {label}
                   </p>
                   {href ? (
@@ -157,7 +157,7 @@ export default function Contact() {
                 </svg>
               </div>
               <h3 className="font-serif text-2xl text-[#1a0808]">{t.contact.sent}</h3>
-              <p className="text-[#7a3a3a]/65 text-sm max-w-xs">
+              <p className="text-[var(--color-text-secondary)] text-sm max-w-xs">
                 {t.contact.sentSubtitle}
               </p>
               <button
@@ -171,7 +171,7 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <FocusField>
-                  <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                  <label htmlFor="name" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
                     {t.contact.nameLabel} *
                   </label>
                   <input
@@ -182,11 +182,11 @@ export default function Contact() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t.contact.namePlaceholder}
-                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                   />
                 </FocusField>
                 <FocusField>
-                  <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                  <label htmlFor="email" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
                     {t.contact.emailLabel} *
                   </label>
                   <input
@@ -197,12 +197,12 @@ export default function Contact() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
-                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                   />
                 </FocusField>
               </div>
               <FocusField>
-                <label htmlFor="subject" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                <label htmlFor="subject" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
                   {t.contact.subjectLabel} *
                 </label>
                 <input
@@ -213,11 +213,11 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder={t.contact.subjectPlaceholder}
-                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
                 />
               </FocusField>
               <FocusField>
-                <label htmlFor="message" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                <label htmlFor="message" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
                   {t.contact.messageLabel}
                 </label>
                 <textarea
@@ -227,7 +227,7 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}
-                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white resize-none"
+                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white resize-none"
                 />
               </FocusField>
               <button

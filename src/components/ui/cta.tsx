@@ -28,7 +28,7 @@ function InSeasonCTA() {
         <em className="italic text-[#f5c6c2]">{t.cta.titleEm}</em>
       </motion.h2>
       <motion.p
-        className="text-white/70 text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
+        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
@@ -59,7 +59,7 @@ function InSeasonCTA() {
       </div>
 
       {/* M4 — micro-bloque cold-chain: trazabilidad logística de la entrega. */}
-      <div className="mt-7 flex items-center justify-center gap-2.5 flex-wrap text-xs text-white/55">
+      <div className="mt-7 flex items-center justify-center gap-2.5 flex-wrap text-xs text-[var(--color-text-on-brand)]">
         {t.cta.coldChain.map((item, i) => (
           <span key={item} className="flex items-center gap-2.5">
             {i > 0 && <span aria-hidden className="text-white/30">·</span>}
@@ -69,7 +69,7 @@ function InSeasonCTA() {
       </div>
 
       {/* Trust badges */}
-      <div className="mt-8 flex items-center justify-center gap-6 flex-wrap text-sm text-white/60">
+      <div className="mt-8 flex items-center justify-center gap-6 flex-wrap text-sm text-[var(--color-text-on-brand)]">
         {[t.cta.badges.freeShipping, t.cta.badges.noPesticides, t.cta.badges.ownHarvest, t.cta.badges.returns].map((badge) => (
           <span key={badge} className="flex items-center gap-1.5">
             <svg viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 text-[#b5341f]">
@@ -112,7 +112,7 @@ function OffSeasonCTA() {
         <h2 className="font-serif text-3xl md:text-4xl" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
           {o.sentTitle}
         </h2>
-        <p className="text-white/70 text-[0.9375rem] leading-relaxed max-w-md mx-auto">
+        <p className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed max-w-md mx-auto">
           {o.sentSubtitle}
         </p>
       </div>
@@ -138,7 +138,7 @@ function OffSeasonCTA() {
         </em>
       </motion.h2>
       <motion.p
-        className="text-white/70 text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
+        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
@@ -156,7 +156,7 @@ function OffSeasonCTA() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={o.emailPlaceholder}
             aria-label={o.emailLabel}
-            className="flex-1 rounded-full bg-white px-5 py-3 text-sm text-[#1a0808] placeholder:text-[#b08a8a] focus:outline-none focus:ring-2 focus:ring-white/70"
+            className="flex-1 rounded-full bg-white px-5 py-3 text-sm text-[#1a0808] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-white/70"
           />
           <button
             type="submit"
@@ -166,7 +166,7 @@ function OffSeasonCTA() {
             {o.notify}
           </button>
         </div>
-        <label className="mt-4 flex items-start gap-2.5 text-left text-xs text-white/65 leading-relaxed cursor-pointer">
+        <label className="mt-4 flex items-start gap-2.5 text-left text-xs text-[var(--color-text-on-brand)] leading-relaxed cursor-pointer">
           <input
             type="checkbox"
             required

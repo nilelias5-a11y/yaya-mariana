@@ -89,7 +89,7 @@ export default function Cart() {
               {/* Items */}
               <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
                 {items.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full gap-3 text-[#7a3a3a]/50">
+                  <div className="flex flex-col items-center justify-center h-full gap-3 text-[var(--color-text-muted)]">
                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 opacity-40">
                       <path d="M12 4L6 12v28a4 4 0 004 4h28a4 4 0 004-4V12l-6-8z" />
                       <line x1="6" y1="12" x2="42" y2="12" />
@@ -112,7 +112,7 @@ export default function Cart() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-[#1a0808] truncate">{item.name}</p>
-                        <p className="text-xs text-[#7a3a3a]/60">500g · {item.price.toFixed(2)}€</p>
+                        <p className="text-xs text-[var(--color-text-secondary)]">500g · {item.price.toFixed(2)}€</p>
                         {/* Quantity controls — L2: el botón es un tap target
                             de 44px; el círculo visible (32px) va dentro. */}
                         <div className="flex items-center gap-1 mt-1 -ml-1.5">
@@ -142,7 +142,7 @@ export default function Cart() {
                         <button
                           onClick={() => removeFromCart(item.name)}
                           /* py-1.5 amplía el área de toque del enlace de borrado (L2). */
-                          className="text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#962a1f] transition-colors mt-0.5 py-1.5"
+                          className="text-[0.65rem] text-[var(--color-text-muted)] hover:text-[#962a1f] transition-colors mt-0.5 py-1.5"
                         >
                           {t.cart.remove}
                         </button>
@@ -156,10 +156,10 @@ export default function Cart() {
               {items.length > 0 && (
                 <div className="px-5 py-4 border-t border-[#f5c6c2]/60 space-y-3">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#7a3a3a]/70">{t.cart.subtotal}</span>
+                    <span className="text-[var(--color-text-secondary)]">{t.cart.subtotal}</span>
                     <span className="font-bold text-[#1a0808]">{total.toFixed(2)}€</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-[#7a3a3a]/50">
+                  <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)]">
                     <span>{t.cart.shipping}</span>
                     <span>{t.cart.shippingNote}</span>
                   </div>

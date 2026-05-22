@@ -337,7 +337,7 @@ function ProductCard({
           <h3 className="font-serif text-[1.25rem] text-[#1a0808] leading-snug mb-2">
             {product.name}
           </h3>
-          <p className="text-sm text-[#7a3a3a]/65 leading-relaxed">
+          <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
             {product.description}
           </p>
         </div>
@@ -356,11 +356,11 @@ function ProductCard({
           <div className="flex items-center justify-between">
             <div>
               <span className="text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
-              <span className="text-xs text-[#7a3a3a]/50 ml-1.5">/ 500g</span>
+              <span className="text-xs text-[var(--color-text-muted)] ml-1.5">/ 500g</span>
             </div>
             <a
               href="/checkout"
-              className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[#962a1f]/70 hover:text-[#962a1f] transition-colors duration-200"
+              className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-brand-primary)] hover:text-[#7a1f17] transition-colors duration-200"
             >
               {viewMoreLabel}
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1">
@@ -448,7 +448,7 @@ export default function Products() {
             {t.products.title}
           </motion.h2>
           <motion.p
-            className="mt-3 text-[#7a3a3a]/65 max-w-md mx-auto text-[0.9375rem] leading-relaxed"
+            className="mt-3 text-[var(--color-text-secondary)] max-w-md mx-auto text-[0.9375rem] leading-relaxed"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

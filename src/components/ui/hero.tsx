@@ -268,7 +268,7 @@ export default function Hero() {
             <div style={{ width: 1, height: 80, backgroundColor: "#f0d0d0", flexShrink: 0 }} />
             <p
               className="font-sans font-semibold uppercase"
-              style={{ color: "#962a1f", fontSize: 11, letterSpacing: "0.22em" }}
+              style={{ color: "var(--strawberry-700)", fontSize: 11, letterSpacing: "0.22em" }}
             >
               {t.hero.eyebrow}
             </p>
@@ -281,7 +281,8 @@ export default function Hero() {
                 fontFamily: "var(--font-playfair)",
                 fontStyle: "italic",
                 fontSize: "clamp(2rem, 4vw, 3rem)",
-                color: "#962a1f",
+                /* TANDA 2 — strawberry-700: AA sobre el stop más oscuro del Mesh. */
+                color: "var(--strawberry-700)",
                 lineHeight: 1.3,
                 margin: 0,
                 fontWeight: 400,
@@ -294,7 +295,8 @@ export default function Hero() {
                 fontFamily: "var(--font-playfair)",
                 fontStyle: "italic",
                 fontSize: "clamp(1.1rem, 2vw, 1.4rem)",
-                color: "#7a4a42",
+                /* TANDA 2 — text-secondary sólido: AA de cuerpo sobre el Mesh. */
+                color: "var(--color-text-secondary)",
                 marginTop: 8,
               }}
             >

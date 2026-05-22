@@ -100,7 +100,7 @@ export default function StatsStrip() {
             <span className="font-serif text-[2.6rem] font-semibold leading-none mt-1">
               <AnimatedValue raw={value} />
             </span>
-            <span className="text-sm text-white/65 leading-snug max-w-[14ch]">
+            <span className="text-sm text-[var(--color-text-on-deep)] leading-snug max-w-[14ch]">
               {t.stats.labels[i]}
             </span>
           </motion.div>

@@ -14,7 +14,7 @@ const CARD_STYLE = {
       fontSize: "15px",
       color: "#1a0808",
       fontFamily: "Inter, system-ui, sans-serif",
-      "::placeholder": { color: "#c0a0a0" },
+      "::placeholder": { color: "#6e3232" },
       iconColor: "#962a1f",
     },
     invalid: { color: "#b5341f", iconColor: "#b5341f" },
@@ -91,7 +91,7 @@ function CheckoutForm() {
             </svg>
           </div>
           <h1 className="font-serif text-3xl text-[#1a0808] mb-3">¡Pedido confirmado!</h1>
-          <p className="text-[#7a3a3a]/70 mb-8 leading-relaxed">
+          <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed">
             Gracias por tu compra, {name}. Recibirás un email de confirmación en{" "}
             <span className="font-semibold text-[#1a0808]">{email}</span>.
           </p>
@@ -113,7 +113,7 @@ function CheckoutForm() {
         {/* Back button */}
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-sm text-[#7a3a3a]/60 hover:text-[#962a1f] transition-colors mb-10"
+          className="flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[#962a1f] transition-colors mb-10"
         >
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
             <path d="M10 4L6 8l4 4" />
@@ -126,7 +126,7 @@ function CheckoutForm() {
           <form onSubmit={handleSubmit} className="space-y-8">
             <div>
               <h1 className="font-serif text-3xl md:text-4xl text-[#1a0808] mb-1">Finalizar pedido</h1>
-              <p className="text-sm text-[#7a3a3a]/60">Rellena tus datos para completar la compra</p>
+              <p className="text-sm text-[var(--color-text-secondary)]">Rellena tus datos para completar la compra</p>
             </div>
 
             {/* Personal info */}
@@ -202,11 +202,11 @@ function CheckoutForm() {
               <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
                 Datos de pago
               </legend>
-              <div className="rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3 focus-within:border-[#962a1f] transition-colors">
+              <div className="rounded-xl border-2 border-[#d8b8b4] bg-white px-4 py-3 focus-within:border-[#962a1f] transition-colors">
                 <CardElement options={CARD_STYLE} />
               </div>
-              <p className="text-[0.72rem] text-[#7a3a3a]/50 flex items-center gap-1.5">
-                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[#962a1f]/60 shrink-0">
+              <p className="text-[0.72rem] text-[var(--color-text-muted)] flex items-center gap-1.5">
+                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[var(--color-brand-primary)] shrink-0">
                   <path d="M8 1a5 5 0 100 10A5 5 0 008 1zm0 9a4 4 0 110-8 4 4 0 010 8zm0-6a1 1 0 00-1 1v2a1 1 0 002 0V5a1 1 0 00-1-1z" />
                 </svg>
                 Pago seguro gestionado por Stripe. No almacenamos datos de tu tarjeta.
@@ -246,9 +246,9 @@ function CheckoutForm() {
             <div className="space-y-3 mb-5">
               {items.map((item) => (
                 <div key={item.name} className="flex justify-between text-sm">
-                  <span className="text-[#7a3a3a]/80">
+                  <span className="text-[var(--color-text-secondary)]">
                     {item.name}{" "}
-                    <span className="text-[#7a3a3a]/40">×{item.quantity}</span>
+                    <span className="text-[var(--color-text-muted)]">×{item.quantity}</span>
                   </span>
                   <span className="font-semibold text-[#1a0808]">
                     {(item.price * item.quantity).toFixed(2)}€
@@ -257,11 +257,11 @@ function CheckoutForm() {
               ))}
             </div>
             <div className="border-t border-[#f5c6c2]/50 pt-4 space-y-2">
-              <div className="flex justify-between text-sm text-[#7a3a3a]/60">
+              <div className="flex justify-between text-sm text-[var(--color-text-secondary)]">
                 <span>Subtotal</span>
                 <span>{total.toFixed(2)}€</span>
               </div>
-              <div className="flex justify-between text-sm text-[#7a3a3a]/60">
+              <div className="flex justify-between text-sm text-[var(--color-text-secondary)]">
                 <span>Envío</span>
                 <span>A calcular</span>
               </div>
@@ -278,7 +278,7 @@ function CheckoutForm() {
 }
 
 const inputClass =
-  "w-full rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3 text-sm text-[#1a0808] placeholder-[#c0a0a0] focus:outline-none focus:border-[#962a1f] transition-colors";
+  "w-full rounded-xl border-2 border-[#d8b8b4] bg-white px-4 py-3 text-sm text-[#1a0808] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[#962a1f] transition-colors";
 
 function Field({
   label,
@@ -291,7 +291,7 @@ function Field({
 }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-semibold text-[#7a3a3a]/80 uppercase tracking-wide">
+      <span className="text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide">
         {label}
         {required && <span className="text-[#962a1f] ml-0.5">*</span>}
       </span>
