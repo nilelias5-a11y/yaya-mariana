@@ -102,7 +102,9 @@
   --color-brand-pressed: var(--strawberry-700);
 
   --color-border-subtle:  var(--cream-300);
-  --color-border-default: var(--cream-400);
+  /* TANDA 3 — borde de input a contraste UI 3:1 (WCAG 1.4.11, ratificado por Nil):
+     #ac807b pasa 3.42:1 sobre blanco y 3.21:1 sobre cream. */
+  --color-border-default: #ac807b;
   --color-border-focus:   var(--strawberry-600);
 
   --color-success: var(--green-700);  --color-success-surface: var(--green-50);

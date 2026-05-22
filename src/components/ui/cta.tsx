@@ -13,11 +13,11 @@ function InSeasonCTA() {
 
   return (
     <>
-      <span className="inline-block text-[#f5c6c2] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+      <span className="inline-block text-overline text-[#f5c6c2] mb-4">
         {t.cta.eyebrow}
       </span>
       <motion.h2
-        className="font-serif text-4xl md:text-5xl leading-[1.1] mb-4"
+        className="text-h2 leading-[1.1] mb-4"
         style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}
         initial={{ opacity: 0, scale: 0.85 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -40,7 +40,7 @@ function InSeasonCTA() {
         <motion.a
           href="/checkout"
           /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-          className="inline-flex items-center gap-2 bg-white text-[#962a1f] text-sm font-bold px-8 py-3 rounded-md shadow-lg"
+          className="inline-flex items-center gap-2 bg-[var(--color-bg-surface)] text-[var(--color-brand-primary)] text-sm font-bold px-8 py-3 rounded-md shadow-lg"
           whileHover={{ scale: 1.04, boxShadow: "0 12px 32px rgba(0,0,0,0.25)" }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
@@ -72,7 +72,7 @@ function InSeasonCTA() {
       <div className="mt-8 flex items-center justify-center gap-6 flex-wrap text-sm text-[var(--color-text-on-brand)]">
         {[t.cta.badges.freeShipping, t.cta.badges.noPesticides, t.cta.badges.ownHarvest, t.cta.badges.returns].map((badge) => (
           <span key={badge} className="flex items-center gap-1.5">
-            <svg viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 text-[#b5341f]">
+            <svg viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 text-[var(--color-brand-hover)]">
               <path d="M8 1L10 6h5L11 9l2 5-5-3-5 3 2-5-4-3h5z" />
             </svg>
             {badge}
@@ -109,7 +109,7 @@ function OffSeasonCTA() {
             <polyline points="22,6 12,13 2,6" />
           </svg>
         </div>
-        <h2 className="font-serif text-3xl md:text-4xl" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
+        <h2 className="text-h2" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
           {o.sentTitle}
         </h2>
         <p className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed max-w-md mx-auto">
@@ -121,11 +121,11 @@ function OffSeasonCTA() {
 
   return (
     <>
-      <span className="inline-block text-[#f5c6c2] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+      <span className="inline-block text-overline text-[#f5c6c2] mb-4">
         {o.eyebrow}
       </span>
       <motion.h2
-        className="font-serif text-4xl md:text-5xl leading-[1.1] mb-4"
+        className="text-h2 leading-[1.1] mb-4"
         style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}
         initial={{ opacity: 0, scale: 0.85 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -156,12 +156,12 @@ function OffSeasonCTA() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={o.emailPlaceholder}
             aria-label={o.emailLabel}
-            className="flex-1 rounded-full bg-white px-5 py-3 text-sm text-[#1a0808] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-white/70"
+            className="flex-1 rounded-full bg-[var(--color-bg-surface)] px-5 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-white/70"
           />
           <button
             type="submit"
             /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-            className="inline-flex items-center justify-center bg-white text-[#962a1f] text-sm font-bold px-7 py-3 rounded-md shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+            className="inline-flex items-center justify-center bg-[var(--color-bg-surface)] text-[var(--color-brand-primary)] text-sm font-bold px-7 py-3 rounded-md shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
           >
             {o.notify}
           </button>
@@ -172,7 +172,7 @@ function OffSeasonCTA() {
             required
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
-            className="mt-0.5 w-4 h-4 shrink-0 accent-[#962a1f] cursor-pointer"
+            className="mt-0.5 w-4 h-4 shrink-0 accent-[var(--color-brand-primary)] cursor-pointer"
           />
           <span>{o.consent}</span>
         </label>

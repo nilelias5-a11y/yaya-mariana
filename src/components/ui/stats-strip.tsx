@@ -85,7 +85,7 @@ export default function StatsStrip() {
 
   return (
     /* TANDA 1 — banda oscura: ritmo .section-deep (56→72px); ancho .container. */
-    <section className="section-deep bg-[#5c1a1a] text-white">
+    <section className="section-deep bg-[var(--color-bg-deep)] text-white">
       <div className="container grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
         {STATS.map(({ value, icon }, i) => (
           <motion.div
@@ -96,7 +96,7 @@ export default function StatsStrip() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="text-[#b5341f]">{icon}</div>
+            <div className="text-[var(--color-brand-hover)]">{icon}</div>
             <span className="font-serif text-[2.6rem] font-semibold leading-none mt-1">
               <AnimatedValue raw={value} />
             </span>

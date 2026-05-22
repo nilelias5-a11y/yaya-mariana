@@ -16,10 +16,10 @@ export default function AboutUs() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="inline-block text-[var(--color-brand-primary)] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+          <span className="inline-block text-overline text-[var(--color-brand-primary)] mb-4">
             {t.about.eyebrow}
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl text-[var(--color-text-primary)] leading-[1.1] mb-6">
+          <h2 className="text-h2 text-[var(--color-text-primary)] leading-[1.1] mb-6">
             {t.about.title}{" "}
             <em className="italic text-[var(--color-brand-primary)]">{t.about.titleEm}</em>
           </h2>
@@ -32,8 +32,11 @@ export default function AboutUs() {
               Slot de retrato: tratamiento tipográfico (Path fallback).
               Foto de archivo familiar pendiente; NUNCA imagen IA de Mariana. */}
           <div className="mt-8 flex flex-col sm:flex-row items-stretch gap-5">
+            {/* Issue #10 — placa = soporte (etiqueta de autoría): su nombre se
+                reduce a text-lg para no exceder el peso del blockquote, que es
+                el protagonista del bloque tributo. */}
             <div className="shrink-0 w-full sm:w-[160px] h-[150px] sm:h-auto flex items-center justify-center bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] px-5 py-6">
-              <span className="font-serif italic text-[1.75rem] leading-tight text-[var(--color-brand-primary)]">
+              <span className="font-serif italic text-lg leading-tight text-[var(--color-brand-primary)]">
                 Mariana
               </span>
             </div>

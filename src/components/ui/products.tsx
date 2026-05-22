@@ -160,7 +160,7 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
           strokeWidth={2.2}
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-4 h-4 text-[#962a1f]"
+          className="w-4 h-4 text-[var(--color-brand-primary)]"
         >
           <path d="M10 4L6 8l4 4" />
         </svg>
@@ -181,7 +181,7 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
           strokeWidth={2.2}
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-4 h-4 text-[#962a1f]"
+          className="w-4 h-4 text-[var(--color-brand-primary)]"
         >
           <path d="M6 4l4 4-4 4" />
         </svg>
@@ -310,7 +310,7 @@ function ProductCard({
 
         {/* Badge de variedad (M3 — sustituye al genérico "Premium") */}
         <div className="absolute top-3 left-3 z-20">
-          <span className="relative inline-flex items-center overflow-hidden px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-[#7a1f17] bg-white/92 backdrop-blur-sm rounded-full shadow-sm">
+          <span className="relative inline-flex items-center overflow-hidden px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-[var(--color-brand-pressed)] bg-white/92 backdrop-blur-sm rounded-full shadow-sm">
             <motion.span
               aria-hidden
               className="absolute inset-y-0 w-6 skew-x-[-18deg] rounded-full pointer-events-none"
@@ -334,7 +334,8 @@ function ProductCard({
       {/* Body */}
       <div className="p-6 flex flex-col gap-4">
         <div>
-          <h3 className="font-serif text-[1.25rem] text-[#1a0808] leading-snug mb-2">
+          {/* Issue #5 — nombre a .text-h3 (22→24px): delta ≥6px sobre el precio. */}
+          <h3 className="text-h3 text-[var(--color-text-primary)] mb-2">
             {product.name}
           </h3>
           <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
@@ -344,7 +345,7 @@ function ProductCard({
 
         {/* Chip de trazabilidad (M1 — gate 2.5 #3: vive en Products, no en Hero).
             Origen + semana ISO de recogida. Footnote, sin animación. */}
-        <p className="flex items-center gap-1.5 text-[0.6875rem] font-medium text-[#6e3232]">
+        <p className="flex items-center gap-1.5 text-[0.6875rem] font-medium text-[var(--color-text-muted)]">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3 shrink-0" aria-hidden>
             <circle cx="8" cy="8" r="5" />
             <path d="M8 1v2.5M8 12.5V15M1 8h2.5M12.5 8H15" strokeLinecap="round" />
@@ -352,15 +353,15 @@ function ProductCard({
           {harvestLabel} {season.harvestWeek}
         </p>
 
-        <div className="pt-3 border-t border-[#f5c6c2]/50 space-y-3">
+        <div className="pt-3 border-t border-[var(--color-border-subtle)] space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
+              <span className="text-lg font-bold text-[var(--color-text-primary)]">{product.price.toFixed(2)}€</span>
               <span className="text-xs text-[var(--color-text-muted)] ml-1.5">/ 500g</span>
             </div>
             <a
               href="/checkout"
-              className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-brand-primary)] hover:text-[#7a1f17] transition-colors duration-200"
+              className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-brand-primary)] hover:text-[var(--color-brand-pressed)] transition-colors duration-200"
             >
               {viewMoreLabel}
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1">
@@ -373,7 +374,7 @@ function ProductCard({
             /* py-3 → alto de toque ≥44px (L2); rounded-md = 8px (decisión #3). */
             className={`w-full py-3 rounded-md text-sm font-bold transition-all duration-300 ${
               added
-                ? "bg-green-500 text-white"
+                ? "bg-[var(--color-success)] text-white"
                 : "text-white hover:shadow-lg"
             }`}
             style={added ? undefined : { background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
@@ -419,7 +420,7 @@ export default function Products() {
       id="productos"
       className="section relative"
       style={{
-        backgroundColor: "#fdf6f5",
+        backgroundColor: "var(--color-bg-base)",
         backgroundImage:
           "radial-gradient(circle, rgba(150,42,31,0.10) 1px, transparent 1px)",
         backgroundSize: "22px 22px",
@@ -429,7 +430,7 @@ export default function Products() {
         {/* Header */}
         <div className="text-center mb-12">
           <motion.span
-            className="inline-block text-[#962a1f] text-xs font-bold uppercase tracking-[0.18em] mb-4"
+            className="inline-block text-overline text-[var(--color-brand-primary)] mb-4"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -439,7 +440,7 @@ export default function Products() {
           </motion.span>
           {/* Decisión #2 (gate Fase 3): typewriter retirado → fade-up estándar. */}
           <motion.h2
-            className="font-serif text-4xl md:text-5xl text-[#1a0808]"
+            className="text-h2 text-[var(--color-text-primary)]"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
@@ -469,8 +470,8 @@ export default function Products() {
               /* min-h 44px → tap target (L2); rounded-md = 8px (decisión #3). */
               className={`inline-flex items-center justify-center px-5 py-3 min-h-[44px] rounded-md text-sm font-semibold border-2 transition-all duration-200 cursor-pointer ${
                 active === f
-                  ? "bg-[#962a1f] border-[#962a1f] text-white shadow-sm"
-                  : "border-[#962a1f]/30 text-[#962a1f] hover:border-[#962a1f] bg-white/60"
+                  ? "bg-[var(--color-brand-primary)] border-[var(--color-brand-primary)] text-white shadow-sm"
+                  : "border-[var(--color-brand-primary)]/30 text-[var(--color-brand-primary)] hover:border-[var(--color-brand-primary)] bg-white/60"
               }`}
             >
               {f === "all" ? t.products.all : f}

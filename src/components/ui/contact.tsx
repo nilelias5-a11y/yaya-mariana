@@ -85,8 +85,9 @@ export default function Contact() {
   }
 
   return (
-    <section id="contacto" className="section bg-[#fdf6f5]">
-      <div className="container grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <section id="contacto" className="section bg-[var(--color-bg-base)]">
+      {/* Issue #8 — formulario protagonista: su columna (2ª) más ancha que la info. */}
+      <div className="container grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-12">
         {/* Info */}
         <motion.div
           initial={{ opacity: 0, x: -80 }}
@@ -94,10 +95,10 @@ export default function Contact() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="inline-block text-[#962a1f] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+          <span className="inline-block text-overline text-[var(--color-brand-primary)] mb-4">
             {t.contact.eyebrow}
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
+          <h2 className="text-h2 text-[var(--color-text-primary)] leading-[1.1] mb-4">
             {t.contact.title}
           </h2>
           <p className="text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed mb-10">
@@ -107,7 +108,7 @@ export default function Contact() {
           <div className="space-y-6">
             {contactInfo.map(({ icon, label, value, href }) => (
               <div key={label} className="flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#962a1f] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[var(--color-bg-subtle)] flex items-center justify-center text-[var(--color-brand-primary)] shrink-0">
                   {icon}
                 </div>
                 <div>
@@ -117,12 +118,12 @@ export default function Contact() {
                   {href ? (
                     <a
                       href={href}
-                      className="text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#962a1f] transition-colors whitespace-pre-line"
+                      className="text-[0.9375rem] text-[var(--color-text-secondary)] font-medium hover:text-[var(--color-brand-primary)] transition-colors whitespace-pre-line"
                     >
                       {value}
                     </a>
                   ) : (
-                    <p className="text-[0.9375rem] text-[#7a3a3a] font-medium whitespace-pre-line">
+                    <p className="text-[0.9375rem] text-[var(--color-text-secondary)] font-medium whitespace-pre-line">
                       {value}
                     </p>
                   )}
@@ -134,7 +135,7 @@ export default function Contact() {
 
         {/* Form */}
         <motion.div
-          className="bg-white rounded-2xl p-8 shadow-sm"
+          className="bg-[var(--color-bg-surface)] rounded-2xl p-8 shadow-sm"
           initial={{ opacity: 0, x: 80 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-60px" }}
@@ -142,11 +143,11 @@ export default function Contact() {
         >
           {sent ? (
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-[var(--color-bg-subtle)] flex items-center justify-center">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#962a1f"
+                  stroke="var(--color-brand-primary)"
                   strokeWidth={2.5}
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -156,13 +157,13 @@ export default function Contact() {
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
               </div>
-              <h3 className="font-serif text-2xl text-[#1a0808]">{t.contact.sent}</h3>
+              <h3 className="text-h3 text-[var(--color-text-primary)]">{t.contact.sent}</h3>
               <p className="text-[var(--color-text-secondary)] text-sm max-w-xs">
                 {t.contact.sentSubtitle}
               </p>
               <button
                 onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
-                className="text-sm font-semibold text-[#962a1f] hover:text-[#b5341f] transition-colors mt-2"
+                className="text-sm font-semibold text-[var(--color-brand-primary)] hover:text-[var(--color-brand-hover)] transition-colors mt-2"
               >
                 {t.contact.sendAnother}
               </button>
@@ -182,7 +183,7 @@ export default function Contact() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t.contact.namePlaceholder}
-                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                    className="w-full border border-[var(--color-border-default)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-secondary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-hover)]/40 focus:border-[var(--color-brand-hover)] transition-colors bg-[var(--color-bg-surface)]"
                   />
                 </FocusField>
                 <FocusField>
@@ -197,7 +198,7 @@ export default function Contact() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
-                    className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                    className="w-full border border-[var(--color-border-default)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-secondary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-hover)]/40 focus:border-[var(--color-brand-hover)] transition-colors bg-[var(--color-bg-surface)]"
                   />
                 </FocusField>
               </div>
@@ -213,7 +214,7 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder={t.contact.subjectPlaceholder}
-                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white"
+                  className="w-full border border-[var(--color-border-default)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-secondary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-hover)]/40 focus:border-[var(--color-brand-hover)] transition-colors bg-[var(--color-bg-surface)]"
                 />
               </FocusField>
               <FocusField>
@@ -227,7 +228,7 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}
-                  className="w-full border border-[#d8b8b4] rounded-xl px-4 py-3 text-sm text-[#7a3a3a] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-white resize-none"
+                  className="w-full border border-[var(--color-border-default)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-secondary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-hover)]/40 focus:border-[var(--color-brand-hover)] transition-colors bg-[var(--color-bg-surface)] resize-none"
                 />
               </FocusField>
               <button

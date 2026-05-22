@@ -37,8 +37,8 @@ function LanguageSelector() {
         aria-expanded={open}
         aria-haspopup="listbox"
         /* L2 — selector de idioma con tap target ≥44px de alto. */
-        className="flex items-center gap-1 min-h-[44px] px-1 cursor-pointer select-none transition-colors duration-200 hover:text-[#962a1f]"
-        style={{ fontSize: 13, fontWeight: 500, color: "#1a0808" }}
+        className="flex items-center gap-1 min-h-[44px] px-1 cursor-pointer select-none transition-colors duration-200 hover:text-[var(--color-brand-primary)]"
+        style={{ fontSize: 13, fontWeight: 500, color: "var(--color-text-primary)" }}
       >
         <span>{lang.toUpperCase()}</span>
         <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-2.5 h-2.5">
@@ -54,7 +54,7 @@ function LanguageSelector() {
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
             role="listbox"
-            className="absolute right-0 top-[calc(100%+8px)] w-20 bg-white rounded-lg overflow-hidden z-50"
+            className="absolute right-0 top-[calc(100%+8px)] w-20 bg-[var(--color-bg-surface)] rounded-lg overflow-hidden z-50"
             style={{ border: "1px solid #f0e0e0", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
           >
             {LANG_OPTIONS.map(({ code, label }) => (
@@ -64,8 +64,8 @@ function LanguageSelector() {
                 aria-selected={lang === code}
                 onClick={() => { setLang(code); setOpen(false); }}
                 /* L2 — cada opción del desplegable con alto de toque ≥44px. */
-                className="w-full px-3 min-h-[44px] flex items-center text-left transition-colors duration-150 cursor-pointer hover:bg-[#fdf0ef]"
-                style={{ fontSize: 13, fontWeight: 500, color: lang === code ? "#962a1f" : "#1a0808" }}
+                className="w-full px-3 min-h-[44px] flex items-center text-left transition-colors duration-150 cursor-pointer hover:bg-[var(--color-bg-subtle)]"
+                style={{ fontSize: 13, fontWeight: 500, color: lang === code ? "var(--color-brand-primary)" : "var(--color-text-primary)" }}
               >
                 {label}
               </button>
@@ -101,7 +101,7 @@ function MobileNav({
         aria-label={menuLabel}
         /* L2 — tap target ≥44px (antes w-9 h-9 = 36px). */
         className="md:hidden flex items-center justify-center w-11 h-11 -mr-1.5 cursor-pointer"
-        style={{ color: "#1a0808" }}
+        style={{ color: "var(--color-text-primary)" }}
       >
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-5 h-5">
           {open ? <path d="M4 4l12 12M16 4L4 16" /> : <path d="M3 6h14M3 10h14M3 14h14" />}
@@ -116,7 +116,7 @@ function MobileNav({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.18 }}
-            className="md:hidden absolute left-0 right-0 top-full bg-white px-6 py-4 flex flex-col"
+            className="md:hidden absolute left-0 right-0 top-full bg-[var(--color-bg-surface)] px-6 py-4 flex flex-col"
             style={{ borderBottom: "1px solid #f0e0e0", boxShadow: "0 8px 20px rgba(26,8,8,0.08)" }}
           >
             {navLinks.map(({ label, href }) => (
@@ -126,7 +126,7 @@ function MobileNav({
                 onClick={() => setOpen(false)}
                 /* L2 — cada enlace del panel móvil con alto de toque ≥44px. */
                 className="font-sans font-medium flex items-center min-h-[44px]"
-                style={{ fontSize: 15, color: "#1a0808" }}
+                style={{ fontSize: 15, color: "var(--color-text-primary)" }}
               >
                 {label}
               </a>
@@ -136,7 +136,7 @@ function MobileNav({
               onClick={() => setOpen(false)}
               className="mt-3 inline-flex items-center justify-center font-sans font-semibold text-white"
               /* L2 — minHeight 44px garantiza el tap target del CTA móvil. */
-              style={{ backgroundColor: "#962a1f", borderRadius: 8, padding: "11px 20px", minHeight: 44, fontSize: 14 }}
+              style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, padding: "11px 20px", minHeight: 44, fontSize: 14 }}
             >
               {verTienda}
             </a>
@@ -160,7 +160,7 @@ export default function Hero() {
     <>
       {/* Nav sticky */}
       <nav
-        className="flex items-center justify-between px-6 md:px-12 bg-white"
+        className="flex items-center justify-between px-6 md:px-12 bg-[var(--color-bg-surface)]"
         style={{
           position: "sticky",
           top: 0,
@@ -194,14 +194,14 @@ export default function Hero() {
                 href={href}
                 className="relative font-sans font-medium pb-[3px]"
                 style={{ fontSize: 14 }}
-                variants={{ rest: { y: 0, color: "#1a0808" }, hover: { y: -2, color: "#962a1f" } }}
+                variants={{ rest: { y: 0, color: "var(--color-text-primary)" }, hover: { y: -2, color: "var(--color-brand-primary)" } }}
                 initial="rest"
                 whileHover="hover"
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
                 {label}
                 <motion.span
-                  className="absolute bottom-0 left-0 h-[2px] bg-[#962a1f] w-full block"
+                  className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-brand-primary)] w-full block"
                   variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   style={{ transformOrigin: "left" }}
@@ -221,8 +221,8 @@ export default function Hero() {
             href="/checkout"
             className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white overflow-hidden"
             /* Radio de botones unificado a 8px (decisión #3 — antes 6px). */
-            style={{ backgroundColor: "#962a1f", borderRadius: 8, padding: "10px 20px", fontSize: 14 }}
-            variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(150,42,31,0.35)", backgroundColor: "#7a1f17" } }}
+            style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, padding: "10px 20px", fontSize: 14 }}
+            variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(150,42,31,0.35)", backgroundColor: "var(--color-brand-pressed)" } }}
             initial="rest"
             whileHover="hover"
             whileTap={{ scale: 0.97 }}
@@ -244,7 +244,7 @@ export default function Hero() {
         </div>
       </nav>
 
-      <section className="relative overflow-hidden" style={{ isolation: "isolate", backgroundColor: "#fff5f5" }}>
+      <section className="relative overflow-hidden" style={{ isolation: "isolate", backgroundColor: "var(--color-bg-base)" }}>
         <MeshGradient
           colors={["#f5d0c8", "#e8a090", "#f0b8a8", "#ffd0c0", "#e89888"]}
           /* prefers-reduced-motion: speed 0 congela el shader (mantiene el degradado, sin movimiento) */
@@ -266,10 +266,8 @@ export default function Hero() {
           {/* Eyebrow con línea vertical decorativa */}
           <div className="flex items-center gap-3 mb-5">
             <div style={{ width: 1, height: 80, backgroundColor: "#f0d0d0", flexShrink: 0 }} />
-            <p
-              className="font-sans font-semibold uppercase"
-              style={{ color: "var(--strawberry-700)", fontSize: 11, letterSpacing: "0.22em" }}
-            >
+            {/* Issue #6 — eyebrow unificado a .text-overline (11px/600/0.18em). */}
+            <p className="text-overline" style={{ color: "var(--color-brand-pressed)" }}>
               {t.hero.eyebrow}
             </p>
           </div>
@@ -281,8 +279,8 @@ export default function Hero() {
                 fontFamily: "var(--font-playfair)",
                 fontStyle: "italic",
                 fontSize: "clamp(2rem, 4vw, 3rem)",
-                /* TANDA 2 — strawberry-700: AA sobre el stop más oscuro del Mesh. */
-                color: "var(--strawberry-700)",
+                /* TANDA 2 — brand-pressed (strawberry-700): AA sobre el stop más oscuro del Mesh. */
+                color: "var(--color-brand-pressed)",
                 lineHeight: 1.3,
                 margin: 0,
                 fontWeight: 400,
@@ -307,7 +305,7 @@ export default function Hero() {
           {/* Línea decorativa */}
           <div
             className="my-6"
-            style={{ width: 60, height: 3, backgroundColor: "#962a1f", borderRadius: 2 }}
+            style={{ width: 60, height: 3, backgroundColor: "var(--color-brand-primary)", borderRadius: 2 }}
           />
 
           {/* Botones */}
@@ -315,8 +313,8 @@ export default function Hero() {
             <motion.a
               href="#productos"
               className="inline-flex items-center justify-center text-sm font-semibold text-white overflow-hidden"
-              style={{ backgroundColor: "#962a1f", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
-              variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 8px 24px rgba(150,42,31,0.4)", backgroundColor: "#7a1f17" } }}
+              style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
+              variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 8px 24px rgba(150,42,31,0.4)", backgroundColor: "var(--color-brand-pressed)" } }}
               initial="rest"
               whileHover="hover"
               whileTap={{ scale: 0.97 }}
@@ -337,7 +335,7 @@ export default function Hero() {
             <motion.a
               href="#sobre-nosotros"
               className="inline-flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: "#962a1f" }}
+              style={{ color: "var(--color-brand-primary)" }}
               variants={{ rest: { x: 0, opacity: 1 }, hover: { x: 4, opacity: 0.8 } }}
               initial="rest"
               whileHover="hover"
@@ -350,7 +348,9 @@ export default function Hero() {
         </motion.div>
 
         {/* Columna derecha — bloque tipográfico Path T.
-            Placa con las tres variedades. Sin animación: restraint museístico. */}
+            Placa con las tres variedades. Sin animación: restraint museístico.
+            Issue #3 — placa demotada a soporte: sin borde (fondo --color-bg-subtle
+            sin contorno) y nombres reducidos para que la cita <h1> gane el squint. */}
         <div className="w-full md:w-[45%] flex items-center justify-center">
           <div
             className="flex flex-col items-center justify-center text-center"
@@ -358,15 +358,11 @@ export default function Hero() {
               maxWidth: 380,
               width: "100%",
               aspectRatio: "1 / 1",
-              backgroundColor: "#ffffff",
-              border: "1px solid #f0d0d0",
+              backgroundColor: "var(--color-bg-subtle)",
               padding: "clamp(32px, 6vw, 56px)",
             }}
           >
-            <p
-              className="font-sans font-semibold uppercase"
-              style={{ color: "#962a1f", fontSize: 11, letterSpacing: "0.22em", margin: 0 }}
-            >
+            <p className="text-overline" style={{ color: "var(--color-brand-primary)", margin: 0 }}>
               Tres variedades
             </p>
             <div
@@ -387,8 +383,8 @@ export default function Hero() {
                   style={{
                     fontFamily: "var(--font-playfair)",
                     fontStyle: "italic",
-                    fontSize: "clamp(1.7rem, 3.4vw, 2.35rem)",
-                    color: "#7a4a42",
+                    fontSize: "clamp(1.35rem, 2.6vw, 1.75rem)",
+                    color: "var(--color-text-secondary)",
                     lineHeight: 1.15,
                   }}
                 >

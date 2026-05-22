@@ -83,17 +83,17 @@ function CheckoutForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: "#fdf6f5" }}>
+      <div className="min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: "var(--color-bg-base)" }}>
         <div className="max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
+          <div className="w-20 h-20 rounded-full bg-[var(--color-success-surface)] flex items-center justify-center mx-auto mb-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
               <path d="M20 6L9 17l-5-5" />
             </svg>
           </div>
-          <h1 className="font-serif text-3xl text-[#1a0808] mb-3">¡Pedido confirmado!</h1>
+          <h1 className="font-serif text-3xl text-[var(--color-text-primary)] mb-3">¡Pedido confirmado!</h1>
           <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed">
             Gracias por tu compra, {name}. Recibirás un email de confirmación en{" "}
-            <span className="font-semibold text-[#1a0808]">{email}</span>.
+            <span className="font-semibold text-[var(--color-text-primary)]">{email}</span>.
           </p>
           <button
             onClick={() => router.push("/")}
@@ -108,12 +108,12 @@ function CheckoutForm() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-16" style={{ backgroundColor: "#fdf6f5" }}>
+    <div className="min-h-screen px-6 py-16" style={{ backgroundColor: "var(--color-bg-base)" }}>
       <div className="max-w-5xl mx-auto">
         {/* Back button */}
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[#962a1f] transition-colors mb-10"
+          className="flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-brand-primary)] transition-colors mb-10"
         >
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
             <path d="M10 4L6 8l4 4" />
@@ -125,13 +125,13 @@ function CheckoutForm() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-8">
             <div>
-              <h1 className="font-serif text-3xl md:text-4xl text-[#1a0808] mb-1">Finalizar pedido</h1>
+              <h1 className="font-serif text-3xl md:text-4xl text-[var(--color-text-primary)] mb-1">Finalizar pedido</h1>
               <p className="text-sm text-[var(--color-text-secondary)]">Rellena tus datos para completar la compra</p>
             </div>
 
             {/* Personal info */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
+              <legend className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-primary)] mb-3">
                 Datos personales
               </legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -160,7 +160,7 @@ function CheckoutForm() {
 
             {/* Shipping */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
+              <legend className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-primary)] mb-3">
                 Dirección de envío
               </legend>
               <Field label="Dirección" required>
@@ -199,10 +199,10 @@ function CheckoutForm() {
 
             {/* Payment */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
+              <legend className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-primary)] mb-3">
                 Datos de pago
               </legend>
-              <div className="rounded-xl border-2 border-[#d8b8b4] bg-white px-4 py-3 focus-within:border-[#962a1f] transition-colors">
+              <div className="rounded-xl border-2 border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-4 py-3 focus-within:border-[var(--color-brand-primary)] transition-colors">
                 <CardElement options={CARD_STYLE} />
               </div>
               <p className="text-[0.72rem] text-[var(--color-text-muted)] flex items-center gap-1.5">
@@ -214,7 +214,7 @@ function CheckoutForm() {
             </fieldset>
 
             {error && (
-              <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+              <div className="rounded-xl bg-[var(--color-error-surface)] border border-[var(--color-error)]/30 px-4 py-3 text-sm text-[var(--color-error)]">
                 {error}
               </div>
             )}
@@ -241,8 +241,8 @@ function CheckoutForm() {
           </form>
 
           {/* Order summary */}
-          <aside className="bg-white rounded-2xl p-6 shadow-sm border border-[#f5c6c2]/40 h-fit sticky top-8">
-            <h2 className="font-serif text-lg text-[#1a0808] mb-4">Resumen del pedido</h2>
+          <aside className="bg-[var(--color-bg-surface)] rounded-2xl p-6 shadow-sm border border-[var(--color-border-subtle)] h-fit sticky top-8">
+            <h2 className="font-serif text-lg text-[var(--color-text-primary)] mb-4">Resumen del pedido</h2>
             <div className="space-y-3 mb-5">
               {items.map((item) => (
                 <div key={item.name} className="flex justify-between text-sm">
@@ -250,13 +250,13 @@ function CheckoutForm() {
                     {item.name}{" "}
                     <span className="text-[var(--color-text-muted)]">×{item.quantity}</span>
                   </span>
-                  <span className="font-semibold text-[#1a0808]">
+                  <span className="font-semibold text-[var(--color-text-primary)]">
                     {(item.price * item.quantity).toFixed(2)}€
                   </span>
                 </div>
               ))}
             </div>
-            <div className="border-t border-[#f5c6c2]/50 pt-4 space-y-2">
+            <div className="border-t border-[var(--color-border-subtle)] pt-4 space-y-2">
               <div className="flex justify-between text-sm text-[var(--color-text-secondary)]">
                 <span>Subtotal</span>
                 <span>{total.toFixed(2)}€</span>
@@ -265,7 +265,7 @@ function CheckoutForm() {
                 <span>Envío</span>
                 <span>A calcular</span>
               </div>
-              <div className="flex justify-between font-bold text-[#1a0808] pt-1">
+              <div className="flex justify-between font-bold text-[var(--color-text-primary)] pt-1">
                 <span>Total</span>
                 <span>{total.toFixed(2)}€</span>
               </div>
@@ -278,7 +278,7 @@ function CheckoutForm() {
 }
 
 const inputClass =
-  "w-full rounded-xl border-2 border-[#d8b8b4] bg-white px-4 py-3 text-sm text-[#1a0808] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[#962a1f] transition-colors";
+  "w-full rounded-xl border-2 border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-brand-primary)] transition-colors";
 
 function Field({
   label,
@@ -293,7 +293,7 @@ function Field({
     <label className="block space-y-1.5">
       <span className="text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide">
         {label}
-        {required && <span className="text-[#962a1f] ml-0.5">*</span>}
+        {required && <span className="text-[var(--color-brand-primary)] ml-0.5">*</span>}
       </span>
       {children}
     </label>

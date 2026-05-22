@@ -93,7 +93,7 @@ export default function Footer() {
   return (
     /* TANDA 1 — paddingTop alineado al ritmo de banda oscura; pb-8 (cierre) se mantiene. */
     <footer
-      className="bg-[#2d0a0a] text-white pb-8"
+      className="bg-[var(--color-bg-footer)] text-white pb-8"
       style={{ paddingTop: "var(--space-section-gap-deep)" }}
     >
       <div className="container">
@@ -123,7 +123,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#962a1f] flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-[var(--color-brand-primary)] flex items-center justify-center transition-colors duration-200"
                 >
                   {icon}
                 </a>
@@ -140,7 +140,7 @@ export default function Footer() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.75, delay: colIdx * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h4 className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-text-on-deep)] mb-4">
+              <h4 className="text-overline text-[var(--color-text-on-deep)] mb-4">
                 {heading}
               </h4>
               <ul className="space-y-2.5">
@@ -149,7 +149,7 @@ export default function Footer() {
                     <motion.a
                       href={href}
                       className="text-sm text-[var(--color-text-on-deep)] inline-block"
-                      whileHover={{ x: 4, color: "#962a1f" }}
+                      whileHover={{ x: 4, color: "var(--color-brand-primary)" }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
                     >
                       {label}
