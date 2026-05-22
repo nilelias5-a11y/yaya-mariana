@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Yellowtail } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 
@@ -15,16 +15,10 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
-const yellowtail = Yellowtail({
-  variable: "--font-yellowtail",
-  subsets: ["latin"],
-  weight: ["400"],
-});
-
 export const metadata: Metadata = {
-  title: "Yaya Mariana – Lechugas hidropónicas frescas",
+  title: "Yaya Mariana – Fresas de Tarragona",
   description:
-    "Lechugas hidropónicas frescas, cultivadas con cariño. Sin pesticidas, sin químicos. Directas a tu mesa.",
+    "Fresas frescas de Tarragona, cultivadas sin pesticidas con el cuidado de siempre. Tres variedades — Mágnum, Dream y 1525 — directas del campo a tu mesa.",
 };
 
 export default function RootLayout({
@@ -35,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${playfair.variable} ${yellowtail.variable} h-full antialiased`}
+      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#fdf6f5]">
         <Providers>{children}</Providers>

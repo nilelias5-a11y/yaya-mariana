@@ -36,7 +36,7 @@ function LanguageSelector() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="flex items-center gap-1 cursor-pointer select-none transition-colors duration-200 hover:text-[#c0392b]"
+        className="flex items-center gap-1 cursor-pointer select-none transition-colors duration-200 hover:text-[#962a1f]"
         style={{ fontSize: 13, fontWeight: 500, color: "#1a0808" }}
       >
         <span>{lang.toUpperCase()}</span>
@@ -63,7 +63,7 @@ function LanguageSelector() {
                 aria-selected={lang === code}
                 onClick={() => { setLang(code); setOpen(false); }}
                 className="w-full px-3 py-2 text-left transition-colors duration-150 cursor-pointer hover:bg-[#fdf0ef]"
-                style={{ fontSize: 13, fontWeight: 500, color: lang === code ? "#c0392b" : "#1a0808" }}
+                style={{ fontSize: 13, fontWeight: 500, color: lang === code ? "#962a1f" : "#1a0808" }}
               >
                 {label}
               </button>
@@ -72,6 +72,73 @@ function LanguageSelector() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/* Hamburguesa móvil — autorizada en gate 2.5 (decisión #2).
+   Mínima: replica los 3 enlaces de nav + el CTA tienda en un panel
+   desplegable bajo la barra. <768px hoy el nav móvil quedaba vacío. */
+function MobileNav({
+  navLinks,
+  verTienda,
+  menuLabel,
+}: {
+  navLinks: { label: string; href: string }[];
+  verTienda: string;
+  menuLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="mobile-nav-panel"
+        aria-label={menuLabel}
+        className="md:hidden flex items-center justify-center w-9 h-9 -mr-1 cursor-pointer"
+        style={{ color: "#1a0808" }}
+      >
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-5 h-5">
+          {open ? <path d="M4 4l12 12M16 4L4 16" /> : <path d="M3 6h14M3 10h14M3 14h14" />}
+        </svg>
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id="mobile-nav-panel"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+            className="md:hidden absolute left-0 right-0 top-full bg-white px-6 py-4 flex flex-col"
+            style={{ borderBottom: "1px solid #f0e0e0", boxShadow: "0 8px 20px rgba(26,8,8,0.08)" }}
+          >
+            {navLinks.map(({ label, href }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="font-sans font-medium py-2.5"
+                style={{ fontSize: 15, color: "#1a0808" }}
+              >
+                {label}
+              </a>
+            ))}
+            <a
+              href="/checkout"
+              onClick={() => setOpen(false)}
+              className="mt-3 inline-flex items-center justify-center font-sans font-semibold text-white"
+              style={{ backgroundColor: "#962a1f", borderRadius: 8, padding: "11px 20px", fontSize: 14 }}
+            >
+              {verTienda}
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -121,14 +188,14 @@ export default function Hero() {
                 href={href}
                 className="relative font-sans font-medium pb-[3px]"
                 style={{ fontSize: 14 }}
-                variants={{ rest: { y: 0, color: "#1a0808" }, hover: { y: -2, color: "#c0392b" } }}
+                variants={{ rest: { y: 0, color: "#1a0808" }, hover: { y: -2, color: "#962a1f" } }}
                 initial="rest"
                 whileHover="hover"
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
                 {label}
                 <motion.span
-                  className="absolute bottom-0 left-0 h-[2px] bg-[#c0392b] w-full block"
+                  className="absolute bottom-0 left-0 h-[2px] bg-[#962a1f] w-full block"
                   variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   style={{ transformOrigin: "left" }}
@@ -147,8 +214,8 @@ export default function Hero() {
           <motion.a
             href="/checkout"
             className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white overflow-hidden"
-            style={{ backgroundColor: "#c0392b", borderRadius: 6, padding: "10px 20px", fontSize: 14 }}
-            variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(192,57,43,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(192,57,43,0.35)", backgroundColor: "#a93226" } }}
+            style={{ backgroundColor: "#962a1f", borderRadius: 6, padding: "10px 20px", fontSize: 14 }}
+            variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(150,42,31,0.35)", backgroundColor: "#7a1f17" } }}
             initial="rest"
             whileHover="hover"
             whileTap={{ scale: 0.97 }}
@@ -162,6 +229,11 @@ export default function Hero() {
               {t.nav.menu.verTienda}
             </motion.span>
           </motion.a>
+          <MobileNav
+            navLinks={navLinks}
+            verTienda={t.nav.menu.verTienda}
+            menuLabel={t.nav.menu.label}
+          />
         </div>
       </nav>
 
@@ -188,9 +260,9 @@ export default function Hero() {
             <div style={{ width: 1, height: 80, backgroundColor: "#f0d0d0", flexShrink: 0 }} />
             <p
               className="font-sans font-semibold uppercase"
-              style={{ color: "#c0392b", fontSize: 11, letterSpacing: "0.22em" }}
+              style={{ color: "#962a1f", fontSize: 11, letterSpacing: "0.22em" }}
             >
-              Tarragona · Qualitat premium
+              {t.hero.eyebrow}
             </p>
           </div>
 
@@ -201,7 +273,7 @@ export default function Hero() {
                 fontFamily: "var(--font-playfair)",
                 fontStyle: "italic",
                 fontSize: "clamp(2rem, 4vw, 3rem)",
-                color: "#c0392b",
+                color: "#962a1f",
                 lineHeight: 1.3,
                 margin: 0,
                 fontWeight: 400,
@@ -225,7 +297,7 @@ export default function Hero() {
           {/* Línea decorativa */}
           <div
             className="my-6"
-            style={{ width: 60, height: 3, backgroundColor: "#c0392b", borderRadius: 2 }}
+            style={{ width: 60, height: 3, backgroundColor: "#962a1f", borderRadius: 2 }}
           />
 
           {/* Botones */}
@@ -233,8 +305,8 @@ export default function Hero() {
             <motion.a
               href="#productos"
               className="inline-flex items-center justify-center text-sm font-semibold text-white overflow-hidden"
-              style={{ backgroundColor: "#c0392b", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
-              variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(192,57,43,0)" }, hover: { scale: 1.04, boxShadow: "0 8px 24px rgba(192,57,43,0.4)", backgroundColor: "#a93226" } }}
+              style={{ backgroundColor: "#962a1f", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
+              variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 8px 24px rgba(150,42,31,0.4)", backgroundColor: "#7a1f17" } }}
               initial="rest"
               whileHover="hover"
               whileTap={{ scale: 0.97 }}
@@ -255,7 +327,7 @@ export default function Hero() {
             <motion.a
               href="#sobre-nosotros"
               className="inline-flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: "#c0392b" }}
+              style={{ color: "#962a1f" }}
               variants={{ rest: { x: 0, opacity: 1 }, hover: { x: 4, opacity: 0.8 } }}
               initial="rest"
               whileHover="hover"
@@ -283,7 +355,7 @@ export default function Hero() {
           >
             <p
               className="font-sans font-semibold uppercase"
-              style={{ color: "#c0392b", fontSize: 11, letterSpacing: "0.22em", margin: 0 }}
+              style={{ color: "#962a1f", fontSize: 11, letterSpacing: "0.22em", margin: 0 }}
             >
               Tres variedades
             </p>

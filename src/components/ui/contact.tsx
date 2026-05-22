@@ -94,7 +94,7 @@ export default function Contact() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
+          <span className="inline-block text-[#962a1f] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.contact.eyebrow}
           </span>
           <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
@@ -107,7 +107,7 @@ export default function Contact() {
           <div className="space-y-6">
             {contactInfo.map(({ icon, label, value, href }) => (
               <div key={label} className="flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#962a1f] shrink-0">
                   {icon}
                 </div>
                 <div>
@@ -117,7 +117,7 @@ export default function Contact() {
                   {href ? (
                     <a
                       href={href}
-                      className="text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] transition-colors whitespace-pre-line"
+                      className="text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#962a1f] transition-colors whitespace-pre-line"
                     >
                       {value}
                     </a>
@@ -146,7 +146,7 @@ export default function Contact() {
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#c0392b"
+                  stroke="#962a1f"
                   strokeWidth={2.5}
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -162,7 +162,7 @@ export default function Contact() {
               </p>
               <button
                 onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
-                className="text-sm font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors mt-2"
+                className="text-sm font-semibold text-[#962a1f] hover:text-[#b5341f] transition-colors mt-2"
               >
                 {t.contact.sendAnother}
               </button>
@@ -182,7 +182,7 @@ export default function Contact() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t.contact.namePlaceholder}
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5]"
                   />
                 </FocusField>
                 <FocusField>
@@ -197,7 +197,7 @@ export default function Contact() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5]"
                   />
                 </FocusField>
               </div>
@@ -213,7 +213,7 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder={t.contact.subjectPlaceholder}
-                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5]"
                 />
               </FocusField>
               <FocusField>
@@ -227,14 +227,14 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}
-                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5] resize-none"
+                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#b5341f]/40 focus:border-[#b5341f] transition-colors bg-[#fdf6f5] resize-none"
                 />
               </FocusField>
               <button
                 type="submit"
                 className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
                 style={{
-                  background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
+                  background: "linear-gradient(135deg, #962a1f 0%, #b5341f 100%)",
                 }}
               >
                 {t.contact.send}

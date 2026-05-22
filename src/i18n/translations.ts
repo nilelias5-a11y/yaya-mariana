@@ -3,6 +3,7 @@ export type Lang = "es" | "ca" | "en";
 export const translations = {
   es: {
     hero: {
+      eyebrow: "Tarragona · Calidad premium",
       word1: "Fresas",
       subtitle:
         "Fresas frescas de Tarragona, cultivadas con el mismo cariño que le pondría tu abuela. Sin pesticidas, naturales y siempre en su punto.",
@@ -36,6 +37,7 @@ export const translations = {
       addToCart: "Añadir al carrito",
       added: "Añadido",
       viewMore: "Ver más",
+      harvestLabel: "Recogida en Tarragona · semana",
       items: [
         { description: "Fresa de gran tamaño y sabor intenso, cultivada en Tarragona. Recogida en su punto óptimo de madurez, sin pesticidas." },
         { description: "Variedad Dream de sabor dulce y textura firme. Cultivo propio de Tarragona, directa del campo a tu mesa." },
@@ -85,6 +87,21 @@ export const translations = {
         ownHarvest: "Cosecha propia",
         returns: "Devolución en 14 días",
       },
+      coldChain: ["Recogida la víspera", "Cadena de frío", "Entrega en 24–48 h"],
+      offSeason: {
+        eyebrow: "Fuera de temporada",
+        title: "La próxima cosecha",
+        titleEm: "llega en",
+        subtitle:
+          "Las fresas descansan hasta la próxima temporada. Déjanos tu correo y te avisaremos en cuanto las primeras Mágnum estén listas.",
+        emailLabel: "Email",
+        emailPlaceholder: "tu@correo.com",
+        consent: "Quiero recibir un único aviso cuando vuelva la cosecha.",
+        notify: "Avísame",
+        sentTitle: "Casi listo",
+        sentSubtitle:
+          "Te hemos enviado un correo para confirmar tu aviso. Ábrelo y confírmalo — solo así quedará activo.",
+      },
     },
     contact: {
       eyebrow: "Hablemos",
@@ -132,9 +149,11 @@ export const translations = {
       shippingNote: "Calculado al pagar",
       checkout: "Ir a pagar",
     },
+    months: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
   },
   ca: {
     hero: {
+      eyebrow: "Tarragona · Qualitat premium",
       word1: "Maduixes",
       subtitle:
         "Maduixes fresques de Tarragona, cultivades amb la mateixa cura que li posaria la teva àvia. Sense pesticides, naturals i sempre al seu punt.",
@@ -168,6 +187,7 @@ export const translations = {
       addToCart: "Afegir al carret",
       added: "Afegit",
       viewMore: "Veure més",
+      harvestLabel: "Collida a Tarragona · setmana",
       items: [
         { description: "Maduixa de gran mida i sabor intens, cultivada a Tarragona. Recollida en el seu punt òptim de maduresa, sense pesticides." },
         { description: "Varietat Dream de sabor dolç i textura ferma. Cultiu propi de Tarragona, directa del camp a la teva taula." },
@@ -217,6 +237,21 @@ export const translations = {
         ownHarvest: "Collita pròpia",
         returns: "Devolució en 14 dies",
       },
+      coldChain: ["Collida la vigília", "Cadena de fred", "Lliurament en 24–48 h"],
+      offSeason: {
+        eyebrow: "Fora de temporada",
+        title: "La propera collita",
+        titleEm: "arriba el",
+        subtitle:
+          "Les maduixes descansen fins a la propera temporada. Deixa'ns el teu correu i t'avisarem tan bon punt les primeres Mágnum estiguin llestes.",
+        emailLabel: "Email",
+        emailPlaceholder: "el.teu@correu.com",
+        consent: "Vull rebre un únic avís quan torni la collita.",
+        notify: "Avisa'm",
+        sentTitle: "Gairebé fet",
+        sentSubtitle:
+          "T'hem enviat un correu per confirmar el teu avís. Obre'l i confirma'l — només així quedarà actiu.",
+      },
     },
     contact: {
       eyebrow: "Parlem",
@@ -264,9 +299,11 @@ export const translations = {
       shippingNote: "Calculat en pagar",
       checkout: "Anar a pagar",
     },
+    months: ["gener", "febrer", "març", "abril", "maig", "juny", "juliol", "agost", "setembre", "octubre", "novembre", "desembre"],
   },
   en: {
     hero: {
+      eyebrow: "Tarragona · Premium quality",
       word1: "Strawberries",
       subtitle:
         "Fresh strawberries from Tarragona, grown with the same care your grandmother would put in. No pesticides, natural and always at their best.",
@@ -300,6 +337,7 @@ export const translations = {
       addToCart: "Add to cart",
       added: "Added",
       viewMore: "View more",
+      harvestLabel: "Picked in Tarragona · week",
       items: [
         { description: "Large strawberry with intense flavour, grown in Tarragona. Picked at its optimal ripeness, no pesticides." },
         { description: "Dream variety with sweet flavour and firm texture. Own cultivation in Tarragona, straight from the field to your table." },
@@ -349,6 +387,21 @@ export const translations = {
         ownHarvest: "Own harvest",
         returns: "14-day returns",
       },
+      coldChain: ["Picked the day before", "Cold chain", "Delivery in 24–48 h"],
+      offSeason: {
+        eyebrow: "Out of season",
+        title: "The next harvest",
+        titleEm: "arrives in",
+        subtitle:
+          "The strawberries rest until next season. Leave us your email and we'll let you know as soon as the first Mágnum are ready.",
+        emailLabel: "Email",
+        emailPlaceholder: "you@email.com",
+        consent: "I'd like a single notice when the harvest returns.",
+        notify: "Notify me",
+        sentTitle: "Almost there",
+        sentSubtitle:
+          "We've sent you an email to confirm your request. Open it and confirm — only then will it be active.",
+      },
     },
     contact: {
       eyebrow: "Let's talk",
@@ -396,6 +449,7 @@ export const translations = {
       shippingNote: "Calculated at checkout",
       checkout: "Checkout",
     },
+    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
   },
 } as const;
 

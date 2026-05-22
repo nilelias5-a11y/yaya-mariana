@@ -15,9 +15,9 @@ const CARD_STYLE = {
       color: "#1a0808",
       fontFamily: "Inter, system-ui, sans-serif",
       "::placeholder": { color: "#c0a0a0" },
-      iconColor: "#c0392b",
+      iconColor: "#962a1f",
     },
-    invalid: { color: "#e74c3c", iconColor: "#e74c3c" },
+    invalid: { color: "#b5341f", iconColor: "#b5341f" },
   },
 };
 
@@ -98,7 +98,7 @@ function CheckoutForm() {
           <button
             onClick={() => router.push("/")}
             className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-bold shadow-lg"
-            style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
+            style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
           >
             Volver al inicio
           </button>
@@ -113,7 +113,7 @@ function CheckoutForm() {
         {/* Back button */}
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-sm text-[#7a3a3a]/60 hover:text-[#c0392b] transition-colors mb-10"
+          className="flex items-center gap-1.5 text-sm text-[#7a3a3a]/60 hover:text-[#962a1f] transition-colors mb-10"
         >
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
             <path d="M10 4L6 8l4 4" />
@@ -131,7 +131,7 @@ function CheckoutForm() {
 
             {/* Personal info */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3">
+              <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
                 Datos personales
               </legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -160,7 +160,7 @@ function CheckoutForm() {
 
             {/* Shipping */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3">
+              <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
                 Dirección de envío
               </legend>
               <Field label="Dirección" required>
@@ -199,14 +199,14 @@ function CheckoutForm() {
 
             {/* Payment */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3">
+              <legend className="text-xs font-bold uppercase tracking-widest text-[#962a1f] mb-3">
                 Datos de pago
               </legend>
-              <div className="rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3.5 focus-within:border-[#c0392b] transition-colors">
+              <div className="rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3.5 focus-within:border-[#962a1f] transition-colors">
                 <CardElement options={CARD_STYLE} />
               </div>
               <p className="text-[0.72rem] text-[#7a3a3a]/50 flex items-center gap-1.5">
-                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[#c0392b]/60 shrink-0">
+                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[#962a1f]/60 shrink-0">
                   <path d="M8 1a5 5 0 100 10A5 5 0 008 1zm0 9a4 4 0 110-8 4 4 0 010 8zm0-6a1 1 0 00-1 1v2a1 1 0 002 0V5a1 1 0 00-1-1z" />
                 </svg>
                 Pago seguro gestionado por Stripe. No almacenamos datos de tu tarjeta.
@@ -223,7 +223,7 @@ function CheckoutForm() {
               type="submit"
               disabled={!stripe || loading}
               className="w-full py-4 rounded-full text-white font-bold text-base shadow-xl hover:shadow-2xl transition-shadow disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
+              style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -277,7 +277,7 @@ function CheckoutForm() {
 }
 
 const inputClass =
-  "w-full rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3 text-sm text-[#1a0808] placeholder-[#c0a0a0] focus:outline-none focus:border-[#c0392b] transition-colors";
+  "w-full rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3 text-sm text-[#1a0808] placeholder-[#c0a0a0] focus:outline-none focus:border-[#962a1f] transition-colors";
 
 function Field({
   label,
@@ -292,7 +292,7 @@ function Field({
     <label className="block space-y-1.5">
       <span className="text-xs font-semibold text-[#7a3a3a]/80 uppercase tracking-wide">
         {label}
-        {required && <span className="text-[#c0392b] ml-0.5">*</span>}
+        {required && <span className="text-[#962a1f] ml-0.5">*</span>}
       </span>
       {children}
     </label>

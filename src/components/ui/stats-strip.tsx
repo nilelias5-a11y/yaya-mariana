@@ -90,13 +90,13 @@ export default function StatsStrip() {
           <motion.div
             key={i}
             className="flex flex-col items-center text-center gap-2"
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.75, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="text-[#e74c3c]">{icon}</div>
-            <span className="font-serif text-[2.6rem] font-bold leading-none mt-1">
+            <div className="text-[#b5341f]">{icon}</div>
+            <span className="font-serif text-[2.6rem] font-semibold leading-none mt-1">
               <AnimatedValue raw={value} />
             </span>
             <span className="text-sm text-white/65 leading-snug max-w-[14ch]">

@@ -119,7 +119,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#c0392b] flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#962a1f] flex items-center justify-center transition-colors duration-200"
                 >
                   {icon}
                 </a>
@@ -145,7 +145,7 @@ export default function Footer() {
                     <motion.a
                       href={href}
                       className="text-sm text-white/65 inline-block"
-                      whileHover={{ x: 4, color: "#c0392b" }}
+                      whileHover={{ x: 4, color: "#962a1f" }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
                     >
                       {label}

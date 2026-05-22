@@ -212,7 +212,7 @@ ul, ol { list-style: none; }
 
 /* ============================================================
    5. TYPOGRAPHY UTILITIES — Playfair (heading) + Inter (body)
-   Yellowtail ELIMINADA del sistema (retirar de layout.tsx).
+   Yellowtail retirada del sistema y de layout.tsx.
    ============================================================ */
 .text-display {
   font-family: var(--font-heading);
@@ -292,7 +292,7 @@ ul, ol { list-style: none; }
 .tap-target { min-width: 44px; min-height: 44px; }
 
 /* ============================================================
-   8. REDUCED MOTION  (NUEVO — hoy ausente en el build)
+   8. REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -307,8 +307,3 @@ ul, ol { list-style: none; }
     --duration-slow: 0.01ms;
   }
 }
-
-/* ============================================================
-   9. UTILIDAD DE INTEGRACIÓN HEREDADA
-   ============================================================ */
-.logo-blend { mix-blend-mode: multiply; }

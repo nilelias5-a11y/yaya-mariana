@@ -26,7 +26,7 @@ export default function Cart() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
-        style={{ background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)" }}
+        style={{ background: "linear-gradient(135deg, #962a1f 0%, #b5341f 100%)" }}
         aria-label={t.cart.ariaOpen}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
@@ -41,7 +41,7 @@ export default function Cart() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white text-[#c0392b] text-[0.65rem] font-black flex items-center justify-center shadow"
+              className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white text-[#962a1f] text-[0.65rem] font-black flex items-center justify-center shadow"
             >
               {count > 9 ? "9+" : count}
             </motion.span>
@@ -116,14 +116,14 @@ export default function Cart() {
                         <div className="flex items-center gap-2 mt-1.5">
                           <button
                             onClick={() => updateQuantity(item.name, -1)}
-                            className="w-6 h-6 rounded-full border border-[#c0392b]/30 flex items-center justify-center text-[#c0392b] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
+                            className="w-6 h-6 rounded-full border border-[#962a1f]/30 flex items-center justify-center text-[#962a1f] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
                           >
                             −
                           </button>
                           <span className="text-sm font-semibold text-[#1a0808] w-4 text-center">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.name, +1)}
-                            className="w-6 h-6 rounded-full border border-[#c0392b]/30 flex items-center justify-center text-[#c0392b] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
+                            className="w-6 h-6 rounded-full border border-[#962a1f]/30 flex items-center justify-center text-[#962a1f] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
                           >
                             +
                           </button>
@@ -135,7 +135,7 @@ export default function Cart() {
                         </p>
                         <button
                           onClick={() => removeFromCart(item.name)}
-                          className="text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#c0392b] transition-colors mt-0.5"
+                          className="text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#962a1f] transition-colors mt-0.5"
                         >
                           {t.cart.remove}
                         </button>
@@ -159,7 +159,7 @@ export default function Cart() {
                   <button
                     onClick={handleCheckout}
                     className="w-full py-3 rounded-full text-white text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
-                    style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
+                    style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
                   >
                     {t.cart.checkout} · {total.toFixed(2)}€
                   </button>
