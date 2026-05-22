@@ -57,17 +57,21 @@ export default function Values() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {t.values.benefits.map(({ title, description }, i) => (
+            // TANDA 5 (HI-7) — entrada fade-up pura: sin scale:0.92 de pop,
+            // distancia reducida a 14px (antes y:60). (ME-8) — lift de hover
+            // sobrio -4px con sombra neutra del sistema.
             <motion.div
               key={title}
               className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 group"
-              initial={{ opacity: 0, y: 60, scale: 0.92 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.75, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -6, boxShadow: "0 12px 32px rgba(150,42,31,0.18)", transition: { duration: 0.2, ease: "easeOut" } }}
-              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -4, boxShadow: "var(--shadow-card-raised)", transition: { duration: 0.2, ease: "easeOut" } }}
             >
-              <div className="w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-[10deg] transition-transform duration-200">
+              {/* TANDA 5 (ME-10) — rotate-[10deg] juguetón retirado del icono;
+                  se conserva solo un scale-105 muy leve, sobrio. */}
+              <div className="w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200">
                 {ICONS[i]}
               </div>
               <h3 className="text-h4 text-[var(--color-text-primary)] mb-2">{title}</h3>

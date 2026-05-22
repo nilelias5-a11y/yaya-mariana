@@ -64,7 +64,9 @@ function AnimatedValue({ raw }: { raw: string }) {
 
     const [, numStr, suffix] = match;
     const target = parseInt(numStr, 10);
-    const duration = 1400;
+    /* TANDA 5 (ME-11) — count-up más lento y sereno: 1400 → 2200ms.
+       Una cuenta pausada lee como reposo, no como reclamo comercial. */
+    const duration = 2200;
     const startTime = Date.now();
 
     const timer = setInterval(() => {
@@ -89,10 +91,11 @@ export default function StatsStrip() {
     <section className="section-deep bg-[var(--color-bg-deep)] text-white">
       <div className="container grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
         {STATS.map(({ value, icon }, i) => (
+          // TANDA 5 — entrada fade-up uniforme: distancia discreta 14px.
           <motion.div
             key={i}
             className="flex flex-col items-center text-center gap-2"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}

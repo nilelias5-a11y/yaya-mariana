@@ -10,11 +10,14 @@ export default function AboutUs() {
     /* TANDA 1 — ritmo .section; ancho editorial .container-prose (720px). */
     <section id="sobre-nosotros" className="section bg-white">
       <div className="container-prose">
+        {/* TANDA 5 (HI-7) — entrada de la sección de tributo: el barrido
+            lateral x:-60 se sustituye por un fade-up discreto translateY
+            14px. Movimiento corto y digno en la sección más solemne. */}
         <motion.div
-          initial={{ opacity: 0, x: -60 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="inline-block text-overline text-[var(--color-brand-primary)] mb-4">
             {t.about.eyebrow}
@@ -50,13 +53,18 @@ export default function AboutUs() {
             </blockquote>
           </div>
 
+          {/* TANDA 5 (HI-5) — botón de tributo: sin scale:1.06 ni glow
+              boxShadow. El hover oscurece la superficie a brand-pressed.
+              El enlace de contacto ya no se desplaza; solo el subrayado
+              scaleX señala el hover. */}
           <div className="mt-8 flex items-center gap-4">
             <motion.a
               href="/checkout"
               /* rounded-md = 8px — radio de botones unificado (decisión #3). */
               className="inline-flex items-center gap-2 bg-[var(--color-brand-primary)] text-white text-sm font-semibold px-6 py-3 rounded-md"
-              whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(150,42,31,0.35)" }}
-              whileTap={{ scale: 0.97 }}
+              variants={{ rest: { backgroundColor: "var(--color-brand-primary)" }, hover: { backgroundColor: "var(--color-brand-pressed)" } }}
+              initial="rest"
+              whileHover="hover"
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {t.about.viewStore}
@@ -64,11 +72,8 @@ export default function AboutUs() {
             <motion.a
               href="#contacto"
               className="relative inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-brand-primary)] pb-[3px]"
-              variants={{ rest: { x: 0 }, hover: { x: 4 } }}
               initial="rest"
               whileHover="hover"
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {t.about.contact}
               <motion.span

@@ -16,46 +16,46 @@ function InSeasonCTA() {
       <span className="inline-block text-overline text-[#f5c6c2] mb-4">
         {t.cta.eyebrow}
       </span>
+      {/* TANDA 5 (HI-7) — el H2 ya no crece desde scale:0.85 (pop de
+          anuncio); entra en fade-up discreto translateY 14px. El subtítulo
+          reduce su barrido de y:40 a 14px. */}
       <motion.h2
         className="text-h2 leading-[1.1] mb-4"
         style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}
-        initial={{ opacity: 0, scale: 0.85 }}
-        whileInView={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.75, ease: EASE_OUT }}
+        transition={{ duration: 0.6, ease: EASE_OUT }}
       >
         {t.cta.title}<br />
         <em className="italic text-[#f5c6c2]">{t.cta.titleEm}</em>
       </motion.h2>
       <motion.p
         className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.75, delay: 0.15, ease: EASE_OUT }}
+        transition={{ duration: 0.6, delay: 0.12, ease: EASE_OUT }}
       >
         {t.cta.subtitle}
       </motion.p>
+      {/* TANDA 5 (HI-5) — botones de tributo: sin scale ni glow boxShadow.
+          El botón sólido oscurece levemente su superficie en hover; el
+          botón fantasma rellena su fondo. Cambios de color, no de tamaño. */}
       <div className="flex items-center justify-center gap-4 flex-wrap">
-        <motion.a
+        <a
           href="/checkout"
           /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-          className="inline-flex items-center gap-2 bg-[var(--color-bg-surface)] text-[var(--color-brand-primary)] text-sm font-bold px-8 py-3 rounded-md shadow-lg"
-          whileHover={{ scale: 1.04, boxShadow: "0 12px 32px rgba(0,0,0,0.25)" }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="inline-flex items-center gap-2 bg-[var(--color-bg-surface)] text-[var(--color-brand-primary)] text-sm font-bold px-8 py-3 rounded-md shadow-lg transition-colors duration-200 hover:bg-[var(--color-bg-subtle)]"
         >
           {t.cta.buyNow}
-        </motion.a>
-        <motion.a
+        </a>
+        <a
           href="#sobre-nosotros"
-          className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3 rounded-md"
-          whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.12)" }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3 rounded-md transition-colors duration-200 hover:bg-white/10"
         >
           {t.cta.ourStory}
-        </motion.a>
+        </a>
       </div>
 
       {/* M4 — micro-bloque cold-chain: trazabilidad logística de la entrega. */}
@@ -125,13 +125,15 @@ function OffSeasonCTA() {
       <span className="inline-block text-overline text-[#f5c6c2] mb-4">
         {o.eyebrow}
       </span>
+      {/* TANDA 5 (HI-7) — entrada fade-up discreta: sin scale:0.85 de pop;
+          barrido del subtítulo reducido de y:40 a 14px. */}
       <motion.h2
         className="text-h2 leading-[1.1] mb-4"
         style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}
-        initial={{ opacity: 0, scale: 0.85 }}
-        whileInView={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.75, ease: EASE_OUT }}
+        transition={{ duration: 0.6, ease: EASE_OUT }}
       >
         {o.title}<br />
         <em className="italic text-[#f5c6c2]">
@@ -140,10 +142,10 @@ function OffSeasonCTA() {
       </motion.h2>
       <motion.p
         className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.75, delay: 0.15, ease: EASE_OUT }}
+        transition={{ duration: 0.6, delay: 0.12, ease: EASE_OUT }}
       >
         {o.subtitle}
       </motion.p>
@@ -190,11 +192,13 @@ function OffSeasonCTA() {
 export default function CTA() {
   return (
     /* TANDA 1 — banda oscura: ritmo .section-deep; ancho editorial .container-prose. */
+    /* TANDA 5 (ME-21) — fondo aplanado: el gradiente diagonal 3-stop
+       rojo→naranja se sustituye por superficie sólida --color-bg-deep,
+       coherente con la banda oscura de StatsStrip y dentro de la
+       disciplina 2-color. */
     <section
       className="section-deep text-white text-center"
-      style={{
-        background: "linear-gradient(135deg, #5c1a1a 0%, #962a1f 50%, #7a1f17 100%)",
-      }}
+      style={{ backgroundColor: "var(--color-bg-deep)" }}
     >
       <div className="container-prose">
         {season.isOffSeason ? <OffSeasonCTA /> : <InSeasonCTA />}

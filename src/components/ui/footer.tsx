@@ -101,11 +101,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
           {/* Brand */}
           <div className="md:col-span-1">
+            {/* TANDA 5 (HI-7) — el wordmark ya no crece desde scale:0.8
+                (pop de entrada); entra en fade-up discreto translateY 14px. */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Wordmark tipográfico (Path T) — sustituye el hot-link al dominio legacy. */}
               <span className="block font-serif italic text-white text-[1.75rem] leading-none mb-4">
@@ -132,13 +134,15 @@ export default function Footer() {
           </div>
 
           {/* Nav columns */}
+          {/* TANDA 5 (HI-22) — entrada fade-up discreta: barrido y:30
+              reducido a 14px, movimiento corto y digno. */}
           {navLinks.map(({ heading, items }, colIdx) => (
             <motion.div
               key={heading}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.75, delay: colIdx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, delay: colIdx * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
               <h4 className="text-overline text-[var(--color-text-on-deep)] mb-4">
                 {heading}

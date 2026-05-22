@@ -4,18 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
+/* TANDA 5 (ME-10) — FocusField sin scale:1.01 en focus: el campo ya no
+   se agranda al enfocar; el único indicador de foco es el anillo de marca
+   (focus:ring del input). Se conserva como wrapper neutro de layout. */
 function FocusField({ children }: { children: React.ReactNode }) {
-  const [focused, setFocused] = useState(false);
-  return (
-    <motion.div
-      animate={{ scale: focused ? 1.01 : 1 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      onFocusCapture={() => setFocused(true)}
-      onBlurCapture={() => setFocused(false)}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div>{children}</div>;
 }
 
 type FormState = {
@@ -133,11 +126,13 @@ export default function Contact() {
       {/* Issue #8 — formulario protagonista: su columna (2ª) más ancha que la info. */}
       <div className="container grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-12">
         {/* Info */}
+        {/* TANDA 5 (HI-7) — barrido lateral x:-80 sustituido por fade-up
+            discreto translateY 14px. */}
         <motion.div
-          initial={{ opacity: 0, x: -80 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="inline-block text-overline text-[var(--color-brand-primary)] mb-4">
             {t.contact.eyebrow}
@@ -178,12 +173,14 @@ export default function Contact() {
         </motion.div>
 
         {/* Form */}
+        {/* TANDA 5 (HI-7) — barrido lateral x:80 sustituido por fade-up
+            discreto translateY 14px. */}
         <motion.div
           className="bg-[var(--color-bg-surface)] rounded-2xl p-8 shadow-sm"
-          initial={{ opacity: 0, x: 80 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
           {sent ? (
             /* TANDA 4 (#37) — bloque de éxito anunciado por el lector de pantalla. */
@@ -313,13 +310,12 @@ export default function Contact() {
                   </p>
                 )}
               </FocusField>
+              {/* TANDA 5 (HI-8) — botón submit: color de marca plano (antes
+                  gradiente rojo→naranja); hover sobrio de color, sin opacidad. */}
               <button
                 type="submit"
                 /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-                className="w-full py-3 rounded-md text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
-                style={{
-                  background: "linear-gradient(135deg, #962a1f 0%, #b5341f 100%)",
-                }}
+                className="w-full py-3 rounded-md text-sm font-bold text-white bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)] transition-colors duration-200 cursor-pointer"
               >
                 {t.contact.send}
               </button>

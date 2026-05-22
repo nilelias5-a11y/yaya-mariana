@@ -241,14 +241,15 @@ export default function Hero() {
         <ul className="hidden md:flex items-center list-none m-0 p-0">
           {navLinks.map(({ label, href }, i, arr) => (
             <li key={href} className="flex items-center">
+              {/* TANDA 5 (HI-6) — motion de tributo: el nav-link ya no sube
+                  (y:-2) ni cambia de color en hover; solo el subrayado
+                  scaleX señala el hover, conforme a ui-spec §3.12. */}
               <motion.a
                 href={href}
                 className="relative font-sans font-medium pb-[3px]"
-                style={{ fontSize: 14 }}
-                variants={{ rest: { y: 0, color: "var(--color-text-primary)" }, hover: { y: -2, color: "var(--color-brand-primary)" } }}
+                style={{ fontSize: 14, color: "var(--color-text-primary)" }}
                 initial="rest"
                 whileHover="hover"
-                transition={{ duration: 0.2, ease: "easeOut" }}
               >
                 {label}
                 <motion.span
@@ -268,24 +269,20 @@ export default function Hero() {
         {/* Derecha: idioma + botón */}
         <div className="flex items-center gap-5">
           <LanguageSelector />
+          {/* TANDA 5 (HI-5) — motion de tributo: hover = solo cambio de
+              background a brand-pressed. Sin scale, sin glow boxShadow,
+              sin desplazamiento del texto. Conforme a ui-spec §3.1. */}
           <motion.a
             href="/checkout"
-            className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white overflow-hidden"
+            className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white"
             /* Radio de botones unificado a 8px (decisión #3 — antes 6px). */
             style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, padding: "10px 20px", fontSize: 14 }}
-            variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(150,42,31,0.35)", backgroundColor: "var(--color-brand-pressed)" } }}
+            variants={{ rest: { backgroundColor: "var(--color-brand-primary)" }, hover: { backgroundColor: "var(--color-brand-pressed)" } }}
             initial="rest"
             whileHover="hover"
-            whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            <motion.span
-              className="flex items-center gap-1"
-              variants={{ rest: { x: 0 }, hover: { x: 3 } }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-            >
-              {t.nav.menu.verTienda}
-            </motion.span>
+            {t.nav.menu.verTienda}
           </motion.a>
           <MobileNav
             navLinks={navLinks}
@@ -296,8 +293,12 @@ export default function Hero() {
       </nav>
 
       <section className="relative overflow-hidden" style={{ isolation: "isolate", backgroundColor: "var(--color-bg-base)" }}>
+        {/* TANDA 5 (ME-21) — MeshGradient dentro de la disciplina 2-color:
+            el shader de 5 rosas-melocotón ajenos al sistema se reduce a 3
+            tonos cream de la paleta de marca (cream-100/200/300). Conserva
+            un susurro de calidez en el Hero sin romper el restraint. */}
         <MeshGradient
-          colors={["#f5d0c8", "#e8a090", "#f0b8a8", "#ffd0c0", "#e89888"]}
+          colors={["#fdf6f5", "#fdf0ef", "#ead7d4"]}
           /* prefers-reduced-motion: speed 0 congela el shader (mantiene el degradado, sin movimiento) */
           speed={reduceMotion ? 0 : 0.5}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
@@ -310,9 +311,11 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 py-20 min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)]">
 
         {/* Columna izquierda */}
+        {/* TANDA 5 (HI-22) — entrada de barrido x:-40 sustituida por
+            fade-up discreto translateY 14px: movimiento corto y digno. */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE_OUT }}
           className="flex flex-col items-start w-full md:w-[55%] md:pr-10"
         >
@@ -362,41 +365,29 @@ export default function Hero() {
           />
 
           {/* Botones */}
+          {/* TANDA 5 (HI-5) — motion de tributo: el botón primario ya no
+              escala, no emite glow boxShadow ni despliega la flecha en
+              hover; el hover es solo cambio de background a brand-pressed.
+              El enlace secundario ya no se desplaza ni baja de opacidad. */}
           <div className="flex items-center gap-5 flex-wrap">
             <motion.a
               href="#productos"
-              className="inline-flex items-center justify-center text-sm font-semibold text-white overflow-hidden"
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-white"
               style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
-              variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(150,42,31,0)" }, hover: { scale: 1.04, boxShadow: "0 8px 24px rgba(150,42,31,0.4)", backgroundColor: "var(--color-brand-pressed)" } }}
+              variants={{ rest: { backgroundColor: "var(--color-brand-primary)" }, hover: { backgroundColor: "var(--color-brand-pressed)" } }}
               initial="rest"
               whileHover="hover"
-              whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
-              <motion.span
-                className="flex items-center gap-1.5"
-                variants={{ rest: { x: 0 }, hover: { x: 4 } }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              >
-                {t.hero.btn1}
-                <motion.span
-                  variants={{ rest: { opacity: 0, x: -8 }, hover: { opacity: 1, x: 0 } }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >→</motion.span>
-              </motion.span>
+              {t.hero.btn1}
             </motion.a>
-            <motion.a
+            <a
               href="#sobre-nosotros"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors duration-200 hover:text-[var(--color-brand-pressed)]"
               style={{ color: "var(--color-brand-primary)" }}
-              variants={{ rest: { x: 0, opacity: 1 }, hover: { x: 4, opacity: 0.8 } }}
-              initial="rest"
-              whileHover="hover"
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {t.hero.btn2} →
-            </motion.a>
+            </a>
           </div>
         </motion.div>
 

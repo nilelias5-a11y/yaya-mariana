@@ -135,10 +135,10 @@ function CheckoutForm() {
             Gracias por tu compra, {name}. Recibirás un email de confirmación en{" "}
             <span className="font-semibold text-[var(--color-text-primary)]">{email}</span>.
           </p>
+          {/* TANDA 5 (HI-8) — botón aplanado a color de marca plano. */}
           <button
             onClick={() => router.push("/")}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-md text-white font-bold shadow-lg"
-            style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-md text-white font-bold shadow-lg bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)] transition-colors duration-200"
           >
             Volver al inicio
           </button>
@@ -292,12 +292,13 @@ function CheckoutForm() {
               </div>
             )}
 
+            {/* TANDA 5 (HI-8) — botón "Pagar": color de marca plano (antes
+                gradiente rojo→naranja); hover sobrio de color. */}
             <button
               type="submit"
               disabled={!stripe || loading}
               /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-              className="w-full py-4 rounded-md text-white font-bold text-base shadow-xl hover:shadow-2xl transition-shadow disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
+              className="w-full py-4 rounded-md text-white font-bold text-base shadow-xl bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)] transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

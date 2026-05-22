@@ -135,11 +135,13 @@ function ProductCarousel({
           exit={{ opacity: 0, x: -28 }}
           transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
         >
+          {/* TANDA 5 (ME-9) — parallax sin física de muelle: transición
+              ease-out con duración explícita, sin rebote. */}
           <motion.div
             className="absolute"
             style={{ top: "-8%", left: "-8%", right: "-8%", bottom: "-8%" }}
             animate={{ x: imgOffset.x, y: imgOffset.y }}
-            transition={{ type: "spring", stiffness: 110, damping: 22 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image
               src={images[current]}
@@ -280,20 +282,21 @@ function ProductCard({
   }
 
   return (
+    /* TANDA 5 (HI-7) — entrada fade-up discreta (y:56 → 14px) en lugar
+       del barrido amplio. (ME-8) — lift de hover sobrio translateY(-4px)
+       y sombra neutra del sistema; sin la sombra teñida de rojo. */
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 56 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay: index * 0.14, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{
-        y: -8,
-        boxShadow:
-          "0 28px 64px rgba(150,42,31,0.17), 0 8px 24px rgba(0,0,0,0.09)",
+        y: -4,
+        boxShadow: "var(--shadow-card-raised)",
       }}
       className="group bg-white rounded-2xl overflow-hidden cursor-pointer"
       style={{
-        boxShadow:
-          "0 2px 18px rgba(150,42,31,0.07), 0 1px 4px rgba(0,0,0,0.05)",
+        boxShadow: "var(--shadow-card)",
       }}
     >
       {/* Carousel */}
@@ -324,23 +327,25 @@ function ProductCard({
         )}
 
         {/* Badge de variedad (M3 — sustituye al genérico "Premium") */}
+        {/* TANDA 5 (ME-7) — shine de tributo: una sola pasada al entrar en
+            viewport (antes repeat:Infinity = patrón de anuncio); easing del
+            sistema (antes ease:"linear"); no se monta bajo reduced-motion. */}
         <div className="absolute top-3 left-3 z-20">
           <span className="relative inline-flex items-center overflow-hidden px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-[var(--color-brand-pressed)] bg-white/92 backdrop-blur-sm rounded-full shadow-sm">
-            <motion.span
-              aria-hidden
-              className="absolute inset-y-0 w-6 skew-x-[-18deg] rounded-full pointer-events-none"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent)",
-              }}
-              animate={{ x: [-24, 90] }}
-              transition={{
-                duration: 1.8,
-                ease: "linear",
-                repeat: Infinity,
-                repeatDelay: 2,
-              }}
-            />
+            {!reduceMotion && (
+              <motion.span
+                aria-hidden
+                className="absolute inset-y-0 w-6 skew-x-[-18deg] rounded-full pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent)",
+                }}
+                initial={{ x: -24 }}
+                whileInView={{ x: 90 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              />
+            )}
             <span className="relative">{product.variety}</span>
           </span>
         </div>
@@ -387,12 +392,13 @@ function ProductCard({
           <button
             onClick={handleAddToCart}
             /* py-3 → alto de toque ≥44px (L2); rounded-md = 8px (decisión #3). */
-            className={`w-full py-3 rounded-md text-sm font-bold transition-all duration-300 ${
+            /* TANDA 5 (HI-8) — gradiente rojo→naranja aplanado a color de
+               marca plano; hover sobrio sin glow. */
+            className={`w-full py-3 rounded-md text-sm font-bold transition-colors duration-200 ${
               added
                 ? "bg-[var(--color-success)] text-white"
-                : "text-white hover:shadow-lg"
+                : "text-white bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)]"
             }`}
-            style={added ? undefined : { background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
           >
             {added ? (
               <span className="flex items-center justify-center gap-1.5">
@@ -409,11 +415,11 @@ function ProductCard({
       </div>
 
       {/* Bottom accent line — slides in on card hover */}
+      {/* TANDA 5 (HI-8) — línea de acento aplanada a color de marca plano
+          (antes gradiente 3-stop rojo→naranja). */}
       <div
         className="h-[3px] w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-        style={{
-          background: "linear-gradient(90deg, #962a1f 0%, #b5341f 50%, #962a1f 100%)",
-        }}
+        style={{ backgroundColor: "var(--color-brand-primary)" }}
       />
     </motion.div>
   );
@@ -431,15 +437,12 @@ export default function Products() {
   const filtered = active === "all" ? products : products.filter((p) => p.variety === active);
 
   return (
+    /* TANDA 5 (ME-22) — patrón de puntos de fondo retirado: decoración
+       fuera de la disciplina 2-color; la fruta es lo único saturado. */
     <section
       id="productos"
       className="section relative"
-      style={{
-        backgroundColor: "var(--color-bg-base)",
-        backgroundImage:
-          "radial-gradient(circle, rgba(150,42,31,0.10) 1px, transparent 1px)",
-        backgroundSize: "22px 22px",
-      }}
+      style={{ backgroundColor: "var(--color-bg-base)" }}
     >
       <div className="container">
         {/* Header */}
@@ -454,9 +457,10 @@ export default function Products() {
             {t.products.eyebrow}
           </motion.span>
           {/* Decisión #2 (gate Fase 3): typewriter retirado → fade-up estándar. */}
+          {/* TANDA 5 — fade-up uniforme: distancia discreta 14px (antes 24). */}
           <motion.h2
             className="text-h2 text-[var(--color-text-primary)]"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}

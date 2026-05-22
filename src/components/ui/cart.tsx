@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -13,6 +13,9 @@ export default function Cart() {
   const { items, count, total, removeFromCart, updateQuantity } = useCart();
   const { t } = useLanguage();
   const router = useRouter();
+  /* TANDA 5 (#ME-21) — el slide del drawer y el scale del badge se gatean
+     explícitamente con useReducedMotion (además del MotionConfig global). */
+  const reduceMotion = useReducedMotion();
 
   /* TANDA 4 (#24) — focus-trap del drawer + Escape-close + retorno
      de foco al FAB al cerrar (el hook devuelve el foco al trigger). */
@@ -29,13 +32,15 @@ export default function Cart() {
       {/* Floating button */}
       {/* TANDA 4 (#ME-16) — el FAB respeta env(safe-area-inset-*): en
           dispositivos con notch / barra de gestos no cae sobre el sistema. */}
+      {/* TANDA 5 (HI-8/ME-7) — FAB de tributo: fondo de marca plano (antes
+          gradiente rojo→naranja); hover sube la sombra, sin scale. */}
       <motion.button
         onClick={() => setOpen(true)}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ boxShadow: "var(--shadow-modal)" }}
+        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
         className="fixed z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
         style={{
-          background: "linear-gradient(135deg, #962a1f 0%, #b5341f 100%)",
+          backgroundColor: "var(--color-brand-primary)",
           bottom: "calc(1.5rem + env(safe-area-inset-bottom))",
           right: "calc(1.5rem + env(safe-area-inset-right))",
         }}
@@ -48,11 +53,13 @@ export default function Cart() {
         </svg>
         <AnimatePresence>
           {count > 0 && (
+            /* TANDA 5 — bajo reduced-motion el badge aparece sin scale
+               (solo fade); con motion conserva el pop discreto del contador. */
             <motion.span
               key="badge"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
+              initial={reduceMotion ? { opacity: 0 } : { scale: 0 }}
+              animate={reduceMotion ? { opacity: 1 } : { scale: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { scale: 0 }}
               className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[var(--color-bg-surface)] text-[var(--color-brand-primary)] text-[0.65rem] font-black flex items-center justify-center shadow"
             >
               {count > 9 ? "9+" : count}
@@ -76,6 +83,10 @@ export default function Cart() {
             />
 
             {/* Panel — diálogo modal accesible (#24). */}
+            {/* TANDA 5 (ME-9) — el drawer ya no usa física de muelle
+                (type:spring rebotaba); entra con una curva ease-in-out y
+                duración explícita. Bajo reduced-motion el slide se sustituye
+                por un fade simple (sin desplazamiento). */}
             <motion.div
               key="panel"
               ref={panelRef}
@@ -83,10 +94,10 @@ export default function Cart() {
               aria-modal="true"
               aria-labelledby="cart-title"
               tabIndex={-1}
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 320, damping: 34 }}
+              initial={reduceMotion ? { opacity: 0 } : { x: "100%" }}
+              animate={reduceMotion ? { opacity: 1 } : { x: 0 }}
+              exit={reduceMotion ? { opacity: 0 } : { x: "100%" }}
+              transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
               className="fixed right-0 top-0 h-full w-full max-w-[22rem] bg-[var(--color-bg-surface)] shadow-2xl z-50 flex flex-col"
             >
               {/* Header */}
@@ -185,8 +196,9 @@ export default function Cart() {
                   <button
                     onClick={handleCheckout}
                     /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-                    className="w-full py-3 rounded-md text-white text-sm font-bold shadow-lg hover:shadow-xl transition-shadow"
-                    style={{ background: "linear-gradient(125deg, #962a1f 0%, #b5341f 100%)" }}
+                    /* TANDA 5 (HI-8) — botón checkout: color de marca plano
+                       (antes gradiente rojo→naranja); hover sobrio de color. */
+                    className="w-full py-3 rounded-md text-white text-sm font-bold bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)] transition-colors duration-200"
                   >
                     {t.cart.checkout} · {total.toFixed(2)}€
                   </button>
