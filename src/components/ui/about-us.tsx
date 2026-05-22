@@ -34,16 +34,26 @@ export default function AboutUs() {
           {/* Bloque tributo — slot de retrato + cita.
               Slot de retrato: tratamiento tipográfico (Path fallback).
               Foto de archivo familiar pendiente; NUNCA imagen IA de Mariana. */}
-          <div className="mt-8 flex flex-col sm:flex-row items-stretch gap-5">
+          {/* TANDA 1 — el bloque pasa de `items-stretch` a `items-start`: la
+              placa de tributo ya no se estira a la altura variable del
+              blockquote. */}
+          <div className="mt-8 flex flex-col sm:flex-row items-start gap-5">
             {/* Issue #10 — placa = soporte (etiqueta de autoría): su nombre se
                 reduce a text-lg para no exceder el peso del blockquote, que es
                 el protagonista del bloque tributo. */}
-            <div className="shrink-0 w-full sm:w-[160px] h-[150px] sm:h-auto flex items-center justify-center bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] px-5 py-6">
+            {/* TANDA 1 — la placa con el nombre de la homenajeada tiene ahora
+                una FORMA ESTABLE: `aspect-[4/5]` se mantiene idéntica en móvil
+                y desktop (antes `h-[150px] sm:h-auto` cambiaba de proporción
+                entre viewports). Ancho `sm:w-[160px]`→`sm:w-[220px]`: ratio
+                ~2:3 frente al blockquote, la presencia que su carga emocional
+                pide. El `aspect-ratio` fijo deja además reservado el slot
+                anti-CLS para el futuro swap por la foto familiar de archivo. */}
+            <div className="shrink-0 w-full sm:w-[220px] aspect-[4/5] flex items-center justify-center bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] px-5 py-6">
               <span className="font-serif italic text-lg leading-tight text-[var(--color-brand-primary)]">
                 Mariana
               </span>
             </div>
-            <blockquote className="flex-1 pl-5 border-l-[3px] border-[var(--color-brand-primary)] flex flex-col justify-center">
+            <blockquote className="flex-1 pl-5 border-l-[3px] border-[var(--color-brand-primary)] flex flex-col justify-center self-stretch">
               <p className="font-serif italic text-[var(--color-text-primary)] text-lg leading-relaxed">
                 &ldquo;{t.about.quote}&rdquo;
               </p>

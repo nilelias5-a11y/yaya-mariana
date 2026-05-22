@@ -320,8 +320,11 @@ function ProductCard({
             transition={{ duration: 1, ease: "easeIn" }}
             onAnimationComplete={() => setPetal(false)}
           >
+            {/* TANDA 1 — pétalo del easter-egg: el literal melocotón
+                `#e8a090` (fuera de la paleta 2-color) pasa a un tono de la
+                escala cream de marca, dentro de la disciplina cromática. */}
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <path d="M11 2C16 7 16 14 11 20C6 14 6 7 11 2Z" fill="#e8a090" />
+              <path d="M11 2C16 7 16 14 11 20C6 14 6 7 11 2Z" fill="var(--cream-400)" />
             </svg>
           </motion.div>
         )}
@@ -365,7 +368,8 @@ function ProductCard({
 
         {/* Chip de trazabilidad (M1 — gate 2.5 #3: vive en Products, no en Hero).
             Origen + semana ISO de recogida. Footnote, sin animación. */}
-        <p className="flex items-center gap-1.5 text-[0.6875rem] font-medium text-[var(--color-text-muted)]">
+        {/* TANDA 1 — `gap-1.5`(6px)→`gap-2`(8px): icono↔texto on-baseline. */}
+        <p className="flex items-center gap-2 text-[0.6875rem] font-medium text-[var(--color-text-muted)]">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3 shrink-0" aria-hidden>
             <circle cx="8" cy="8" r="5" />
             <path d="M8 1v2.5M8 12.5V15M1 8h2.5M12.5 8H15" strokeLinecap="round" />
@@ -377,7 +381,8 @@ function ProductCard({
           <div className="flex items-center justify-between">
             <div>
               <span className="text-lg font-bold text-[var(--color-text-primary)]">{product.price.toFixed(2)}€</span>
-              <span className="text-xs text-[var(--color-text-muted)] ml-1.5">/ 500g</span>
+              {/* TANDA 1 — `ml-1.5`(6px)→`ml-2`(8px): precio↔unidad on-baseline. */}
+              <span className="text-xs text-[var(--color-text-muted)] ml-2">/ 500g</span>
             </div>
             <a
               href="/checkout"
@@ -446,9 +451,12 @@ export default function Products() {
     >
       <div className="container">
         {/* Header */}
-        <div className="text-center mb-12">
+        {/* TANDA 1 (G-2) — receta única de header: `.section-header` fija la
+            columna de medida (eyebrow/h2/subtítulo comparten ancho) y el
+            ritmo eyebrow mb-4 → título → subtítulo mt-4 → contenido mb-12. */}
+        <div className="section-header mb-12">
           <motion.span
-            className="inline-block text-overline text-[var(--color-brand-primary)] mb-4"
+            className="section-header__eyebrow text-overline text-[var(--color-brand-primary)]"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -467,8 +475,10 @@ export default function Products() {
           >
             {t.products.title}
           </motion.h2>
+          {/* TANDA 1 — `mt-3`→`mt-4`: el salto título→subtítulo iguala al de
+              eyebrow→título (16px); antes 12px invertía la progresión. */}
           <motion.p
-            className="mt-3 text-[var(--color-text-secondary)] max-w-md mx-auto text-[0.9375rem] leading-relaxed"
+            className="section-header__sub text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -479,7 +489,9 @@ export default function Products() {
         </div>
 
         {/* Filtro por variedad (M9 — Mágnum / Dream / 1525) */}
-        <div className="flex justify-center gap-2 mb-10 flex-wrap">
+        {/* TANDA 1 — `mb-10`→`mb-12`: iguala el ritmo header→filtros con el
+            de filtros→grid; antes 40px/48px eran dos saltos casi paritarios. */}
+        <div className="flex justify-center gap-2 mb-12 flex-wrap">
           {FILTERS.map((f) => (
             <button
               key={f}
@@ -499,7 +511,21 @@ export default function Products() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* TANDA 1 — card huérfana al filtrar: con 3 resultados ("all") el
+            grid de 3 columnas queda completo; al filtrar por variedad queda
+            1 card anclada a la izquierda con dos columnas vacías. Cuando el
+            filtro deja <3 items, el grid pasa a columnas `auto-fit` acotadas
+            (280–360px) con `justify-center`: 1 card queda centrada, 2 cards
+            quedan centradas como par — la composición no se rompe. El
+            `ProductCard` se mantiene como hijo directo de `AnimatePresence`
+            para no perder la animación de salida al filtrar. */}
+        <div
+          className={
+            filtered.length < 3
+              ? "grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(280px,360px))] justify-center gap-6"
+              : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          }
+        >
           <AnimatePresence mode="popLayout">
             {filtered.map((p, i) => (
               <ProductCard

@@ -101,6 +101,13 @@
   --color-brand-hover:   var(--strawberry-500);
   --color-brand-pressed: var(--strawberry-700);
 
+  /* Fase 5 · TANDA 1 — acento cream sobre superficie maroon profunda.
+     Cierra los residuos cosméticos #f5c6c2 (eyebrow / <em> del H2 / stroke
+     del icono de éxito en CTA) y #e8c4bf (línea de tributo del Footer):
+     dos literales cálidos que no tenían token destino. Un único primitivo
+     cream-rosado para los acentos delicados sobre --color-bg-deep/-footer. */
+  --color-accent-on-deep: #f3c9c4;
+
   --color-border-subtle:  var(--cream-300);
   /* TANDA 3 — borde de input a contraste UI 3:1 (WCAG 1.4.11, ratificado por Nil):
      #ac807b pasa 3.42:1 sobre blanco y 3.21:1 sobre cream. */
@@ -146,6 +153,10 @@
 
   --container-max:   72rem; /* 1152px — coincide con max-w-6xl ya usado */
   --container-prose: 45rem; /* 720px — ancho editorial de lectura: AboutUs, CTA (Fase 4.5 TANDA 1) */
+  /* Fase 5 · TANDA 1 — columna de medida ÚNICA de los headers de sección
+     (defecto transversal G-2). 576px = equivalente a max-w-2xl. Eyebrow,
+     h2 y subtítulo de Products/Values/CTA/Contact comparten este ancho. */
+  --measure-header:  36rem;
 }
 
 /* ============================================================
@@ -280,6 +291,31 @@ ul, ol { list-style: none; }
 .section { padding-block: var(--space-section-gap); }
 /* Banda oscura de quiebre — menos aire vertical por diseño (StatsStrip, CTA). */
 .section-deep { padding-block: var(--space-section-gap-deep); }
+
+/* Fase 5 · TANDA 1 — defecto transversal G-2: receta ÚNICA de header de
+   sección. Antes Products/Values/CTA/Contact/AboutUs gobernaban el ancho y
+   el ritmo eyebrow→título→subtítulo con reglas distintas (h2 sin max-w,
+   subtítulo max-w-md suelto, eyebrow inline-block). Esta clase fija UNA
+   columna de medida (`--measure-header`, declarada en :root) para los tres
+   bloques de texto y un ritmo declarado. El subtítulo lleva la clase
+   `.section-header__sub` para heredar el ancho de medida sin volver a
+   declararlo en cada sección. Variante `.section-header--start` para
+   headers alineados a la izquierda (Contact), que no centran pero sí
+   comparten el gobierno de medida. */
+.section-header {
+  max-width: var(--measure-header);
+  margin-inline: auto;
+  text-align: center;
+}
+.section-header--start {
+  margin-inline: 0;
+  text-align: left;
+}
+/* Ritmo interno declarado: eyebrow → título (16px) → subtítulo (16px).
+   Corrige la arritmia título→subtítulo (antes mt-3=12px < eyebrow→título
+   mb-4=16px: el subtítulo se "pegaba" al título). Ahora ambos saltos = 16px. */
+.section-header__eyebrow { display: inline-block; margin-bottom: var(--space-4); }
+.section-header__sub      { margin-top: var(--space-4); }
 .surface-card {
   background-color: var(--color-bg-surface);
   border-radius: var(--radius-card);

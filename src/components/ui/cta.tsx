@@ -13,7 +13,9 @@ function InSeasonCTA() {
 
   return (
     <>
-      <span className="inline-block text-overline text-[#f5c6c2] mb-4">
+      {/* TANDA 1 — `#f5c6c2` (drift de paleta) → `--color-accent-on-deep`,
+          token nuevo para el acento cream sobre superficie maroon. */}
+      <span className="inline-block text-overline text-[var(--color-accent-on-deep)] mb-4">
         {t.cta.eyebrow}
       </span>
       {/* TANDA 5 (HI-7) — el H2 ya no crece desde scale:0.85 (pop de
@@ -28,10 +30,17 @@ function InSeasonCTA() {
         transition={{ duration: 0.6, ease: EASE_OUT }}
       >
         {t.cta.title}<br />
-        <em className="italic text-[#f5c6c2]">{t.cta.titleEm}</em>
+        <em className="italic text-[var(--color-accent-on-deep)]">{t.cta.titleEm}</em>
       </motion.h2>
+      {/* TANDA 1 — subtítulo a la columna de medida única `--measure-header`
+          (G-2) en lugar del `max-w-md` suelto. Banda oscura: el ritmo
+          eyebrow mb-4 → H2 mb-4 → subtítulo mb-8 se mantiene (el salto
+          H2→subtítulo lo aporta el `mb-4` del H2; menos aire por diseño en
+          superficie deep — no se aplica `.section-header__sub` para no
+          duplicar el margen superior). */}
       <motion.p
-        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
+        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 mx-auto"
+        style={{ maxWidth: "var(--measure-header)" }}
         initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
@@ -59,9 +68,12 @@ function InSeasonCTA() {
       </div>
 
       {/* M4 — micro-bloque cold-chain: trazabilidad logística de la entrega. */}
-      <div className="mt-7 flex items-center justify-center gap-2.5 flex-wrap text-xs text-[var(--color-text-on-brand)]">
+      {/* TANDA 1 — `mt-7`(28px)→`mt-8`(32px): unifica el ritmo de los dos
+          micro-bloques inferiores (cold-chain y trust badges ahora ambos
+          `mt-8`). `gap-2.5`(10px)→`gap-3`(12px): snap a la escala base-4. */}
+      <div className="mt-8 flex items-center justify-center gap-3 flex-wrap text-xs text-[var(--color-text-on-brand)]">
         {t.cta.coldChain.map((item, i) => (
-          <span key={item} className="flex items-center gap-2.5">
+          <span key={item} className="flex items-center gap-3">
             {i > 0 && <span aria-hidden className="text-white/30">·</span>}
             {item}
           </span>
@@ -105,7 +117,8 @@ function OffSeasonCTA() {
       /* TANDA 4 (#36) — bloque de éxito off-season anunciado por el SR. */
       <div role="status" aria-live="polite" className="flex flex-col items-center gap-3 py-4">
         <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#f5c6c2" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7" aria-hidden>
+          {/* TANDA 1 — stroke `#f5c6c2` → token `--color-accent-on-deep`. */}
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-on-deep)" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7" aria-hidden>
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
             <polyline points="22,6 12,13 2,6" />
           </svg>
@@ -122,7 +135,8 @@ function OffSeasonCTA() {
 
   return (
     <>
-      <span className="inline-block text-overline text-[#f5c6c2] mb-4">
+      {/* TANDA 1 — `#f5c6c2` → token `--color-accent-on-deep`. */}
+      <span className="inline-block text-overline text-[var(--color-accent-on-deep)] mb-4">
         {o.eyebrow}
       </span>
       {/* TANDA 5 (HI-7) — entrada fade-up discreta: sin scale:0.85 de pop;
@@ -136,12 +150,15 @@ function OffSeasonCTA() {
         transition={{ duration: 0.6, ease: EASE_OUT }}
       >
         {o.title}<br />
-        <em className="italic text-[#f5c6c2]">
+        <em className="italic text-[var(--color-accent-on-deep)]">
           {o.titleEm} {t.months[season.nextHarvestMonth]}
         </em>
       </motion.h2>
+      {/* TANDA 1 — subtítulo a la columna de medida única `--measure-header`
+          (G-2); banda oscura: ritmo eyebrow mb-4 → H2 mb-4 → subtítulo mb-8. */}
       <motion.p
-        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 max-w-md mx-auto"
+        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 mx-auto"
+        style={{ maxWidth: "var(--measure-header)" }}
         initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
@@ -174,13 +191,15 @@ function OffSeasonCTA() {
             {o.notify}
           </button>
         </div>
-        <label className="mt-4 flex items-start gap-2.5 text-left text-xs text-[var(--color-text-on-brand)] leading-relaxed cursor-pointer">
+        {/* TANDA 1 — `gap-2.5`(10px)→`gap-3`(12px) y `mt-0.5`(2px)→`mt-1`(4px):
+            snap a la escala base-4. */}
+        <label className="mt-4 flex items-start gap-3 text-left text-xs text-[var(--color-text-on-brand)] leading-relaxed cursor-pointer">
           <input
             type="checkbox"
             required
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
-            className="mt-0.5 w-4 h-4 shrink-0 accent-[var(--color-brand-primary)] cursor-pointer"
+            className="mt-1 w-4 h-4 shrink-0 accent-[var(--color-brand-primary)] cursor-pointer"
           />
           <span>{o.consent}</span>
         </label>

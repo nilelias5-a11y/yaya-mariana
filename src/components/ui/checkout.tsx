@@ -9,6 +9,15 @@ import { useLanguage } from "@/context/language-context";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
+/* TANDA 1 — `CARD_STYLE` con hex literales: el CardElement de Stripe es un
+   iframe cross-origin y NO acepta `var()` en runtime (limitación del SDK),
+   así que los valores deben ir crudos. Cada literal coincide 1:1 con un
+   primitivo del design system — la equivalencia se documenta para que el
+   próximo desarrollador no lo lea como drift de paleta:
+     #1a0808 = --ink-900        (--color-text-primary)
+     #6e3232 = --ink-500        (--color-text-muted, placeholder)
+     #962a1f = --strawberry-600 (--color-brand-primary, iconColor)
+     #b5341f = --strawberry-500 (--color-brand-hover, estado inválido) */
 const CARD_STYLE = {
   style: {
     base: {
@@ -148,8 +157,12 @@ function CheckoutForm() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-16" style={{ backgroundColor: "var(--color-bg-base)" }}>
-      <div className="max-w-5xl mx-auto">
+    /* TANDA 1 — el checkout comparte el sistema de spacing del single-page:
+       `.container` aporta el ancho `--container-max` (1152px) y el gutter
+       responsive `--space-container-pad` (antes `px-6` plano + `max-w-5xl`
+       1024px, que hacían "saltar" el ancho al navegar desde la home). */
+    <div className="min-h-screen py-16" style={{ backgroundColor: "var(--color-bg-base)" }}>
+      <div className="container">
         {/* Back button */}
         <button
           onClick={() => router.back()}
@@ -315,7 +328,10 @@ function CheckoutForm() {
           </form>
 
           {/* Order summary */}
-          <aside className="bg-[var(--color-bg-surface)] rounded-2xl p-6 shadow-sm border border-[var(--color-border-subtle)] h-fit sticky top-8">
+          {/* TANDA 1 — `p-6`(24px)→`p-8`(32px): el resumen del pedido y el
+              formulario de Contact son los dos paneles-formulario del sitio;
+              ahora comparten padding de superficie (tier "panel grande"). */}
+          <aside className="bg-[var(--color-bg-surface)] rounded-2xl p-8 shadow-sm border border-[var(--color-border-subtle)] h-fit sticky top-8">
             <h2 className="font-serif text-lg text-[var(--color-text-primary)] mb-4">Resumen del pedido</h2>
             <div className="space-y-3 mb-5">
               {items.map((item) => (
@@ -370,13 +386,15 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-1.5">
+    /* TANDA 1 — `space-y-1.5`(6px)→`space-y-2`(8px) y `ml-0.5`(2px)→`ml-1`(4px):
+       snap a la escala base-4 (mismo patrón que los labels de Contact). */
+    <div className="space-y-2">
       <label
         htmlFor={htmlFor}
         className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide"
       >
         {label}
-        {required && <span className="text-[var(--color-brand-primary)] ml-0.5">*</span>}
+        {required && <span className="text-[var(--color-brand-primary)] ml-1">*</span>}
       </label>
       {children}
       {error && (

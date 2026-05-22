@@ -98,9 +98,14 @@ export default function Footer() {
     >
       <div className="container">
         {/* Top row */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+        {/* TANDA 1 — la rejilla pasa de `md:grid-cols-4` a `md:grid-cols-5`
+            con la columna de marca a `md:col-span-2`. Antes la marca (wordmark
+            + párrafo + 5 sociales) era ~2× más alta que las 3 columnas de nav
+            y rompía la rejilla de 4. Ahora la marca toma 2/5 del ancho y las
+            3 columnas de nav 1/5 cada una: la masa de la fila se equilibra. */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           {/* Brand */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-2">
             {/* TANDA 5 (HI-7) — el wordmark ya no crece desde scale:0.8
                 (pop de entrada); entra en fade-up discreto translateY 14px. */}
             <motion.div
@@ -147,13 +152,20 @@ export default function Footer() {
               <h4 className="text-overline text-[var(--color-text-on-deep)] mb-4">
                 {heading}
               </h4>
-              <ul className="space-y-2.5">
+              {/* TANDA 1 — `space-y-2.5`(10px)→`space-y-3`(12px): snap a la
+                  escala base-4 entre los items de la lista. */}
+              <ul className="space-y-3">
                 {items.map(({ label, href }) => (
                   <li key={label}>
+                    {/* TANDA 1 — hover de link: `--color-brand-primary` (#962a1f)
+                        sobre el footer maroon #2d0a0a OSCURECÍA el texto (el
+                        contraste en hover caía por debajo del reposo). El hover
+                        pasa a blanco — aclara, conforme a la regla "un hover
+                        de texto mantiene o mejora la legibilidad". */}
                     <motion.a
                       href={href}
                       className="text-sm text-[var(--color-text-on-deep)] inline-block"
-                      whileHover={{ x: 4, color: "var(--color-brand-primary)" }}
+                      whileHover={{ x: 4, color: "var(--white)" }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
                     >
                       {label}
@@ -166,14 +178,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-7">
+        {/* TANDA 1 — `pt-7`(28px)→`pt-8`(32px): snap a la escala base-4. */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8">
           {/* L3 — Capa B: la línea de tributo «En memoria de Mariana» acompaña
               al copyright. Hilo del homenaje — presente, pero discreto. */}
           <div className="flex flex-col items-center sm:items-start gap-1">
             <p className="text-xs text-[var(--color-text-on-deep)]">
               © {new Date().getFullYear()} Yaya Mariana. {t.footer.rights}
             </p>
-            <p className="font-serif italic text-[0.8125rem] text-[#e8c4bf]">
+            {/* TANDA 1 — `#e8c4bf` (acento cream sobre maroon, sin token) →
+                `--color-accent-on-deep`, el token nuevo del acento delicado
+                sobre superficie profunda. */}
+            <p className="font-serif italic text-[0.8125rem] text-[var(--color-accent-on-deep)]">
               {t.footer.inMemory}
             </p>
           </div>

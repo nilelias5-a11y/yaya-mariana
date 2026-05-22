@@ -95,8 +95,10 @@ function LanguageSelector() {
             transition={{ duration: 0.15 }}
             role="listbox"
             onKeyDown={handleListKeyDown}
+            /* TANDA 1 — borde/sombra tokenizados: `#f0e0e0` →
+               `--color-border-subtle`, `boxShadow` inline → `--shadow-dropdown`. */
             className="absolute right-0 top-[calc(100%+8px)] w-20 bg-[var(--color-bg-surface)] rounded-lg overflow-hidden z-50"
-            style={{ border: "1px solid #f0e0e0", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
+            style={{ border: "1px solid var(--color-border-subtle)", boxShadow: "var(--shadow-dropdown)" }}
           >
             {LANG_OPTIONS.map(({ code, label }, i) => (
               <button
@@ -163,8 +165,10 @@ function MobileNav({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.18 }}
+            /* TANDA 1 — borde/sombra tokenizados: `#f0e0e0` →
+               `--color-border-subtle`, `boxShadow` inline → `--shadow-dropdown`. */
             className="md:hidden absolute left-0 right-0 top-full bg-[var(--color-bg-surface)] px-6 py-4 flex flex-col"
-            style={{ borderBottom: "1px solid #f0e0e0", boxShadow: "0 8px 20px rgba(26,8,8,0.08)" }}
+            style={{ borderBottom: "1px solid var(--color-border-subtle)", boxShadow: "var(--shadow-dropdown)" }}
           >
             {navLinks.map(({ label, href }) => (
               <a
@@ -208,6 +212,8 @@ export default function Hero() {
       {/* Nav sticky */}
       {/* TANDA 4 — aria-label traducible (#ME-19); padding-top respeta
           env(safe-area-inset-top) en dispositivos con notch (#ME-16). */}
+      {/* TANDA 1 — borde y sombra del nav tokenizados (antes `#f0e0e0` y un
+          `boxShadow` inline crudo): `--color-border-subtle` + `--shadow-nav`. */}
       <nav
         aria-label={t.hero.navLabel}
         className="flex items-center justify-between px-6 md:px-12 bg-[var(--color-bg-surface)]"
@@ -217,8 +223,8 @@ export default function Hero() {
           zIndex: 50,
           height: 72,
           paddingTop: "env(safe-area-inset-top)",
-          borderBottom: "1px solid #f0e0e0",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          borderBottom: "1px solid var(--color-border-subtle)",
+          boxShadow: "var(--shadow-nav)",
         }}
       >
         {/* Logo */}
@@ -260,7 +266,8 @@ export default function Hero() {
                 />
               </motion.a>
               {i < arr.length - 1 && (
-                <span aria-hidden className="select-none" style={{ color: "#c8b8b8", padding: "0 14px" }}>·</span>
+                /* TANDA 1 — separador decorativo `#c8b8b8` → token `--cream-400`. */
+                <span aria-hidden className="select-none" style={{ color: "var(--cream-400)", padding: "0 14px" }}>·</span>
               )}
             </li>
           ))}
@@ -306,22 +313,31 @@ export default function Hero() {
 
       {/* Hero — 2 columnas */}
       {/* TANDA 1 — padding vertical simétrico (antes pt-16/pb-20 asimétrico). */}
+      {/* TANDA 1 (Fase 5) — gutter SIMÉTRICO entre columnas: el canal central
+          lo aporta ahora un `md:gap-16` real en el flex padre (antes el
+          espacio era unilateral — `md:pr-10` solo en la columna izquierda,
+          sin `pl` simétrico en la derecha). */}
       {/* TANDA 4 (#HI-14) — 100dvh evita el salto por la barra de URL de iOS;
           100vh queda como fallback para navegadores sin soporte de dvh. */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 py-20 min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)]">
+      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-16 px-6 md:px-12 py-20 min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)]">
 
         {/* Columna izquierda */}
         {/* TANDA 5 (HI-22) — entrada de barrido x:-40 sustituida por
             fade-up discreto translateY 14px: movimiento corto y digno. */}
+        {/* TANDA 1 (Fase 5) — `md:pr-10` retirado: el canal entre columnas lo
+            gobierna el `md:gap-16` del padre, simétrico para ambas. */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE_OUT }}
-          className="flex flex-col items-start w-full md:w-[55%] md:pr-10"
+          className="flex flex-col items-start w-full md:w-[55%]"
         >
           {/* Eyebrow con línea vertical decorativa */}
-          <div className="flex items-center gap-3 mb-5">
-            <div style={{ width: 1, height: 80, backgroundColor: "#f0d0d0", flexShrink: 0 }} />
+          {/* TANDA 1 — `mb-5`(20px)→`mb-6`(24px): el eyebrow del Hero alinea
+              su ritmo de separación al resto de la pila. Línea decorativa
+              `#f0d0d0` → token `--cream-300`. */}
+          <div className="flex items-center gap-3 mb-6">
+            <div style={{ width: 1, height: 80, backgroundColor: "var(--cream-300)", flexShrink: 0 }} />
             {/* Issue #6 — eyebrow unificado a .text-overline (11px/600/0.18em). */}
             <p className="text-overline" style={{ color: "var(--color-brand-pressed)" }}>
               {t.hero.eyebrow}
@@ -395,11 +411,15 @@ export default function Hero() {
             Placa con las tres variedades. Sin animación: restraint museístico.
             Issue #3 — placa demotada a soporte: sin borde (fondo --color-bg-subtle
             sin contorno) y nombres reducidos para que la cita <h1> gane el squint. */}
+        {/* TANDA 1 (Fase 5) — `maxWidth` 380→440: la placa cuadrada gana
+            altura para acercarse a la masa vertical de la columna de texto
+            (antes era visiblemente más baja a desktop ancho y "flotaba" con
+            aire muerto arriba y abajo). */}
         <div className="w-full md:w-[45%] flex items-center justify-center">
           <div
             className="flex flex-col items-center justify-center text-center"
             style={{
-              maxWidth: 380,
+              maxWidth: 440,
               width: "100%",
               aspectRatio: "1 / 1",
               backgroundColor: "var(--color-bg-subtle)",
@@ -409,16 +429,20 @@ export default function Hero() {
             <p className="text-overline" style={{ color: "var(--color-brand-primary)", margin: 0 }}>
               Tres variedades
             </p>
+            {/* TANDA 1 (Fase 5) — divisor con margen simétrico (12px arriba y
+                abajo, antes "20px 0 4px" asimétrico): la pila interna queda
+                ópticamente centrada dentro del cuadrado. Hex `#f0d0d0` → token. */}
             <div
               aria-hidden
-              style={{ width: 32, height: 2, backgroundColor: "#f0d0d0", borderRadius: 2, margin: "20px 0 4px" }}
+              style={{ width: 32, height: 2, backgroundColor: "var(--cream-400)", borderRadius: 2, margin: "12px 0" }}
             />
             {["Mágnum", "Dream", "1525"].map((variety, i) => (
               <div key={variety} className="flex flex-col items-center">
                 {i > 0 && (
+                  /* TANDA 1 — separador decorativo `#d8b0b0` → token `--cream-400`. */
                   <span
                     aria-hidden
-                    style={{ color: "#d8b0b0", fontSize: 13, lineHeight: 1, margin: "10px 0" }}
+                    style={{ color: "var(--cream-400)", fontSize: 13, lineHeight: 1, margin: "10px 0" }}
                   >
                     ·
                   </span>

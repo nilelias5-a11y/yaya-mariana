@@ -4,12 +4,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
-/* TANDA 5 (ME-10) — FocusField sin scale:1.01 en focus: el campo ya no
-   se agranda al enfocar; el único indicador de foco es el anillo de marca
-   (focus:ring del input). Se conserva como wrapper neutro de layout. */
-function FocusField({ children }: { children: React.ReactNode }) {
-  return <div>{children}</div>;
-}
+/* TANDA 1 — el wrapper `FocusField` quedó vacío en Fase 4.5 (tras retirar
+   el scale:1.01 de focus era un `<div>` neutro = código muerto). Colapsado:
+   los campos usan un `<div>` directo. */
 
 type FormState = {
   name: string;
@@ -128,21 +125,32 @@ export default function Contact() {
         {/* Info */}
         {/* TANDA 5 (HI-7) — barrido lateral x:-80 sustituido por fade-up
             discreto translateY 14px. */}
+        {/* TANDA 1 — `lg:pt-8` compensa el `p-8` (32px) de la tarjeta de
+            formulario contigua: en desktop el eyebrow de esta columna y el
+            primer label de la tarjeta arrancan en la MISMA línea base. */}
         <motion.div
+          className="lg:pt-8"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="inline-block text-overline text-[var(--color-brand-primary)] mb-4">
-            {t.contact.eyebrow}
-          </span>
-          <h2 className="text-h2 text-[var(--color-text-primary)] leading-[1.1] mb-4">
-            {t.contact.title}
-          </h2>
-          <p className="text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed mb-10">
-            {t.contact.subtitle}
-          </p>
+          {/* TANDA 1 (G-2) — header con la receta única: variante
+              `.section-header--start` (alineado a la izquierda, no centrado)
+              que comparte la columna de medida `--measure-header` y el ritmo
+              eyebrow mb-4 → título → subtítulo mt-4. El `mb-12` cierra hacia
+              el bloque de info (antes `mb-10`=40px, valor suelto). */}
+          <div className="section-header section-header--start mb-12">
+            <span className="section-header__eyebrow text-overline text-[var(--color-brand-primary)]">
+              {t.contact.eyebrow}
+            </span>
+            <h2 className="text-h2 text-[var(--color-text-primary)] leading-[1.1]">
+              {t.contact.title}
+            </h2>
+            <p className="section-header__sub text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed">
+              {t.contact.subtitle}
+            </p>
+          </div>
 
           <div className="space-y-6">
             {contactInfo.map(({ icon, label, value, href }) => (
@@ -151,7 +159,8 @@ export default function Contact() {
                   {icon}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide mb-0.5">
+                  {/* TANDA 1 — `mb-0.5`(2px)→`mb-1`(4px): mínimo de la escala. */}
+                  <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide mb-1">
                     {label}
                   </p>
                   {href ? (
@@ -214,9 +223,11 @@ export default function Contact() {
             /* #38 — noValidate: la validación nativa se sustituye por la
                accesible (aria-invalid + aria-describedby); required se mantiene. */
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              {/* TANDA 1 — labels `mb-1.5`(6px)→`mb-2`(8px) y errores
+                  `mt-1.5`(6px)→`mt-2`(8px): snap a la escala base-4. */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <FocusField>
-                  <label htmlFor="name" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
+                <div>
+                  <label htmlFor="name" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
                     {t.contact.nameLabel} *
                   </label>
                   <input
@@ -234,13 +245,13 @@ export default function Contact() {
                     className={inputClass}
                   />
                   {errors.name && (
-                    <p id="name-error" className="mt-1.5 text-xs text-[var(--color-error)]">
+                    <p id="name-error" className="mt-2 text-xs text-[var(--color-error)]">
                       {errors.name}
                     </p>
                   )}
-                </FocusField>
-                <FocusField>
-                  <label htmlFor="email" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
                     {t.contact.emailLabel} *
                   </label>
                   <input
@@ -259,14 +270,14 @@ export default function Contact() {
                     className={inputClass}
                   />
                   {errors.email && (
-                    <p id="email-error" className="mt-1.5 text-xs text-[var(--color-error)]">
+                    <p id="email-error" className="mt-2 text-xs text-[var(--color-error)]">
                       {errors.email}
                     </p>
                   )}
-                </FocusField>
+                </div>
               </div>
-              <FocusField>
-                <label htmlFor="subject" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
+              <div>
+                <label htmlFor="subject" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
                   {t.contact.subjectLabel} *
                 </label>
                 <input
@@ -283,13 +294,13 @@ export default function Contact() {
                   className={inputClass}
                 />
                 {errors.subject && (
-                  <p id="subject-error" className="mt-1.5 text-xs text-[var(--color-error)]">
+                  <p id="subject-error" className="mt-2 text-xs text-[var(--color-error)]">
                     {errors.subject}
                   </p>
                 )}
-              </FocusField>
-              <FocusField>
-                <label htmlFor="message" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-1.5">
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
                   {t.contact.messageLabel}
                 </label>
                 <textarea
@@ -305,11 +316,11 @@ export default function Contact() {
                   className={`${inputClass} resize-none`}
                 />
                 {errors.message && (
-                  <p id="message-error" className="mt-1.5 text-xs text-[var(--color-error)]">
+                  <p id="message-error" className="mt-2 text-xs text-[var(--color-error)]">
                     {errors.message}
                   </p>
                 )}
-              </FocusField>
+              </div>
               {/* TANDA 5 (HI-8) — botón submit: color de marca plano (antes
                   gradiente rojo→naranja); hover sobrio de color, sin opacidad. */}
               <button

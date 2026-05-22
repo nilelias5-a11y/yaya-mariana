@@ -101,7 +101,10 @@ export default function Cart() {
               className="fixed right-0 top-0 h-full w-full max-w-[22rem] bg-[var(--color-bg-surface)] shadow-2xl z-50 flex flex-col"
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border-subtle)]">
+              {/* TANDA 1 — `py-4`(16px)→`py-5`(20px): más aire vertical para
+                  separar header/items/footer del drawer (el `px-5` lateral se
+                  mantiene — drawer estrecho de 22rem). */}
+              <div className="flex items-center justify-between px-5 py-5 border-b border-[var(--color-border-subtle)]">
                 <h2 id="cart-title" className="font-serif text-xl text-[var(--color-text-primary)]">{t.cart.title}</h2>
                 <button
                   onClick={() => setOpen(false)}
@@ -115,7 +118,8 @@ export default function Cart() {
               </div>
 
               {/* Items */}
-              <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+              {/* TANDA 1 — `py-4`→`py-5`: aire vertical del drawer. */}
+              <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
                 {items.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full gap-3 text-[var(--color-text-muted)]">
                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 opacity-40">
@@ -183,8 +187,9 @@ export default function Cart() {
               </div>
 
               {/* Footer */}
+              {/* TANDA 1 — `py-4`→`py-5`: aire vertical del drawer. */}
               {items.length > 0 && (
-                <div className="px-5 py-4 border-t border-[var(--color-border-subtle)] space-y-3">
+                <div className="px-5 py-5 border-t border-[var(--color-border-subtle)] space-y-3">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-[var(--color-text-secondary)]">{t.cart.subtotal}</span>
                     <span className="font-bold text-[var(--color-text-primary)]">{total.toFixed(2)}€</span>
