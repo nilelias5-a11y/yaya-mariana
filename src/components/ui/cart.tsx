@@ -1,17 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 export default function Cart() {
   const [open, setOpen] = useState(false);
   const { items, count, total, removeFromCart, updateQuantity } = useCart();
   const { t } = useLanguage();
   const router = useRouter();
+
+  /* TANDA 4 (#24) — focus-trap del drawer + Escape-close + retorno
+     de foco al FAB al cerrar (el hook devuelve el foco al trigger). */
+  const closeCart = useCallback(() => setOpen(false), []);
+  const panelRef = useFocusTrap<HTMLDivElement>({ active: open, onClose: closeCart });
 
   function handleCheckout() {
     setOpen(false);
@@ -21,12 +27,18 @@ export default function Cart() {
   return (
     <>
       {/* Floating button */}
+      {/* TANDA 4 (#ME-16) — el FAB respeta env(safe-area-inset-*): en
+          dispositivos con notch / barra de gestos no cae sobre el sistema. */}
       <motion.button
         onClick={() => setOpen(true)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
-        style={{ background: "linear-gradient(135deg, #962a1f 0%, #b5341f 100%)" }}
+        className="fixed z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
+        style={{
+          background: "linear-gradient(135deg, #962a1f 0%, #b5341f 100%)",
+          bottom: "calc(1.5rem + env(safe-area-inset-bottom))",
+          right: "calc(1.5rem + env(safe-area-inset-right))",
+        }}
         aria-label={t.cart.ariaOpen}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
@@ -63,9 +75,14 @@ export default function Cart() {
               onClick={() => setOpen(false)}
             />
 
-            {/* Panel */}
+            {/* Panel — diálogo modal accesible (#24). */}
             <motion.div
               key="panel"
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cart-title"
+              tabIndex={-1}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -74,7 +91,7 @@ export default function Cart() {
             >
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border-subtle)]">
-                <h2 className="font-serif text-xl text-[var(--color-text-primary)]">{t.cart.title}</h2>
+                <h2 id="cart-title" className="font-serif text-xl text-[var(--color-text-primary)]">{t.cart.title}</h2>
                 <button
                   onClick={() => setOpen(false)}
                   /* L2 — tap target ≥44px (antes w-8 h-8 = 32px). */
@@ -141,8 +158,10 @@ export default function Cart() {
                         </p>
                         <button
                           onClick={() => removeFromCart(item.name)}
-                          /* py-1.5 amplía el área de toque del enlace de borrado (L2). */
-                          className="text-[0.65rem] text-[var(--color-text-muted)] hover:text-[var(--color-brand-primary)] transition-colors mt-0.5 py-1.5"
+                          /* TANDA 4 (#ME-15) — área de toque ≥44px: el botón
+                             mide 44px de alto e inline-flex llega al borde
+                             derecho; el texto visible se mantiene pequeño. */
+                          className="inline-flex items-center justify-end h-11 -my-2.5 -mr-1 pl-3 text-[0.65rem] text-[var(--color-text-muted)] hover:text-[var(--color-brand-primary)] transition-colors"
                         >
                           {t.cart.remove}
                         </button>

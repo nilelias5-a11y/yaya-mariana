@@ -17,13 +17,20 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("es");
 
   useEffect(() => {
+    /* Fase 4.5 · TANDA 4 (#35) — rehidratación: aceptar también "en"
+       (antes solo "es"|"ca"); sincronizar <html lang> con lo rehidratado. */
     const stored = localStorage.getItem("lang");
-    if (stored === "es" || stored === "ca") setLangState(stored);
+    if (stored === "es" || stored === "ca" || stored === "en") {
+      setLangState(stored);
+      document.documentElement.lang = stored;
+    }
   }, []);
 
   function setLang(l: Lang) {
     setLangState(l);
     localStorage.setItem("lang", l);
+    /* #35 — <html lang> sigue al idioma activo (fonética SR correcta). */
+    document.documentElement.lang = l;
   }
 
   return (

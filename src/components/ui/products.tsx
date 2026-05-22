@@ -62,11 +62,21 @@ function useIsTouch() {
   );
 }
 
-function ProductCarousel({ images, name }: { images: string[]; name: string }) {
+function ProductCarousel({
+  images,
+  name,
+  priority,
+}: {
+  images: string[];
+  name: string;
+  priority?: boolean;
+}) {
   const [current, setCurrent] = useState(0);
   const [hovered, setHovered] = useState(false);
   // M7 — en dispositivos sin hover el carousel no se rota solo.
   const isTouch = useIsTouch();
+  // TANDA 4 (#33) — auto-rotate gateado con prefers-reduced-motion.
+  const reduceMotion = useReducedMotion();
   const [imgOffset, setImgOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -78,8 +88,10 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
   );
 
   useEffect(() => {
-    // En touch o con el puntero encima: sin auto-rotate.
-    if (hovered || isTouch) {
+    // En touch, con el puntero encima, o con prefers-reduced-motion
+    // activo (#33): sin auto-rotate — el setInterval es JS puro y
+    // MotionConfig no lo detiene, así que se gatea explícitamente.
+    if (hovered || isTouch || reduceMotion) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
@@ -87,7 +99,7 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [hovered, isTouch, next]);
+  }, [hovered, isTouch, reduceMotion, next]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (!containerRef.current) return;
@@ -133,6 +145,9 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
               src={images[current]}
               alt={`${name} foto ${current + 1}`}
               fill
+              /* TANDA 4 (#HI-15) — la primera foto del primer producto es el
+                 LCP probable en móvil: priority sólo en index 0 del slide 0. */
+              priority={priority && current === 0}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover"
             />
@@ -290,7 +305,7 @@ function ProductCard({
         onTouchMove={isMagnum ? cancelPress : undefined}
         onTouchCancel={isMagnum ? cancelPress : undefined}
       >
-        <ProductCarousel images={product.images} name={product.name} />
+        <ProductCarousel images={product.images} name={product.name} priority={index === 0} />
 
         {/* L4 — pétalo del easter egg Mágnum: cae una vez, 1s, y se desmonta. */}
         {petal && (

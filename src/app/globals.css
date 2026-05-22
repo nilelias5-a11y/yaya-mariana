@@ -195,6 +195,13 @@
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Fase 4.5 · TANDA 4 (#ME-17) — quita el flash gris de resaltado al tocar
+   en Android Chrome; mantiene el tono museístico/restraint del homenaje. */
+* { -webkit-tap-highlight-color: transparent; }
+/* touch-action: manipulation — elimina el delay de 300ms del doble-tap
+   en los elementos interactivos. */
+a, button, input, textarea, select, [role="button"] { touch-action: manipulation; }
+
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; tab-size: 4; }
 
 body {

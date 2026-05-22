@@ -10,14 +10,21 @@ import Cart from "@/components/ui/cart";
 
 export default function Home() {
   return (
+    /* TANDA 4 (#26) — landmark de contenido principal; ancla del skip-link.
+       El nav vive dentro de Hero (sticky) y precede al contenido scrolleable;
+       <main> envuelve el contenido para que el SR ofrezca "saltar al contenido". */
     <>
       <Hero />
-      <StatsStrip />
-      <Products />
-      <AboutUs />
-      <Values />
-      <CTA />
-      <Contact />
+      {/* tabIndex={-1} — el foco aterriza realmente en <main> al usar el
+          skip-link (un landmark no es focusable por defecto). */}
+      <main id="contenido" tabIndex={-1}>
+        <StatsStrip />
+        <Products />
+        <AboutUs />
+        <Values />
+        <CTA />
+        <Contact />
+      </main>
       <Footer />
       <Cart />
     </>

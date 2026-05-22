@@ -3,6 +3,7 @@
 import { MotionConfig } from "framer-motion";
 import { CartProvider } from "@/context/cart-context";
 import { LanguageProvider } from "@/context/language-context";
+import SkipLink from "@/components/ui/skip-link";
 import type { ReactNode } from "react";
 
 export default function Providers({ children }: { children: ReactNode }) {
@@ -13,6 +14,8 @@ export default function Providers({ children }: { children: ReactNode }) {
     // count-up, typewriter) se gatean individualmente con useReducedMotion().
     <MotionConfig reducedMotion="user">
       <LanguageProvider>
+        {/* TANDA 4 (#27) — skip-link como primer focusable del <body>. */}
+        <SkipLink />
         <CartProvider>{children}</CartProvider>
       </LanguageProvider>
     </MotionConfig>

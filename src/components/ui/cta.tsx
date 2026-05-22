@@ -102,7 +102,8 @@ function OffSeasonCTA() {
 
   if (sent) {
     return (
-      <div className="flex flex-col items-center gap-3 py-4">
+      /* TANDA 4 (#36) — bloque de éxito off-season anunciado por el SR. */
+      <div role="status" aria-live="polite" className="flex flex-col items-center gap-3 py-4">
         <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center">
           <svg viewBox="0 0 24 24" fill="none" stroke="#f5c6c2" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7" aria-hidden>
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -149,14 +150,19 @@ function OffSeasonCTA() {
 
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
         <div className="flex flex-col sm:flex-row gap-3">
+          {/* TANDA 4 — text-base (16px) anti auto-zoom iOS (#CR-12);
+              inputmode/autocomplete/enterkeyhint de email (#CR-13). */}
           <input
             type="email"
             required
+            inputMode="email"
+            autoComplete="email"
+            enterKeyHint="send"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={o.emailPlaceholder}
             aria-label={o.emailLabel}
-            className="flex-1 rounded-full bg-[var(--color-bg-surface)] px-5 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-white/70"
+            className="flex-1 rounded-full bg-[var(--color-bg-surface)] px-5 py-3 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-white/70"
           />
           <button
             type="submit"

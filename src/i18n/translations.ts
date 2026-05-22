@@ -2,7 +2,13 @@ export type Lang = "es" | "ca" | "en";
 
 export const translations = {
   es: {
+    skipLink: "Saltar al contenido",
+    formErrors: {
+      required: "Este campo es obligatorio.",
+      email: "Introduce un correo electrónico válido.",
+    },
     hero: {
+      navLabel: "Principal",
       eyebrow: "Tarragona · Calidad premium",
       word1: "Fresas",
       subtitle:
@@ -153,7 +159,13 @@ export const translations = {
     months: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
   },
   ca: {
+    skipLink: "Salta al contingut",
+    formErrors: {
+      required: "Aquest camp és obligatori.",
+      email: "Introdueix una adreça de correu vàlida.",
+    },
     hero: {
+      navLabel: "Principal",
       eyebrow: "Tarragona · Qualitat premium",
       word1: "Maduixes",
       subtitle:
@@ -304,7 +316,13 @@ export const translations = {
     months: ["gener", "febrer", "març", "abril", "maig", "juny", "juliol", "agost", "setembre", "octubre", "novembre", "desembre"],
   },
   en: {
+    skipLink: "Skip to content",
+    formErrors: {
+      required: "This field is required.",
+      email: "Enter a valid email address.",
+    },
     hero: {
+      navLabel: "Main",
       eyebrow: "Tarragona · Premium quality",
       word1: "Strawberries",
       subtitle:

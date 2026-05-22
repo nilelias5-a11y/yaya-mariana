@@ -8,7 +8,8 @@ const STATS = [
   {
     value: "100%",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
+      /* TANDA 4 (#29) — SVG decorativo: aria-hidden para consistencia con values/contact. */
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8" aria-hidden>
         <path d="M12 2C6 9 4 13 4 16a8 8 0 0 0 16 0c0-3-2-7-8-14z" />
       </svg>
     ),
@@ -16,7 +17,7 @@ const STATS = [
   {
     value: "0",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8" aria-hidden>
         <circle cx="12" cy="12" r="9" />
         <line x1="5.64" y1="5.64" x2="18.36" y2="18.36" />
       </svg>
@@ -25,7 +26,7 @@ const STATS = [
   {
     value: "24h",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8" aria-hidden>
         <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
       </svg>
     ),
@@ -33,7 +34,7 @@ const STATS = [
   {
     value: "3",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8" aria-hidden>
         <path d="M12 21v-9" />
         <path d="M12 12c0-3.3-2.7-6-6-6-.6 0-1 .4-1 1 0 3.3 2.7 6 6 6 .6 0 1-.4 1-1z" />
         <path d="M12 13c0-3.3 2.7-6 6-6 .6 0 1 .4 1 1 0 3.3-2.7 6-6 6-.6 0-1-.4-1-1z" />
@@ -97,7 +98,12 @@ export default function StatsStrip() {
             transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="text-[var(--color-brand-hover)]">{icon}</div>
-            <span className="font-serif text-[2.6rem] font-semibold leading-none mt-1">
+            {/* TANDA 4 (#ME-12) — cifra responsive: en móvil (375px) baja a
+                ~32px; escala fluida hasta 41.6px en escritorio. */}
+            <span
+              className="font-serif font-semibold leading-none mt-1"
+              style={{ fontSize: "clamp(2rem, 6vw, 2.6rem)" }}
+            >
               <AnimatedValue raw={value} />
             </span>
             <span className="text-sm text-[var(--color-text-on-deep)] leading-snug max-w-[14ch]">

@@ -5,13 +5,16 @@ import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { CardElement, Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart } from "@/context/cart-context";
+import { useLanguage } from "@/context/language-context";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const CARD_STYLE = {
   style: {
     base: {
-      fontSize: "15px",
+      /* TANDA 4 (#CR-12) — 16px: el CardElement de Stripe tampoco debe
+         disparar el auto-zoom de iOS Safari (antes 15px). */
+      fontSize: "16px",
       color: "#1a0808",
       fontFamily: "Inter, system-ui, sans-serif",
       "::placeholder": { color: "#6e3232" },
@@ -21,11 +24,15 @@ const CARD_STYLE = {
   },
 };
 
+type CheckoutField = "name" | "email" | "address" | "city" | "zip";
+type CheckoutErrors = Partial<Record<CheckoutField, string>>;
+
 function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
   const { items, total, clearCart } = useCart();
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,9 +42,41 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  /* TANDA 4 (#38) — validación accesible por campo (aria-invalid + describedby). */
+  const [fieldErrors, setFieldErrors] = useState<CheckoutErrors>({});
 
-  async function handleSubmit(e: FormEvent) {
+  function messageFor(field: HTMLInputElement): string | null {
+    if (field.validity.valid) return null;
+    if (field.validity.valueMissing) return t.formErrors.required;
+    if (field.validity.typeMismatch) return t.formErrors.email;
+    return t.formErrors.required;
+  }
+
+  function clearFieldError(fieldName: CheckoutField, el: HTMLInputElement) {
+    if (fieldErrors[fieldName] && el.validity.valid) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[fieldName];
+        return next;
+      });
+    }
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    /* #38 — Constraint Validation API: marca los campos vacíos/erróneos
+       sin reescribir el formulario; el required nativo se conserva. */
+    const fields = e.currentTarget.querySelectorAll<HTMLInputElement>("input[name]");
+    const nextErrors: CheckoutErrors = {};
+    fields.forEach((field) => {
+      const msg = messageFor(field);
+      if (msg) nextErrors[field.name as CheckoutField] = msg;
+    });
+    if (Object.keys(nextErrors).length > 0) {
+      setFieldErrors(nextErrors);
+      return;
+    }
+    setFieldErrors({});
     if (!stripe || !elements) return;
     setLoading(true);
     setError(null);
@@ -84,7 +123,8 @@ function CheckoutForm() {
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: "var(--color-bg-base)" }}>
-        <div className="max-w-md w-full text-center">
+        {/* TANDA 4 (#37) — confirmación de pedido anunciada por el SR. */}
+        <div role="status" aria-live="polite" className="max-w-md w-full text-center">
           <div className="w-20 h-20 rounded-full bg-[var(--color-success-surface)] flex items-center justify-center mx-auto mb-6">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
               <path d="M20 6L9 17l-5-5" />
@@ -123,7 +163,8 @@ function CheckoutForm() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-8">
+          {/* #38 — noValidate: validación accesible en lugar del bubble nativo. */}
+          <form onSubmit={handleSubmit} noValidate className="space-y-8">
             <div>
               <h1 className="font-serif text-3xl md:text-4xl text-[var(--color-text-primary)] mb-1">Finalizar pedido</h1>
               <p className="text-sm text-[var(--color-text-secondary)]">Rellena tus datos para completar la compra</p>
@@ -135,23 +176,36 @@ function CheckoutForm() {
                 Datos personales
               </legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Nombre completo" required>
+                <Field label="Nombre completo" required htmlFor="co-name" error={fieldErrors.name}>
                   <input
+                    id="co-name"
+                    name="name"
                     type="text"
                     required
+                    autoComplete="name"
+                    enterKeyHint="next"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => { setName(e.target.value); clearFieldError("name", e.target); }}
                     placeholder="Ana García"
+                    aria-invalid={fieldErrors.name ? true : undefined}
+                    aria-describedby={fieldErrors.name ? "co-name-error" : undefined}
                     className={inputClass}
                   />
                 </Field>
-                <Field label="Email" required>
+                <Field label="Email" required htmlFor="co-email" error={fieldErrors.email}>
                   <input
+                    id="co-email"
+                    name="email"
                     type="email"
                     required
+                    inputMode="email"
+                    autoComplete="email"
+                    enterKeyHint="next"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => { setEmail(e.target.value); clearFieldError("email", e.target); }}
                     placeholder="ana@ejemplo.com"
+                    aria-invalid={fieldErrors.email ? true : undefined}
+                    aria-describedby={fieldErrors.email ? "co-email-error" : undefined}
                     className={inputClass}
                   />
                 </Field>
@@ -163,34 +217,53 @@ function CheckoutForm() {
               <legend className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-primary)] mb-3">
                 Dirección de envío
               </legend>
-              <Field label="Dirección" required>
+              <Field label="Dirección" required htmlFor="co-address" error={fieldErrors.address}>
                 <input
+                  id="co-address"
+                  name="address"
                   type="text"
                   required
+                  autoComplete="street-address"
+                  enterKeyHint="next"
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => { setAddress(e.target.value); clearFieldError("address", e.target); }}
                   placeholder="Calle Mayor 1, 3ºA"
+                  aria-invalid={fieldErrors.address ? true : undefined}
+                  aria-describedby={fieldErrors.address ? "co-address-error" : undefined}
                   className={inputClass}
                 />
               </Field>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Ciudad" required>
+                <Field label="Ciudad" required htmlFor="co-city" error={fieldErrors.city}>
                   <input
+                    id="co-city"
+                    name="city"
                     type="text"
                     required
+                    autoComplete="address-level2"
+                    enterKeyHint="next"
                     value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                    onChange={(e) => { setCity(e.target.value); clearFieldError("city", e.target); }}
                     placeholder="Barcelona"
+                    aria-invalid={fieldErrors.city ? true : undefined}
+                    aria-describedby={fieldErrors.city ? "co-city-error" : undefined}
                     className={inputClass}
                   />
                 </Field>
-                <Field label="Código postal" required>
+                <Field label="Código postal" required htmlFor="co-zip" error={fieldErrors.zip}>
                   <input
+                    id="co-zip"
+                    name="zip"
                     type="text"
                     required
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    enterKeyHint="done"
                     value={zip}
-                    onChange={(e) => setZip(e.target.value)}
+                    onChange={(e) => { setZip(e.target.value); clearFieldError("zip", e.target); }}
                     placeholder="08001"
+                    aria-invalid={fieldErrors.zip ? true : undefined}
+                    aria-describedby={fieldErrors.zip ? "co-zip-error" : undefined}
                     className={inputClass}
                   />
                 </Field>
@@ -277,26 +350,40 @@ function CheckoutForm() {
   );
 }
 
+/* TANDA 4 (#CR-12) — text-base = 16px: anti auto-zoom iOS (antes text-sm). */
 const inputClass =
-  "w-full rounded-xl border-2 border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-brand-primary)] transition-colors";
+  "w-full rounded-xl border-2 border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-4 py-3 text-base text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-brand-primary)] transition-colors";
 
 function Field({
   label,
   required,
+  htmlFor,
+  error,
   children,
 }: {
   label: string;
   required?: boolean;
+  /* #38 — id del input asociado: permite label htmlFor + error describedby. */
+  htmlFor: string;
+  error?: string;
   children: React.ReactNode;
 }) {
   return (
-    <label className="block space-y-1.5">
-      <span className="text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide">
+    <div className="space-y-1.5">
+      <label
+        htmlFor={htmlFor}
+        className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide"
+      >
         {label}
         {required && <span className="text-[var(--color-brand-primary)] ml-0.5">*</span>}
-      </span>
+      </label>
       {children}
-    </label>
+      {error && (
+        <p id={`${htmlFor}-error`} className="text-xs text-[var(--color-error)]">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 

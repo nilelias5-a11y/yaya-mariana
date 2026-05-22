@@ -3,8 +3,9 @@
 import { MeshGradient } from "@paper-design/shaders-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import type { Lang } from "@/i18n/translations";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -21,6 +22,9 @@ function LanguageSelector() {
   const { lang, setLang } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  /* TANDA 4 (#25) — refs de las opciones para navegación con flechas. */
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -30,10 +34,46 @@ function LanguageSelector() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
+  /* #25 — al abrir, foco en la opción seleccionada. */
+  useEffect(() => {
+    if (!open) return;
+    const idx = LANG_OPTIONS.findIndex((o) => o.code === lang);
+    optionRefs.current[idx >= 0 ? idx : 0]?.focus();
+  }, [open, lang]);
+
+  function close(returnFocus = true) {
+    setOpen(false);
+    /* #25 — retorno de foco al trigger al cerrar. */
+    if (returnFocus) triggerRef.current?.focus();
+  }
+
+  /* #25 — Escape cierra; flechas ↑/↓ navegan entre opciones. */
+  function handleListKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      close();
+      return;
+    }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const current = optionRefs.current.findIndex((el) => el === document.activeElement);
+      const delta = e.key === "ArrowDown" ? 1 : -1;
+      const nextIdx = (current + delta + LANG_OPTIONS.length) % LANG_OPTIONS.length;
+      optionRefs.current[nextIdx]?.focus();
+    }
+  }
+
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         onClick={() => setOpen((v) => !v)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape" && open) {
+            e.preventDefault();
+            close();
+          }
+        }}
         aria-expanded={open}
         aria-haspopup="listbox"
         /* L2 — selector de idioma con tap target ≥44px de alto. */
@@ -41,7 +81,7 @@ function LanguageSelector() {
         style={{ fontSize: 13, fontWeight: 500, color: "var(--color-text-primary)" }}
       >
         <span>{lang.toUpperCase()}</span>
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-2.5 h-2.5">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-2.5 h-2.5" aria-hidden>
           <path d="M2 4.5l4 4 4-4" />
         </svg>
       </button>
@@ -54,15 +94,17 @@ function LanguageSelector() {
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
             role="listbox"
+            onKeyDown={handleListKeyDown}
             className="absolute right-0 top-[calc(100%+8px)] w-20 bg-[var(--color-bg-surface)] rounded-lg overflow-hidden z-50"
             style={{ border: "1px solid #f0e0e0", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
           >
-            {LANG_OPTIONS.map(({ code, label }) => (
+            {LANG_OPTIONS.map(({ code, label }, i) => (
               <button
                 key={code}
+                ref={(el) => { optionRefs.current[i] = el; }}
                 role="option"
                 aria-selected={lang === code}
-                onClick={() => { setLang(code); setOpen(false); }}
+                onClick={() => { setLang(code); close(); }}
                 /* L2 — cada opción del desplegable con alto de toque ≥44px. */
                 className="w-full px-3 min-h-[44px] flex items-center text-left transition-colors duration-150 cursor-pointer hover:bg-[var(--color-bg-subtle)]"
                 style={{ fontSize: 13, fontWeight: 500, color: lang === code ? "var(--color-brand-primary)" : "var(--color-text-primary)" }}
@@ -90,6 +132,10 @@ function MobileNav({
   menuLabel: string;
 }) {
   const [open, setOpen] = useState(false);
+  /* TANDA 4 (#25) — focus-trap del panel móvil + Escape-close +
+     retorno de foco al botón hamburguesa al cerrar. */
+  const closePanel = useCallback(() => setOpen(false), []);
+  const panelRef = useFocusTrap<HTMLDivElement>({ active: open, onClose: closePanel });
 
   return (
     <>
@@ -103,7 +149,7 @@ function MobileNav({
         className="md:hidden flex items-center justify-center w-11 h-11 -mr-1.5 cursor-pointer"
         style={{ color: "var(--color-text-primary)" }}
       >
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-5 h-5">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-5 h-5" aria-hidden>
           {open ? <path d="M4 4l12 12M16 4L4 16" /> : <path d="M3 6h14M3 10h14M3 14h14" />}
         </svg>
       </button>
@@ -111,6 +157,7 @@ function MobileNav({
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={panelRef}
             id="mobile-nav-panel"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -159,13 +206,17 @@ export default function Hero() {
   return (
     <>
       {/* Nav sticky */}
+      {/* TANDA 4 — aria-label traducible (#ME-19); padding-top respeta
+          env(safe-area-inset-top) en dispositivos con notch (#ME-16). */}
       <nav
+        aria-label={t.hero.navLabel}
         className="flex items-center justify-between px-6 md:px-12 bg-[var(--color-bg-surface)]"
         style={{
           position: "sticky",
           top: 0,
           zIndex: 50,
           height: 72,
+          paddingTop: "env(safe-area-inset-top)",
           borderBottom: "1px solid #f0e0e0",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}
@@ -254,7 +305,9 @@ export default function Hero() {
 
       {/* Hero — 2 columnas */}
       {/* TANDA 1 — padding vertical simétrico (antes pt-16/pb-20 asimétrico). */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 py-20 min-h-[calc(100vh-72px)]">
+      {/* TANDA 4 (#HI-14) — 100dvh evita el salto por la barra de URL de iOS;
+          100vh queda como fallback para navegadores sin soporte de dvh. */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 py-20 min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)]">
 
         {/* Columna izquierda */}
         <motion.div
