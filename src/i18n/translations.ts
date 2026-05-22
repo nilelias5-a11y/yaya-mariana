@@ -25,7 +25,7 @@ export const translations = {
       },
     },
     stats: {
-      labels: ["Del camp a taula", "Pesticidas", "Del campo a tu mesa", "Qualitat premium"],
+      labels: ["Natural", "Pesticidas", "Del campo a tu mesa", "Variedades"],
     },
     products: {
       eyebrow: "Nuestra cosecha",
@@ -102,7 +102,7 @@ export const translations = {
       messagePlaceholder: "Escribe tu mensaje aquí...",
       send: "Enviar mensaje",
       sent: "¡Mensaje enviado!",
-      sentSubtitle: "Gracias por contactarnos. Te responderemos en menos de 24 horas.",
+      sentSubtitle: "Gracias por escribirnos. Te leeremos pronto.",
       sendAnother: "Enviar otro mensaje",
     },
     footer: {
@@ -157,7 +157,7 @@ export const translations = {
       },
     },
     stats: {
-      labels: ["Del camp a taula", "Pesticides", "Del camp a taula", "Qualitat premium"],
+      labels: ["Natural", "Pesticides", "Del camp a taula", "Varietats"],
     },
     products: {
       eyebrow: "La nostra collita",
@@ -234,7 +234,7 @@ export const translations = {
       messagePlaceholder: "Escriu el teu missatge aquí...",
       send: "Enviar missatge",
       sent: "Missatge enviat!",
-      sentSubtitle: "Gràcies per contactar-nos. Et respondrem en menys de 24 hores.",
+      sentSubtitle: "Gràcies per escriure'ns. Et llegirem aviat.",
       sendAnother: "Enviar un altre missatge",
     },
     footer: {
@@ -289,7 +289,7 @@ export const translations = {
       },
     },
     stats: {
-      labels: ["From field to table", "Pesticides", "From field to table", "Premium quality"],
+      labels: ["Natural", "Pesticides", "From field to table", "Varieties"],
     },
     products: {
       eyebrow: "Our harvest",
@@ -366,7 +366,7 @@ export const translations = {
       messagePlaceholder: "Write your message here...",
       send: "Send message",
       sent: "Message sent!",
-      sentSubtitle: "Thank you for contacting us. We'll get back to you within 24 hours.",
+      sentSubtitle: "Thank you for writing to us. We'll read your message soon.",
       sendAnother: "Send another message",
     },
     footer: {

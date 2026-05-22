@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
@@ -70,20 +69,23 @@ export default function Footer() {
     },
     {
       heading: t.footer.company,
+      // blog/envíos → stub "#": las páginas del dominio legacy yayamariana.com
+      // están abandonadas; se reapuntarán a páginas reales cuando existan.
       items: [
         { label: t.footer.aboutUs, href: "#sobre-nosotros" },
-        { label: t.footer.blog, href: "https://yayamariana.com/blog/" },
-        { label: t.footer.shipping, href: "https://yayamariana.com/envios/" },
+        { label: t.footer.blog, href: "#" },
+        { label: t.footer.shipping, href: "#" },
         { label: t.footer.contact, href: "#contacto" },
       ],
     },
     {
       heading: t.footer.legal,
+      // Páginas legales pendientes de redacción → stub "#" (no enlazar al dominio legacy).
       items: [
-        { label: t.footer.privacy, href: "https://yayamariana.com/politica-de-privacidad/" },
-        { label: t.footer.returns, href: "https://yayamariana.com/politica-de-devolucion/" },
-        { label: t.footer.legalNotice, href: "https://yayamariana.com/aviso-legal/" },
-        { label: t.footer.myAccount, href: "https://yayamariana.com/mi-cuenta/" },
+        { label: t.footer.privacy, href: "#" },
+        { label: t.footer.returns, href: "#" },
+        { label: t.footer.legalNotice, href: "#" },
+        { label: t.footer.myAccount, href: "#" },
       ],
     },
   ];
@@ -101,14 +103,10 @@ export default function Footer() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
             >
-            <Image
-              src="https://yayamariana.com/wp-content/uploads/2024/11/YAYA_MARIANA_VECTORIAL-01.png"
-              alt="Yaya Mariana"
-              width={140}
-              height={40}
-              className="h-[38px] w-auto brightness-0 invert mb-4"
-              unoptimized
-            />
+              {/* Wordmark tipográfico (Path T) — sustituye el hot-link al dominio legacy. */}
+              <span className="block font-serif italic text-white text-[1.75rem] leading-none mb-4">
+                Yaya Mariana
+              </span>
             </motion.div>
             <p className="text-sm text-white/50 leading-relaxed max-w-[18ch]">
               {t.footer.description}

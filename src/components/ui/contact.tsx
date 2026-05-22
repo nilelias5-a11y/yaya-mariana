@@ -142,8 +142,19 @@ export default function Contact() {
         >
           {sent ? (
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-3xl">
-                ✅
+              <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#c0392b"
+                  strokeWidth={2.5}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-8 h-8"
+                  aria-hidden
+                >
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
               </div>
               <h3 className="font-serif text-2xl text-[#1a0808]">{t.contact.sent}</h3>
               <p className="text-[#7a3a3a]/65 text-sm max-w-xs">

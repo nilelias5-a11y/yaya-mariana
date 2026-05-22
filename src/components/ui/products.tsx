@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
 
@@ -46,7 +46,13 @@ const PRODUCTS_BASE = [
 
 function useTypewriter(text: string, speed = 55, startDelay = 250) {
   const [displayed, setDisplayed] = useState("");
+  const reduceMotion = useReducedMotion();
   useEffect(() => {
+    // prefers-reduced-motion: salta el tecleo, muestra el texto completo.
+    if (reduceMotion) {
+      setDisplayed(text);
+      return;
+    }
     setDisplayed("");
     if (!text) return;
     let i = 0;
@@ -62,7 +68,7 @@ function useTypewriter(text: string, speed = 55, startDelay = 250) {
       clearTimeout(timer);
       clearInterval(interval);
     };
-  }, [text, speed, startDelay]);
+  }, [text, speed, startDelay, reduceMotion]);
   return displayed;
 }
 

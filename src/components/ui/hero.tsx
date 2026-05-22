@@ -1,7 +1,7 @@
 "use client";
 
 import { MeshGradient } from "@paper-design/shaders-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
@@ -77,6 +77,7 @@ function LanguageSelector() {
 
 export default function Hero() {
   const { t } = useLanguage();
+  const reduceMotion = useReducedMotion();
 
   const navLinks = t.nav.menu.items.slice(1).map((item, i) => ({
     label: item.label,
@@ -167,7 +168,8 @@ export default function Hero() {
       <section className="relative overflow-hidden" style={{ isolation: "isolate", backgroundColor: "#fff5f5" }}>
         <MeshGradient
           colors={["#f5d0c8", "#e8a090", "#f0b8a8", "#ffd0c0", "#e89888"]}
-          speed={0.5}
+          /* prefers-reduced-motion: speed 0 congela el shader (mantiene el degradado, sin movimiento) */
+          speed={reduceMotion ? 0 : 0.5}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         />
 
@@ -192,9 +194,9 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* Headline — cita en Yellowtail */}
+          {/* Headline — cita = <h1> de la página (SEO). Mismo tratamiento Playfair italic. */}
           <div className="mb-0">
-            <p
+            <h1
               style={{
                 fontFamily: "var(--font-playfair)",
                 fontStyle: "italic",
@@ -202,10 +204,11 @@ export default function Hero() {
                 color: "#c0392b",
                 lineHeight: 1.3,
                 margin: 0,
+                fontWeight: 400,
               }}
             >
               "{t.hero.quoteText}"
-            </p>
+            </h1>
             <p
               style={{
                 fontFamily: "var(--font-playfair)",
@@ -264,27 +267,55 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Columna derecha — logo oficial */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: EASE_OUT }}
-          className="w-full md:w-[45%] flex items-center justify-center"
-          style={{ filter: "drop-shadow(0 0 0px rgba(0,0,0,0))", mixBlendMode: "multiply" }}
-        >
-          <div className="logo-blend" style={{ maxWidth: 380, width: "100%", display: "flex", justifyContent: "center" }}>
-            <Image
-              src="/logo-nuevo.jpg"
-              alt="Yaya Mariana"
-              width={380}
-              height={380}
-              unoptimized
-              priority
-              className="h-auto"
-              style={{ maxWidth: 380, width: "100%" }}
+        {/* Columna derecha — bloque tipográfico Path T.
+            Placa con las tres variedades. Sin animación: restraint museístico. */}
+        <div className="w-full md:w-[45%] flex items-center justify-center">
+          <div
+            className="flex flex-col items-center justify-center text-center"
+            style={{
+              maxWidth: 380,
+              width: "100%",
+              aspectRatio: "1 / 1",
+              backgroundColor: "#ffffff",
+              border: "1px solid #f0d0d0",
+              padding: "clamp(32px, 6vw, 56px)",
+            }}
+          >
+            <p
+              className="font-sans font-semibold uppercase"
+              style={{ color: "#c0392b", fontSize: 11, letterSpacing: "0.22em", margin: 0 }}
+            >
+              Tres variedades
+            </p>
+            <div
+              aria-hidden
+              style={{ width: 32, height: 2, backgroundColor: "#f0d0d0", borderRadius: 2, margin: "20px 0 4px" }}
             />
+            {["Mágnum", "Dream", "1525"].map((variety, i) => (
+              <div key={variety} className="flex flex-col items-center">
+                {i > 0 && (
+                  <span
+                    aria-hidden
+                    style={{ color: "#d8b0b0", fontSize: 13, lineHeight: 1, margin: "10px 0" }}
+                  >
+                    ·
+                  </span>
+                )}
+                <span
+                  style={{
+                    fontFamily: "var(--font-playfair)",
+                    fontStyle: "italic",
+                    fontSize: "clamp(1.7rem, 3.4vw, 2.35rem)",
+                    color: "#7a4a42",
+                    lineHeight: 1.15,
+                  }}
+                >
+                  {variety}
+                </span>
+              </div>
+            ))}
           </div>
-        </motion.div>
+        </div>
 
       </div>
       </section>

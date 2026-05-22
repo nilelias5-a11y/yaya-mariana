@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
 const STATS = [
@@ -31,13 +31,12 @@ const STATS = [
     ),
   },
   {
-    value: "+",
+    value: "3",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-8 h-8">
-        <rect x="2" y="7" width="14" height="11" rx="1" />
-        <path d="M16 10h3l3 4v4h-6V10z" />
-        <circle cx="6.5" cy="18.5" r="1.5" />
-        <circle cx="18.5" cy="18.5" r="1.5" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
+        <path d="M12 21v-9" />
+        <path d="M12 12c0-3.3-2.7-6-6-6-.6 0-1 .4-1 1 0 3.3 2.7 6 6 6 .6 0 1-.4 1-1z" />
+        <path d="M12 13c0-3.3 2.7-6 6-6 .6 0 1 .4 1 1 0 3.3-2.7 6-6 6-.6 0-1-.4-1-1z" />
       </svg>
     ),
   },
@@ -46,6 +45,7 @@ const STATS = [
 function AnimatedValue({ raw }: { raw: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+  const reduceMotion = useReducedMotion();
   const [display, setDisplay] = useState("0");
 
   useEffect(() => {
@@ -55,6 +55,11 @@ function AnimatedValue({ raw }: { raw: string }) {
       return;
     }
     if (!inView) return;
+    // prefers-reduced-motion: salta el count-up, muestra el valor final.
+    if (reduceMotion) {
+      setDisplay(raw);
+      return;
+    }
 
     const [, numStr, suffix] = match;
     const target = parseInt(numStr, 10);
@@ -70,7 +75,7 @@ function AnimatedValue({ raw }: { raw: string }) {
     }, 16);
 
     return () => clearInterval(timer);
-  }, [inView, raw]);
+  }, [inView, raw, reduceMotion]);
 
   return <span ref={ref}>{display}</span>;
 }
@@ -89,11 +94,9 @@ export default function StatsStrip() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.75, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{ scale: 1.08, filter: "brightness(1.3)" }}
-            style={{ cursor: "default" }}
           >
             <div className="text-[#e74c3c]">{icon}</div>
-            <span className="font-serif text-[3.25rem] font-bold leading-none mt-1">
+            <span className="font-serif text-[2.6rem] font-bold leading-none mt-1">
               <AnimatedValue raw={value} />
             </span>
             <span className="text-sm text-white/65 leading-snug max-w-[14ch]">
