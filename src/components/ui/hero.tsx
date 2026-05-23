@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { Button } from "@/components/ui/button";
 import type { Lang } from "@/i18n/translations";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -141,15 +142,15 @@ function MobileNav({
 
   return (
     <>
+      {/* TANDA 2 — hamburguesa: botón icon-only del sistema (.btn-icon),
+          caja 44×44 coherente con el resto de iconos del sitio. */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         aria-label={menuLabel}
-        /* L2 — tap target ≥44px (antes w-9 h-9 = 36px). */
-        className="md:hidden flex items-center justify-center w-11 h-11 -mr-1.5 cursor-pointer"
-        style={{ color: "var(--color-text-primary)" }}
+        className="btn-icon md:hidden -mr-1.5 text-[var(--color-text-primary)]"
       >
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-5 h-5" aria-hidden>
           {open ? <path d="M4 4l12 12M16 4L4 16" /> : <path d="M3 6h14M3 10h14M3 14h14" />}
@@ -182,15 +183,20 @@ function MobileNav({
                 {label}
               </a>
             ))}
-            <a
-              href="/checkout"
+            {/* TANDA 2 — CTA del sistema (Button primario, size sm).
+                E1 — destino re-apuntado a `#productos`: la compra empieza
+                por "Añadir al carrito", no en un /checkout vacío. */}
+            <Button
+              as="a"
+              href="#productos"
+              variant="primary"
+              size="sm"
+              block
+              className="mt-3"
               onClick={() => setOpen(false)}
-              className="mt-3 inline-flex items-center justify-center font-sans font-semibold text-white"
-              /* L2 — minHeight 44px garantiza el tap target del CTA móvil. */
-              style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, padding: "11px 20px", minHeight: 44, fontSize: 14 }}
             >
               {verTienda}
-            </a>
+            </Button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -276,21 +282,20 @@ export default function Hero() {
         {/* Derecha: idioma + botón */}
         <div className="flex items-center gap-5">
           <LanguageSelector />
-          {/* TANDA 5 (HI-5) — motion de tributo: hover = solo cambio de
-              background a brand-pressed. Sin scale, sin glow boxShadow,
-              sin desplazamiento del texto. Conforme a ui-spec §3.1. */}
-          <motion.a
-            href="/checkout"
-            className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white"
-            /* Radio de botones unificado a 8px (decisión #3 — antes 6px). */
-            style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, padding: "10px 20px", fontSize: 14 }}
-            variants={{ rest: { backgroundColor: "var(--color-brand-primary)" }, hover: { backgroundColor: "var(--color-brand-pressed)" } }}
-            initial="rest"
-            whileHover="hover"
-            transition={{ duration: 0.2, ease: "easeOut" }}
+          {/* TANDA 2 — CTA de nav: Button del sistema, size sm (nav/compacto).
+              El hover (cambio de superficie, sin scale/glow) lo da el CSS del
+              sistema — además focusable por teclado (D11). E1 — destino
+              re-apuntado a `#productos` (antes /checkout directo: el visitante
+              caía en un checkout vacío). */}
+          <Button
+            as="a"
+            href="#productos"
+            variant="primary"
+            size="sm"
+            className="hidden md:inline-flex"
           >
             {t.nav.menu.verTienda}
-          </motion.a>
+          </Button>
           <MobileNav
             navLinks={navLinks}
             verTienda={t.nav.menu.verTienda}
@@ -381,29 +386,16 @@ export default function Hero() {
           />
 
           {/* Botones */}
-          {/* TANDA 5 (HI-5) — motion de tributo: el botón primario ya no
-              escala, no emite glow boxShadow ni despliega la flecha en
-              hover; el hover es solo cambio de background a brand-pressed.
-              El enlace secundario ya no se desplaza ni baja de opacidad. */}
+          {/* TANDA 2 — botones del sistema: primario size md (foco del Hero)
+              + ghost (subrayado scaleX, sin la flecha literal `→` que lo hacía
+              competir con el primario — D5). El hover sobrio lo da el CSS. */}
           <div className="flex items-center gap-5 flex-wrap">
-            <motion.a
-              href="#productos"
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-white"
-              style={{ backgroundColor: "var(--color-brand-primary)", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
-              variants={{ rest: { backgroundColor: "var(--color-brand-primary)" }, hover: { backgroundColor: "var(--color-brand-pressed)" } }}
-              initial="rest"
-              whileHover="hover"
-              transition={{ duration: 0.2, ease: "easeOut" }}
-            >
+            <Button as="a" href="#productos" variant="primary" size="md">
               {t.hero.btn1}
-            </motion.a>
-            <a
-              href="#sobre-nosotros"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors duration-200 hover:text-[var(--color-brand-pressed)]"
-              style={{ color: "var(--color-brand-primary)" }}
-            >
-              {t.hero.btn2} →
-            </a>
+            </Button>
+            <Button as="a" href="#sobre-nosotros" variant="ghost">
+              {t.hero.btn2}
+            </Button>
           </div>
         </motion.div>
 

@@ -60,11 +60,14 @@ export default function Footer() {
   const navLinks = [
     {
       heading: t.footer.shop,
+      /* E1/E7 — los 4 enlaces de "Tienda" apuntaban a /checkout y dejaban al
+         visitante en un checkout vacío. Re-apuntados a `#productos`: la
+         compra empieza siempre por el catálogo + "Añadir al carrito". */
       items: [
-        { label: "Fresa Mágnum", href: "/checkout" },
-        { label: "Fresa Dream", href: "/checkout" },
-        { label: "Fresa Variedad 1525", href: "/checkout" },
-        { label: t.footer.viewAllProducts, href: "/checkout" },
+        { label: "Fresa Mágnum", href: "#productos" },
+        { label: "Fresa Dream", href: "#productos" },
+        { label: "Fresa Variedad 1525", href: "#productos" },
+        { label: t.footer.viewAllProducts, href: "#productos" },
       ],
     },
     {
@@ -122,7 +125,11 @@ export default function Footer() {
             <p className="text-sm text-[var(--color-text-on-deep)] leading-relaxed max-w-[18ch]">
               {t.footer.description}
             </p>
-            <div className="flex items-center gap-3 mt-5">
+            {/* TANDA 2 — iconos sociales: hit-area a 44×44 (.btn-icon),
+                consistente con el resto de icon-only del sitio (antes
+                w-8 h-8 = 32px, por debajo del tap target — D23). El círculo
+                visible de 32px va dentro de la caja de 44px. */}
+            <div className="flex items-center gap-1 mt-5 -ml-2">
               {SOCIALS.map(({ label, href, icon }) => (
                 <a
                   key={label}
@@ -130,9 +137,11 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-[var(--color-brand-primary)] flex items-center justify-center transition-colors duration-200"
+                  className="btn-icon"
                 >
-                  {icon}
+                  <span className="w-8 h-8 rounded-full bg-white/10 hover:bg-[var(--color-brand-primary)] flex items-center justify-center transition-colors duration-200">
+                    {icon}
+                  </span>
                 </a>
               ))}
             </div>
@@ -157,19 +166,18 @@ export default function Footer() {
               <ul className="space-y-3">
                 {items.map(({ label, href }) => (
                   <li key={label}>
-                    {/* TANDA 1 — hover de link: `--color-brand-primary` (#962a1f)
-                        sobre el footer maroon #2d0a0a OSCURECÍA el texto (el
-                        contraste en hover caía por debajo del reposo). El hover
-                        pasa a blanco — aclara, conforme a la regla "un hover
-                        de texto mantiene o mejora la legibilidad". */}
-                    <motion.a
+                    {/* TANDA 1 — hover de link aclara a blanco (sobre el
+                        footer maroon el rojo de marca oscurecía el texto).
+                        TANDA 2 (D20) — retirado el desplazamiento `x:4` del
+                        hover: el motion lateral lee como anuncio y el header
+                        ya tenía esa corrección; el nav-link del footer la
+                        recibe ahora. Queda solo el cambio de color, en CSS. */}
+                    <a
                       href={href}
-                      className="text-sm text-[var(--color-text-on-deep)] inline-block"
-                      whileHover={{ x: 4, color: "var(--white)" }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="text-sm text-[var(--color-text-on-deep)] inline-block transition-colors duration-200 hover:text-[var(--white)]"
                     >
                       {label}
-                    </motion.a>
+                    </a>
                   </li>
                 ))}
               </ul>

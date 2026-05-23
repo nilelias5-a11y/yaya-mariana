@@ -18,6 +18,12 @@ type CartContextType = {
   clearCart: () => void;
   total: number;
   count: number;
+  /* Fase 5 · TANDA 2 (E6) — el estado abierto/cerrado del drawer del Cart
+     vive en el contexto: así "Añadir al carrito" puede abrir la cesta y
+     poner el paso "Ir a pagar" delante del visitante (microconversión). */
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -30,6 +36,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // de hidratación. La cesta guardada se carga en un efecto tras montar.
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  /* E6 — drawer del Cart: estado elevado al contexto (antes local en Cart). */
+  const [isOpen, setIsOpen] = useState(false);
 
   // L8 — rehidratación: leer la cesta guardada una vez en el cliente.
   useEffect(() => {
@@ -67,6 +75,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, hydrated]);
 
+  const openCart = useCallback(() => setIsOpen(true), []);
+  const closeCart = useCallback(() => setIsOpen(false), []);
+
   const addToCart = useCallback((product: CartProduct) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.name === product.name);
@@ -77,6 +88,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...product, quantity: 1 }];
     });
+    /* E6 — al añadir, el drawer se abre: el paso "Ir a pagar" aparece solo. */
+    setIsOpen(true);
   }, []);
 
   const removeFromCart = useCallback((name: string) => {
@@ -98,7 +111,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, total, count }}
+      value={{
+        items,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        total,
+        count,
+        isOpen,
+        openCart,
+        closeCart,
+      }}
     >
       {children}
     </CartContext.Provider>

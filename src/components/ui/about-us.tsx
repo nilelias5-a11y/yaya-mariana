@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
+import { Button } from "@/components/ui/button";
 
 export default function AboutUs() {
   const { t } = useLanguage();
@@ -63,36 +64,17 @@ export default function AboutUs() {
             </blockquote>
           </div>
 
-          {/* TANDA 5 (HI-5) — botón de tributo: sin scale:1.06 ni glow
-              boxShadow. El hover oscurece la superficie a brand-pressed.
-              El enlace de contacto ya no se desplaza; solo el subrayado
-              scaleX señala el hover. */}
+          {/* TANDA 2 — botones del sistema: primario (size md) + ghost
+              (subrayado scaleX, tratamiento único de secundario). El hover
+              sobrio lo da el CSS del sistema. E1 — "Ver tienda" re-apuntado
+              a `#productos` (antes /checkout: checkout vacío). */}
           <div className="mt-8 flex items-center gap-4">
-            <motion.a
-              href="/checkout"
-              /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-              className="inline-flex items-center gap-2 bg-[var(--color-brand-primary)] text-white text-sm font-semibold px-6 py-3 rounded-md"
-              variants={{ rest: { backgroundColor: "var(--color-brand-primary)" }, hover: { backgroundColor: "var(--color-brand-pressed)" } }}
-              initial="rest"
-              whileHover="hover"
-              transition={{ duration: 0.2, ease: "easeOut" }}
-            >
+            <Button as="a" href="#productos" variant="primary" size="md">
               {t.about.viewStore}
-            </motion.a>
-            <motion.a
-              href="#contacto"
-              className="relative inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-brand-primary)] pb-[3px]"
-              initial="rest"
-              whileHover="hover"
-            >
+            </Button>
+            <Button as="a" href="#contacto" variant="ghost">
               {t.about.contact}
-              <motion.span
-                className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-brand-primary)] w-full block"
-                variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                style={{ transformOrigin: "left" }}
-              />
-            </motion.a>
+            </Button>
           </div>
         </motion.div>
       </div>

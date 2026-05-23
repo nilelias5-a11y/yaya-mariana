@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-mot
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
 import { season } from "@/lib/season";
+import { Button } from "@/components/ui/button";
 
 type Variety = "Mágnum" | "Dream" | "1525";
 type Filter = "all" | Variety;
@@ -161,6 +162,12 @@ function ProductCarousel({
       <div className="absolute bottom-0 inset-x-0 h-14 bg-gradient-to-t from-black/25 to-transparent z-[1]" />
 
       {/* Arrows */}
+      {/* TANDA 2 — flechas: botón icon-only del sistema (.btn-icon). El
+          círculo blanco y la transición de aparición controls-visible viven
+          en propiedades explícitas (antes `transition-all` arrastraba
+          propiedades no intencionadas — D8). Centrado vertical por `top`
+          calculado (44px de caja) para no chocar con el translateY(1px) del
+          estado active del sistema. */}
       <button
         type="button"
         aria-label="Foto anterior"
@@ -168,7 +175,7 @@ function ProductCarousel({
           e.preventDefault();
           prev();
         }}
-        className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-all duration-200 ${controlsVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-1 pointer-events-none"}`}
+        className={`btn-icon absolute left-2 top-[calc(50%-22px)] z-10 rounded-full bg-white/85 backdrop-blur-sm shadow-md hover:bg-white transition-[background-color,opacity,transform] duration-200 ${controlsVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       >
         <svg
           viewBox="0 0 16 16"
@@ -189,7 +196,7 @@ function ProductCarousel({
           e.preventDefault();
           next();
         }}
-        className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-all duration-200 ${controlsVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-1 pointer-events-none"}`}
+        className={`btn-icon absolute right-2 top-[calc(50%-22px)] z-10 rounded-full bg-white/85 backdrop-blur-sm shadow-md hover:bg-white transition-[background-color,opacity,transform] duration-200 ${controlsVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       >
         <svg
           viewBox="0 0 16 16"
@@ -384,26 +391,25 @@ function ProductCard({
               {/* TANDA 1 — `ml-1.5`(6px)→`ml-2`(8px): precio↔unidad on-baseline. */}
               <span className="text-xs text-[var(--color-text-muted)] ml-2">/ 500g</span>
             </div>
-            <a
-              href="/checkout"
-              className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-brand-primary)] hover:text-[var(--color-brand-pressed)] transition-colors duration-200"
-            >
+            {/* TANDA 2 — "Ver más": link de acción terciario del sistema
+                (.btn-link, 13px). D7 — retirada la flecha deslizante que le
+                daba peso de secundario fuerte y competía con "Añadir".
+                E1 — destino re-apuntado a `#productos`: el visitante que
+                quiere ver más se queda en el catálogo (no hay PDP). */}
+            <Button as="a" href="#productos" variant="link">
               {viewMoreLabel}
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1">
-                <path d="M3 8h10M9 4l4 4-4 4" />
-              </svg>
-            </a>
+            </Button>
           </div>
+          {/* TANDA 2 — "Añadir al carrito": botón primario del sistema
+              (.btn .btn--md .btn--block). El estado transitorio `added`
+              cambia a la variante `success`. El `min-height` del sistema
+              (48px) garantiza que el swap de label "Añadir"→"Añadido" no
+              cambie la altura (D12). El click abre el drawer (E6, vía
+              addToCart en el cart-context). */}
           <button
+            type="button"
             onClick={handleAddToCart}
-            /* py-3 → alto de toque ≥44px (L2); rounded-md = 8px (decisión #3). */
-            /* TANDA 5 (HI-8) — gradiente rojo→naranja aplanado a color de
-               marca plano; hover sobrio sin glow. */
-            className={`w-full py-3 rounded-md text-sm font-bold transition-colors duration-200 ${
-              added
-                ? "bg-[var(--color-success)] text-white"
-                : "text-white bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)]"
-            }`}
+            className={`btn btn--md btn--block ${added ? "btn--success" : "btn--primary"}`}
           >
             {added ? (
               <span className="flex items-center justify-center gap-1.5">
@@ -492,18 +498,24 @@ export default function Products() {
         {/* TANDA 1 — `mb-10`→`mb-12`: iguala el ritmo header→filtros con el
             de filtros→grid; antes 40px/48px eran dos saltos casi paritarios. */}
         <div className="flex justify-center gap-2 mb-12 flex-wrap">
+          {/* TANDA 2 — filtros de variedad: control segmentado (toggle), no
+              un botón de rol primario/ghost. Normalizado: radio del token
+              (--radius-button), borde inactivo a token sólido que pasa UI
+              3:1 (--color-border-default — antes opacidad /30 < 3:1, D13),
+              `transition-all` → `transition-colors` (D13), y estado
+              active/pressed translateY(1px) por `:active`. */}
           {FILTERS.map((f) => (
             <button
               key={f}
               type="button"
               aria-pressed={active === f}
               onClick={() => setActive(f)}
-              /* min-h 44px → tap target (L2); rounded-md = 8px (decisión #3). */
-              className={`inline-flex items-center justify-center px-5 py-3 min-h-[44px] rounded-md text-sm font-semibold border-2 transition-all duration-200 cursor-pointer ${
+              className={`inline-flex items-center justify-center px-5 py-3 min-h-[44px] text-sm font-semibold border-2 transition-colors duration-200 cursor-pointer active:translate-y-px ${
                 active === f
                   ? "bg-[var(--color-brand-primary)] border-[var(--color-brand-primary)] text-white shadow-sm"
-                  : "border-[var(--color-brand-primary)]/30 text-[var(--color-brand-primary)] hover:border-[var(--color-brand-primary)] bg-white/60"
+                  : "border-[var(--color-border-default)] text-[var(--color-brand-primary)] hover:border-[var(--color-brand-primary)] bg-white/60"
               }`}
+              style={{ borderRadius: "var(--radius-button)" }}
             >
               {f === "all" ? t.products.all : f}
             </button>

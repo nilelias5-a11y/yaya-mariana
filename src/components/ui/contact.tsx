@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
+import { Button } from "@/components/ui/button";
 
 /* TANDA 1 — el wrapper `FocusField` quedó vacío en Fase 4.5 (tras retirar
    el scale:1.01 de focus era un `<div>` neutro = código muerto). Colapsado:
@@ -212,12 +213,16 @@ export default function Contact() {
               <p className="text-[var(--color-text-secondary)] text-sm max-w-xs">
                 {t.contact.sentSubtitle}
               </p>
-              <button
+              {/* TANDA 2 — tras el éxito ésta es LA acción: sube de link
+                  terciario minúsculo a botón ghost del sistema (D21), con
+                  presencia coherente con los demás secundarios. */}
+              <Button
+                variant="ghost"
+                className="mt-2"
                 onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); setErrors({}); }}
-                className="text-sm font-semibold text-[var(--color-brand-primary)] hover:text-[var(--color-brand-hover)] transition-colors mt-2"
               >
                 {t.contact.sendAnother}
-              </button>
+              </Button>
             </div>
           ) : (
             /* #38 — noValidate: la validación nativa se sustituye por la
@@ -321,15 +326,11 @@ export default function Contact() {
                   </p>
                 )}
               </div>
-              {/* TANDA 5 (HI-8) — botón submit: color de marca plano (antes
-                  gradiente rojo→naranja); hover sobrio de color, sin opacidad. */}
-              <button
-                type="submit"
-                /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-                className="w-full py-3 rounded-md text-sm font-bold text-white bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)] transition-colors duration-200 cursor-pointer"
-              >
+              {/* TANDA 2 — submit: botón primario del sistema (.btn .btn--md
+                  .btn--block). */}
+              <Button type="submit" variant="primary" block>
                 {t.contact.send}
-              </button>
+              </Button>
             </form>
           )}
         </motion.div>

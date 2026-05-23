@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { season } from "@/lib/season";
+import { Button } from "@/components/ui/button";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -48,23 +49,19 @@ function InSeasonCTA() {
       >
         {t.cta.subtitle}
       </motion.p>
-      {/* TANDA 5 (HI-5) — botones de tributo: sin scale ni glow boxShadow.
-          El botón sólido oscurece levemente su superficie en hover; el
-          botón fantasma rellena su fondo. Cambios de color, no de tamaño. */}
+      {/* TANDA 2 — jerarquía resuelta (D6): el primario es el botón invertido
+          (blanco sólido sobre la banda roja); el secundario, antes un outline
+          `border-2` que competía con peso casi idéntico, baja a ghost real
+          (texto + subrayado scaleX, sin borde). Un único CTA domina.
+          E1 — "Comprar ahora" re-apuntado a `#productos` (antes /checkout
+          directo: el visitante caía en un checkout vacío). */}
       <div className="flex items-center justify-center gap-4 flex-wrap">
-        <a
-          href="/checkout"
-          /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-          className="inline-flex items-center gap-2 bg-[var(--color-bg-surface)] text-[var(--color-brand-primary)] text-sm font-bold px-8 py-3 rounded-md shadow-lg transition-colors duration-200 hover:bg-[var(--color-bg-subtle)]"
-        >
+        <Button as="a" href="#productos" variant="primary-inverse" size="md">
           {t.cta.buyNow}
-        </a>
-        <a
-          href="#sobre-nosotros"
-          className="inline-flex items-center gap-2 border-2 border-white/60 text-white text-sm font-semibold px-8 py-3 rounded-md transition-colors duration-200 hover:bg-white/10"
-        >
+        </Button>
+        <Button as="a" href="#sobre-nosotros" variant="ghost" onDeep>
           {t.cta.ourStory}
-        </a>
+        </Button>
       </div>
 
       {/* M4 — micro-bloque cold-chain: trazabilidad logística de la entrega. */}
@@ -183,13 +180,14 @@ function OffSeasonCTA() {
             aria-label={o.emailLabel}
             className="flex-1 rounded-full bg-[var(--color-bg-surface)] px-5 py-3 text-base text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-white/70"
           />
-          <button
-            type="submit"
-            /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-            className="inline-flex items-center justify-center bg-[var(--color-bg-surface)] text-[var(--color-brand-primary)] text-sm font-bold px-7 py-3 rounded-md shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
-          >
+          {/* TANDA 2 — "Avísame": mismo botón del sistema que "Comprar ahora"
+              (primario invertido) — son el mismo CTA en dos estaciones, ahora
+              idénticos (D17). D18 — el hover deja de ser un crecimiento de
+              sombra (lectura de anuncio) y pasa al cambio de superficie sobrio
+              del sistema. */}
+          <Button type="submit" variant="primary-inverse" size="md">
             {o.notify}
-          </button>
+          </Button>
         </div>
         {/* TANDA 1 — `gap-2.5`(10px)→`gap-3`(12px) y `mt-0.5`(2px)→`mt-1`(4px):
             snap a la escala base-4. */}

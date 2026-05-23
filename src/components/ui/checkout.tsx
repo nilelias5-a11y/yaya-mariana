@@ -6,6 +6,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CardElement, Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
+import { Button } from "@/components/ui/button";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -144,13 +145,45 @@ function CheckoutForm() {
             Gracias por tu compra, {name}. Recibirás un email de confirmación en{" "}
             <span className="font-semibold text-[var(--color-text-primary)]">{email}</span>.
           </p>
-          {/* TANDA 5 (HI-8) — botón aplanado a color de marca plano. */}
-          <button
-            onClick={() => router.push("/")}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-md text-white font-bold shadow-lg bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)] transition-colors duration-200"
-          >
+          {/* TANDA 2 — botón "Volver al inicio" del sistema (primario md). */}
+          <Button variant="primary" size="md" onClick={() => router.push("/")}>
             Volver al inicio
-          </button>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  /* E2 (CRÍTICO) — guard de carrito vacío. Antes /checkout renderizaba el
+     formulario completo con "Pagar 0.00€" aunque no hubiera ítems (importe
+     que la API rechaza por < 0,50€). Si la cesta está vacía se muestra un
+     estado vacío digno con un enlace de vuelta al catálogo (`/#productos`)
+     en lugar de un checkout inutilizable. El éxito de pago se comprueba
+     ANTES (clearCart vacía la cesta tras pagar — no debe disparar este
+     guard, por eso va después del bloque `success`). */
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: "var(--color-bg-base)" }}>
+        <div className="max-w-md w-full text-center">
+          <div className="w-20 h-20 rounded-full bg-[var(--color-bg-subtle)] flex items-center justify-center mx-auto mb-6 text-[var(--color-text-muted)]">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10" aria-hidden>
+              <path d="M12 4L6 12v28a4 4 0 004 4h28a4 4 0 004-4V12l-6-8z" />
+              <line x1="6" y1="12" x2="42" y2="12" />
+              <path d="M32 20a8 8 0 01-16 0" />
+            </svg>
+          </div>
+          <h1 className="font-serif text-3xl text-[var(--color-text-primary)] mb-3">{t.cart.empty}</h1>
+          <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
+            {/* Vuelve al catálogo del single-page: la compra empieza por
+                "Añadir al carrito". El ancla `/#productos` funciona tanto
+                desde /checkout como tras una recarga directa. */}
+            <Button as="a" href="/#productos" variant="primary" size="md">
+              {t.about.viewStore}
+            </Button>
+            <Button as="a" href="/" variant="ghost">
+              {t.nav.menu.items[0].label}
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -164,9 +197,12 @@ function CheckoutForm() {
     <div className="min-h-screen py-16" style={{ backgroundColor: "var(--color-bg-base)" }}>
       <div className="container">
         {/* Back button */}
+        {/* TANDA 2 — "Volver": link de acción terciario del sistema
+            (.btn-link, 13px — antes 14px suelto). */}
         <button
+          type="button"
           onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-brand-primary)] transition-colors mb-10"
+          className="btn-link mb-10"
         >
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
             <path d="M10 4L6 8l4 4" />
@@ -305,13 +341,13 @@ function CheckoutForm() {
               </div>
             )}
 
-            {/* TANDA 5 (HI-8) — botón "Pagar": color de marca plano (antes
-                gradiente rojo→naranja); hover sobrio de color. */}
+            {/* TANDA 2 — botón "Pagar": botón primario del sistema
+                (.btn .btn--md .btn--block). El estado disabled (mientras
+                Stripe carga / procesa el pago) lo da el sistema. */}
             <button
               type="submit"
               disabled={!stripe || loading}
-              /* rounded-md = 8px — radio de botones unificado (decisión #3). */
-              className="w-full py-4 rounded-md text-white font-bold text-base shadow-xl bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-pressed)] transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn btn--md btn--block btn--primary"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
