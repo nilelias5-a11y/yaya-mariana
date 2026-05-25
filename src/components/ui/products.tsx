@@ -283,8 +283,6 @@ function ProductCard({
             </div>
             <a
               href="/checkout"
-              target="_blank"
-              rel="noopener noreferrer"
               className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[#c0392b]/70 hover:text-[#c0392b] transition-colors duration-200"
             >
               {viewMoreLabel}

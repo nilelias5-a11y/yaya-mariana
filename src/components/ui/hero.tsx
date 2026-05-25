@@ -188,7 +188,7 @@ export default function Hero() {
               className="font-sans font-semibold uppercase"
               style={{ color: "#c0392b", fontSize: 11, letterSpacing: "0.22em" }}
             >
-              Tarragona · Qualitat premium
+              {t.hero.eyebrow}
             </p>
           </div>
 

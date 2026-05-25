@@ -39,8 +39,6 @@ export default function AboutUs() {
           <div className="mt-8 flex items-center gap-4">
             <motion.a
               href="/checkout"
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#c0392b] text-white text-sm font-semibold px-6 py-3 rounded-full"
               whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(192,57,43,0.35)" }}
               whileTap={{ scale: 0.97 }}

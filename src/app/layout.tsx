@@ -22,9 +22,9 @@ const yellowtail = Yellowtail({
 });
 
 export const metadata: Metadata = {
-  title: "Yaya Mariana – Lechugas hidropónicas frescas",
+  title: "Yaya Mariana – Fresas de Tarragona",
   description:
-    "Lechugas hidropónicas frescas, cultivadas con cariño. Sin pesticidas, sin químicos. Directas a tu mesa.",
+    "Fresas frescas de Tarragona, cultivadas sin pesticidas con el cuidado de siempre. Tres variedades — Mágnum, Dream y 1525 — directas del campo a tu mesa.",
 };
 
 export default function RootLayout({

@@ -3,6 +3,7 @@ export type Lang = "es" | "ca" | "en";
 export const translations = {
   es: {
     hero: {
+      eyebrow: "Tarragona · Calidad premium",
       word1: "Fresas",
       subtitle:
         "Fresas frescas de Tarragona, cultivadas con el mismo cariño que le pondría tu abuela. Sin pesticidas, naturales y siempre en su punto.",
@@ -25,7 +26,7 @@ export const translations = {
       },
     },
     stats: {
-      labels: ["Del camp a taula", "Pesticidas", "Del campo a tu mesa", "Qualitat premium"],
+      labels: ["Del campo a la mesa", "Pesticidas", "Del campo a tu mesa", "Calidad premium"],
     },
     products: {
       eyebrow: "Nuestra cosecha",
@@ -125,6 +126,7 @@ export const translations = {
   },
   ca: {
     hero: {
+      eyebrow: "Tarragona · Qualitat premium",
       word1: "Maduixes",
       subtitle:
         "Maduixes fresques de Tarragona, cultivades amb la mateixa cura que li posaria la teva àvia. Sense pesticides, naturals i sempre al seu punt.",
@@ -247,6 +249,7 @@ export const translations = {
   },
   en: {
     hero: {
+      eyebrow: "Tarragona · Premium quality",
       word1: "Strawberries",
       subtitle:
         "Fresh strawberries from Tarragona, grown with the same care your grandmother would put in. No pesticides, natural and always at their best.",

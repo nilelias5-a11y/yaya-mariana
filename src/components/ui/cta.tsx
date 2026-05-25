@@ -40,8 +40,6 @@ export default function CTA() {
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <motion.a
             href="/checkout"
-            target="_blank"
-            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-white text-[#c0392b] text-sm font-bold px-8 py-3.5 rounded-full shadow-lg"
             whileHover={{ scale: 1.04, boxShadow: "0 12px 32px rgba(0,0,0,0.25)" }}
             whileTap={{ scale: 0.97 }}
