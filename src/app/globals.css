@@ -250,3 +250,19 @@
     transform: none;
   }
 }
+
+/* ENHANCE-3 — Dropcap editorial AboutUs p1.
+   Aplicable al wrapper de los parrafos del cuerpo de AboutUs.
+   Solo afecta a la primera letra del PRIMER <p>; el segundo
+   parrafo se respeta como prosa estandar. Playfair regular,
+   color de marca a 70% alpha (no rompe la paleta canonica). */
+.about-dropcap > p:first-of-type::first-letter {
+  font-family: var(--font-playfair);
+  float: left;
+  font-size: 3.2em;
+  line-height: 0.85;
+  margin: 0.08em 0.12em 0 0;
+  color: rgba(192, 57, 43, 0.85);
+  font-weight: 400;
+  font-style: normal;
+}

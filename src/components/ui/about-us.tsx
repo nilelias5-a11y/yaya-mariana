@@ -7,34 +7,120 @@ export default function AboutUs() {
   const { t } = useLanguage();
 
   return (
-    <section id="sobre-nosotros" className="bg-white py-20 px-6">
-      <div className="max-w-[720px] mx-auto">
+    /* ENHANCE-3 — `relative` para anclar la capa de textura de papel
+       absoluta sobre la seccion sin tocar fondo bg-white. */
+    <section id="sobre-nosotros" className="relative bg-white py-20 px-6">
+      {/* ENHANCE-3 — Overlay textura de papel envejecido. SVG turbulence
+          tintando hacia ink-warm (#7a3a3a) via mix-blend-multiply al 3%.
+          Da sensacion de carta de receta, no de marketing. Cero impacto
+          en motion ni interaccion (pointer-events: none). */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          mixBlendMode: "multiply",
+          opacity: 0.03,
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.478  0 0 0 0 0.227  0 0 0 0 0.227  0 0 0 1 0'/></filter><rect width='200' height='200' filter='url(%23p)'/></svg>\")",
+          backgroundRepeat: "repeat",
+        }}
+      />
+
+      <div className="relative max-w-[720px] mx-auto">
         <motion.div
           initial={{ opacity: 0, x: -60 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
+          {/* ENHANCE-3 — Divisor decorativo superior 60x1px (#f5c6c2)
+              centrado: marca de "abre-capitulo" antes del eyebrow. */}
+          <div
+            aria-hidden
+            className="mx-auto mb-8"
+            style={{ width: 60, height: 1, backgroundColor: "#f5c6c2" }}
+          />
+
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.about.eyebrow}
           </span>
           <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-6">
             {t.about.title}{" "}
-            <em className="text-[#c0392b] not-italic italic">{t.about.titleEm}</em>
+            {/* ENHANCE-3 — Highlight wipe terracota sobre <em> del titulo
+                (capa abs detras del texto, scaleX origin-left 820ms warm-lux
+                al entrar en viewport). em mantiene su markup canonico. */}
+            <em
+              className="text-[#c0392b] not-italic italic"
+              style={{ position: "relative", display: "inline-block" }}
+            >
+              <motion.span
+                aria-hidden
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.82, ease: [0.19, 1, 0.22, 1], delay: 0.4 }}
+                style={{
+                  position: "absolute",
+                  inset: "0 -0.08em",
+                  backgroundColor: "rgba(192,57,43,0.08)",
+                  transformOrigin: "left center",
+                  zIndex: 0,
+                }}
+              />
+              <span style={{ position: "relative", zIndex: 1 }}>
+                {t.about.titleEm}
+              </span>
+            </em>
           </h2>
-          <div className="space-y-4 text-[#7a3a3a]/72 text-[0.9375rem] leading-relaxed">
+          {/* ENHANCE-3 — Drop cap en la primera letra del primer parrafo.
+              Activado por .about-dropcap (regla en globals.css §ENHANCE-3).
+              Solo afecta a `p:first-of-type`. */}
+          <div className="about-dropcap space-y-4 text-[#7a3a3a]/72 text-[0.9375rem] leading-relaxed">
             <p>{t.about.p1}</p>
             <p>{t.about.p2}</p>
           </div>
 
-          <blockquote className="mt-8 pl-5 border-l-[3px] border-[#e74c3c]">
-            <p className="italic text-[#7a3a3a] text-base leading-relaxed">
-              "{t.about.quote}"
-            </p>
+          {/* ENHANCE-3 — Blockquote draw: el "border-l-[3px]" se sustituye
+              por un motion.div absoluto que dibuja scaleY 0->1 origin-top
+              al entrar el bloque, y la cita aparece con fade encadenado.
+              Comillas tipograficas reales (curly) en lugar de straight. */}
+          <blockquote className="relative mt-8 pl-5">
+            <motion.div
+              aria-hidden
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.76, ease: [0.19, 1, 0.22, 1] }}
+              className="absolute left-0 top-0 bottom-0"
+              style={{
+                width: 3,
+                backgroundColor: "#e74c3c",
+                transformOrigin: "top center",
+              }}
+            />
+            <motion.p
+              className="italic text-[#7a3a3a] text-base leading-relaxed"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, delay: 0.22, ease: [0.19, 1, 0.22, 1] }}
+            >
+              &ldquo;{t.about.quote}&rdquo;
+            </motion.p>
             <footer className="mt-2 text-sm text-[#7a3a3a]/50 not-italic">
               — {t.about.quoteAuthor}
             </footer>
           </blockquote>
+
+          {/* ENHANCE-3 — Glifo ornamental tras el blockquote: cierre
+              editorial sutil entre la cita y los CTAs. */}
+          <div
+            aria-hidden
+            className="mt-6 text-center"
+            style={{ color: "rgba(192,57,43,0.4)", fontSize: "1.1rem", lineHeight: 1 }}
+          >
+            ❦
+          </div>
 
           <div className="mt-8 flex items-center gap-4">
             <motion.a
