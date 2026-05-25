@@ -1,7 +1,6 @@
 "use client";
 
-import { MeshGradient } from "@paper-design/shaders-react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
@@ -206,7 +205,6 @@ function MobileNav({
 
 export default function Hero() {
   const { t } = useLanguage();
-  const reduceMotion = useReducedMotion();
 
   const navLinks = t.nav.menu.items.slice(1).map((item, i) => ({
     label: item.label,
@@ -305,15 +303,26 @@ export default function Hero() {
       </nav>
 
       <section className="relative overflow-hidden" style={{ isolation: "isolate", backgroundColor: "var(--color-bg-base)" }}>
-        {/* TANDA 5 (ME-21) — MeshGradient dentro de la disciplina 2-color:
-            el shader de 5 rosas-melocotón ajenos al sistema se reduce a 3
-            tonos cream de la paleta de marca (cream-100/200/300). Conserva
-            un susurro de calidez en el Hero sin romper el restraint. */}
-        <MeshGradient
-          colors={["#fdf6f5", "#fdf0ef", "#ead7d4"]}
-          /* prefers-reduced-motion: speed 0 congela el shader (mantiene el degradado, sin movimiento) */
-          speed={reduceMotion ? 0 : 0.5}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+        {/* TANDA 4 (Fase 5) — el shader WebGL `@paper-design/shaders-react`
+            MeshGradient era el #1 perf-blocker del Hero (LCP ~4s, ~+15 pts
+            Lighthouse perdidos en mobile por la inicialización GPU + el
+            requestAnimationFrame del shader). Reemplazado por un fondo
+            CSS estático de 3 capas (radial-gradients cálidos sobre cream-100):
+            sin JS, sin GPU, sin layout-shift y con el mismo aspecto cream-
+            melocotón suave. La aproximación visual es muy buena — los puntos
+            calientes de los radial-gradients caen en las mismas esquinas
+            ópticas que la mesh anterior (TL cream-200, BR cream-300). */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(ellipse 70% 60% at 22% 18%, var(--cream-200) 0%, transparent 60%),
+              radial-gradient(ellipse 65% 55% at 78% 78%, var(--cream-300) 0%, transparent 65%),
+              radial-gradient(ellipse 45% 40% at 52% 52%, var(--cream-200) 0%, transparent 70%),
+              var(--cream-100)
+            `,
+          }}
         />
 
       {/* Hero — 2 columnas */}
