@@ -67,12 +67,23 @@
 
 ---
 
-## Estrategia de reversión — DECISIÓN PENDIENTE de Nil
+## Estrategia de reversión — EJECUTADA 2026-05-25
 
-Tres opciones presentadas a Nil el 2026-05-25. Su recomendación: B (cherry-pick). Esperando confirmación explícita antes de tocar git.
+Nil confirmó estrategia **B (cherry-pick) con 1-fix-1-commit**. Ejecutado en bloque, build verde + tsc 0 tras cada commit. Estado final del repo:
 
-- **A) HARD RESET** — `clasico` ← `clasico-backup-pre-agents`. Pierde TODO el trabajo de los agentes (incl. a11y WCAG AA, SEO completo, perf, mobile, i18n, bug fixes).
-- **B) CHERRY-PICK** — `clasico` ← `clasico-backup-pre-agents` + commits aditivos con los fixes técnicos que NO tocan diseño visual (a11y, SEO, performance, mobile, i18n cart+checkout, bug fixes, Yellowtail). Implementación: hard reset + commits aditivos sobre la base original, archivando el trabajo actual en `clasico-agents-archive` antes del reset.
-- **C) MIXTO** — empezar desde backup y pedir permiso por cada fix técnico antes de aplicarlo. Más lento, más control.
+- `origin/clasico` = `f01c8cb` (baseline `19dabf2` + 7 commits aditivos, working branch)
+- `origin/clasico-agents-archive` = `62c6f77` (trabajo agentes Fases 0-5 preservado)
+- `origin/clasico-backup-pre-agents` = `19dabf2` (pristine reference, intacta)
 
-Cuando Nil confirme estrategia, se ejecuta y se añade aquí la nota de cierre.
+**7 commits aditivos aplicados:**
+1. `907d2e1` — **docs**: preserve agent-era reports + canonical `nil-design-preferences.md`.
+2. `c37369f` — **fix**: title "lechugas"→"fresas", target=_blank internos retirados, hero.eyebrow CA leak en ES, es.stats.labels CA→ES.
+3. `7eeb7b2` — **perf**: Yellowtail + lucide-react retiradas (dead deps), `next.config.ts` formats AVIF/WebP, public/ purgado ~14 MB, logo `unoptimized` retirado.
+4. `d3c935c` — **seo**: robots.ts + sitemap.ts + opengraph-image.tsx + metadata OG/Twitter/canonical + JSON-LD Organization + 3 Products.
+5. `33a3546` — **a11y**: skip-link + focus-trap + html lang sync + reduced-motion + aria-labels i18n + accessible validation + role=dialog Cart.
+6. `a1bb002` — **i18n**: cart + checkout traducidos a ES/CA/EN.
+7. `f01c8cb` — **mobile**: hamburguesa nav + tap-targets ≥44px + env(safe-area-inset-*) + 100dvh + iOS anti-zoom (16px) + inputmode/autocomplete/enterkeyhint.
+
+Cero modificación en fondos / paleta / tipografía / layouts / estructura visual base. Único modificado: paddings/min-height de botones para 44×44 mobile y font-size 16px en inputs (anti auto-zoom iOS) — ambos aprobados explícitamente por Nil para la capa mobile.
+
+Pendiente: las correcciones manuales de Nil tras revisar `localhost:3000` se anotan ABAJO (sección "Correcciones de Nil"). `learning-loop-v2` dispara al cerrar `quality-gate` APPROVED.
