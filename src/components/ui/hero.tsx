@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import QuoteAuthorHalo from "@/components/easter-eggs/quote-author-halo";
 import type { Lang } from "@/i18n/translations";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -343,7 +344,9 @@ export default function Hero() {
                 marginTop: 8,
               }}
             >
-              — {t.hero.quoteAuthor}
+              {/* ENHANCE-7: easter egg #3 — halo en hover sostenido >=1.5s
+                  sobre el nombre. Una vez por sesion (sessionStorage). */}
+              — <QuoteAuthorHalo>{t.hero.quoteAuthor}</QuoteAuthorHalo>
             </p>
           </div>
 

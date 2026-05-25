@@ -9,6 +9,8 @@ import Footer from "@/components/ui/footer";
 import Cart from "@/components/ui/cart";
 import SkipLink from "@/components/ui/skip-link";
 import HtmlLangSync from "@/components/html-lang-sync";
+import ConsoleTribute from "@/components/easter-eggs/console-tribute";
+import FooterPetal from "@/components/easter-eggs/footer-petal";
 
 export default function Home() {
   /* a11y: landmark de contenido principal y skip-link.
@@ -33,6 +35,9 @@ export default function Home() {
       </main>
       <Footer />
       <Cart />
+      {/* ENHANCE-7: easter eggs sutiles montados a nivel raiz. */}
+      <ConsoleTribute />
+      <FooterPetal />
     </>
   );
 }
