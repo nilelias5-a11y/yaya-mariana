@@ -249,6 +249,21 @@ export default function Hero() {
           speed={0.5}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         />
+        {/* ENHANCE-2 — Grano filmográfico 4% sobre MeshGradient. SVG
+            feTurbulence inlineado como background-image; mix-blend-multiply
+            tinta el grano gris hacia los tonos cream/melocotón de la mesh
+            sin introducir nuevos hex. Estático: cero impacto en motion. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none z-[1]"
+          style={{
+            mixBlendMode: "multiply",
+            opacity: 0.04,
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>\")",
+            backgroundRepeat: "repeat",
+          }}
+        />
 
       {/* Hero — 2 columnas */}
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 pt-16 pb-20 min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)]">
@@ -260,15 +275,49 @@ export default function Hero() {
           transition={{ duration: 0.7, ease: EASE_OUT }}
           className="flex flex-col items-start w-full md:w-[55%] md:pr-10"
         >
-          {/* Eyebrow con línea vertical decorativa */}
+          {/* Eyebrow con línea vertical decorativa.
+              ENHANCE-2: línea vertical draw-in (scaleY origin-top 620ms),
+              eyebrow letter-spacing settle 0.30→0.22em (880ms warm-lux),
+              y hairline-rule horizontal 32×1px bajo el eyebrow (MIXTA
+              aprobada por Nil — suma al sistema vertical+horizontal de
+              acentos hairline, no toca el existente). */}
           <div className="flex items-center gap-3 mb-5">
-            <div style={{ width: 1, height: 80, backgroundColor: "#f0d0d0", flexShrink: 0 }} />
-            <p
-              className="font-sans font-semibold uppercase"
-              style={{ color: "#c0392b", fontSize: 11, letterSpacing: "0.22em" }}
-            >
-              {t.hero.eyebrow}
-            </p>
+            <motion.div
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              transition={{ duration: 0.62, ease: [0.19, 1, 0.22, 1], delay: 0.38 }}
+              style={{
+                width: 1,
+                height: 80,
+                backgroundColor: "#f0d0d0",
+                flexShrink: 0,
+                transformOrigin: "top center",
+              }}
+            />
+            <div className="flex flex-col items-start gap-2">
+              <motion.p
+                className="font-sans font-semibold uppercase"
+                initial={{ letterSpacing: "0.30em", opacity: 0 }}
+                animate={{ letterSpacing: "0.22em", opacity: 1 }}
+                transition={{ duration: 0.88, ease: [0.19, 1, 0.22, 1], delay: 0.25 }}
+                style={{ color: "#c0392b", fontSize: 11 }}
+              >
+                {t.hero.eyebrow}
+              </motion.p>
+              <motion.span
+                aria-hidden
+                className="block"
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{ scaleX: 1, opacity: 1 }}
+                transition={{ duration: 0.72, ease: [0.19, 1, 0.22, 1], delay: 0.6 }}
+                style={{
+                  width: 32,
+                  height: 1,
+                  backgroundColor: "rgba(192,57,43,0.28)",
+                  transformOrigin: "left center",
+                }}
+              />
+            </div>
           </div>
 
           {/* Headline — cita en Yellowtail */}
@@ -298,10 +347,20 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* Línea decorativa */}
-          <div
+          {/* Línea decorativa — ENHANCE-2: entrada scaleX origin-left
+              720ms warm-lux, delay 500ms (encadenada tras eyebrow). */}
+          <motion.div
             className="my-6"
-            style={{ width: 60, height: 3, backgroundColor: "#c0392b", borderRadius: 2 }}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.72, ease: [0.19, 1, 0.22, 1], delay: 0.5 }}
+            style={{
+              width: 60,
+              height: 3,
+              backgroundColor: "#c0392b",
+              borderRadius: 2,
+              transformOrigin: "left center",
+            }}
           />
 
           {/* Botones */}
@@ -343,28 +402,81 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Columna derecha — logo oficial */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: EASE_OUT }}
-          className="w-full md:w-[45%] flex items-center justify-center"
-          style={{ filter: "drop-shadow(0 0 0px rgba(0,0,0,0))", mixBlendMode: "multiply" }}
-        >
-          <div className="logo-blend" style={{ maxWidth: 380, width: "100%", display: "flex", justifyContent: "center" }}>
-            <Image
-              src="/logo-nuevo.jpg"
-              alt="Yaya Mariana"
-              width={380}
-              height={380}
-              priority
-              className="h-auto"
-              style={{ maxWidth: 380, width: "100%" }}
+        {/* Columna derecha — logo oficial.
+            ENHANCE-2: aura radial cream-rosa (#f5c6c2 35% alpha) detrás
+            del logo, blur 40px. Sibling absolute al motion.div del logo
+            para que la `mixBlendMode: multiply` del logo no toque el halo. */}
+        <div className="w-full md:w-[45%] relative flex items-center justify-center">
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none flex items-center justify-center"
+          >
+            <div
+              style={{
+                width: 420,
+                height: 420,
+                maxWidth: "90%",
+                background:
+                  "radial-gradient(circle at center, rgba(245,198,194,0.35) 0%, transparent 60%)",
+                filter: "blur(40px)",
+              }}
             />
           </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: EASE_OUT }}
+            className="relative flex items-center justify-center w-full"
+            style={{ filter: "drop-shadow(0 0 0px rgba(0,0,0,0))", mixBlendMode: "multiply" }}
+          >
+            <div className="logo-blend" style={{ maxWidth: 380, width: "100%", display: "flex", justifyContent: "center" }}>
+              <Image
+                src="/logo-nuevo.jpg"
+                alt="Yaya Mariana"
+                width={380}
+                height={380}
+                priority
+                className="h-auto"
+                style={{ maxWidth: 380, width: "100%" }}
+              />
+            </div>
+          </motion.div>
+        </div>
 
       </div>
+
+      {/* ENHANCE-2 — Scroll cue idle abajo-centrado (solo md+). Label
+          uppercase + chevron drift. MotionConfig reducedMotion="user"
+          neutraliza el bounce automáticamente. */}
+      <motion.div
+        aria-hidden
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
+        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-10 hidden md:flex flex-col items-center gap-2 pointer-events-none"
+      >
+        <span
+          className="font-sans font-semibold uppercase"
+          style={{ color: "#c0392b", fontSize: 10, letterSpacing: "0.22em", opacity: 0.7 }}
+        >
+          {t.hero.scrollCue}
+        </span>
+        <motion.svg
+          viewBox="0 0 16 16"
+          width={14}
+          height={14}
+          fill="none"
+          stroke="#c0392b"
+          strokeOpacity={0.7}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          animate={{ y: [0, 4, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <path d="M4 6l4 4 4-4" />
+        </motion.svg>
+      </motion.div>
       </section>
     </>
   );

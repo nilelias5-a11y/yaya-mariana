@@ -17,6 +17,7 @@ export const translations = {
       btn2: "Nuestra historia",
       quoteText: "Todo lo bueno de la vida requiere paciencia, trabajo y amor.",
       quoteAuthor: "Yaya Mariana",
+      scrollCue: "Sigue leyendo",
     },
     nav: {
       sobreNosotros: "Sobre nosotros",
@@ -204,6 +205,7 @@ export const translations = {
       btn2: "La nostra història",
       quoteText: "Tot el bo de la vida requereix paciència, treball i amor.",
       quoteAuthor: "Yaya Mariana",
+      scrollCue: "Continua",
     },
     nav: {
       sobreNosotros: "Sobre nosaltres",
@@ -391,6 +393,7 @@ export const translations = {
       btn2: "Our story",
       quoteText: "All the good things in life require patience, work and love.",
       quoteAuthor: "Yaya Mariana",
+      scrollCue: "Read on",
     },
     nav: {
       sobreNosotros: "About us",
