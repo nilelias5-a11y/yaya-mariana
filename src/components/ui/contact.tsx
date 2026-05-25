@@ -25,6 +25,9 @@ type FormState = {
   message: string;
 };
 
+type FieldName = keyof FormState;
+type FieldErrors = Partial<Record<FieldName, string>>;
+
 const ADDRESS_ICON = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
@@ -54,6 +57,18 @@ export default function Contact() {
     message: "",
   });
   const [sent, setSent] = useState(false);
+  /* a11y (#38) — validacion accesible: errores por campo asociados
+     via aria-describedby; aria-invalid en los campos que fallan. */
+  const [errors, setErrors] = useState<FieldErrors>({});
+
+  /* Traduce el motivo de fallo de la Constraint Validation API a un
+     mensaje propio. valueMissing -> required; typeMismatch (email) -> email. */
+  function messageFor(field: HTMLInputElement | HTMLTextAreaElement): string | null {
+    if (field.validity.valid) return null;
+    if (field.validity.valueMissing) return t.formErrors.required;
+    if (field.validity.typeMismatch) return t.formErrors.email;
+    return t.formErrors.required;
+  }
 
   const contactInfo = [
     {
@@ -76,11 +91,35 @@ export default function Contact() {
   ];
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const field = e.target;
+    setForm((prev) => ({ ...prev, [field.name]: field.value }));
+    /* #38 — el error se limpia en cuanto el campo pasa a ser valido. */
+    if (errors[field.name as FieldName] && field.validity.valid) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[field.name as FieldName];
+        return next;
+      });
+    }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    /* #38 — Constraint Validation API: recolecta los campos invalidos
+       sin reescribir el formulario; el `required` nativo se mantiene. */
+    const fields = e.currentTarget.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+      "input[name], textarea[name]",
+    );
+    const nextErrors: FieldErrors = {};
+    fields.forEach((field) => {
+      const msg = messageFor(field);
+      if (msg) nextErrors[field.name as FieldName] = msg;
+    });
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      return;
+    }
+    setErrors({});
     setSent(true);
   }
 
@@ -141,8 +180,9 @@ export default function Contact() {
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         >
           {sent ? (
-            <div className="flex flex-col items-center justify-center h-full gap-4 text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-3xl">
+            /* a11y (#37) — bloque de exito anunciado por lectores de pantalla. */
+            <div role="status" aria-live="polite" className="flex flex-col items-center justify-center h-full gap-4 text-center py-12">
+              <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-3xl" aria-hidden>
                 ✅
               </div>
               <h3 className="font-serif text-2xl text-[#1a0808]">{t.contact.sent}</h3>
@@ -150,14 +190,14 @@ export default function Contact() {
                 {t.contact.sentSubtitle}
               </p>
               <button
-                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
+                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); setErrors({}); }}
                 className="text-sm font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors mt-2"
               >
                 {t.contact.sendAnother}
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} noValidate className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <FocusField>
                   <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
@@ -171,8 +211,13 @@ export default function Contact() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t.contact.namePlaceholder}
+                    aria-invalid={errors.name ? true : undefined}
+                    aria-describedby={errors.name ? "name-error" : undefined}
                     className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
+                  {errors.name && (
+                    <p id="name-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.name}</p>
+                  )}
                 </FocusField>
                 <FocusField>
                   <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
@@ -186,8 +231,13 @@ export default function Contact() {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
+                    aria-invalid={errors.email ? true : undefined}
+                    aria-describedby={errors.email ? "email-error" : undefined}
                     className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
+                  {errors.email && (
+                    <p id="email-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.email}</p>
+                  )}
                 </FocusField>
               </div>
               <FocusField>
@@ -202,8 +252,13 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder={t.contact.subjectPlaceholder}
+                  aria-invalid={errors.subject ? true : undefined}
+                  aria-describedby={errors.subject ? "subject-error" : undefined}
                   className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                 />
+                {errors.subject && (
+                  <p id="subject-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.subject}</p>
+                )}
               </FocusField>
               <FocusField>
                 <label htmlFor="message" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
@@ -216,8 +271,13 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}
+                  aria-invalid={errors.message ? true : undefined}
+                  aria-describedby={errors.message ? "message-error" : undefined}
                   className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5] resize-none"
                 />
+                {errors.message && (
+                  <p id="message-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.message}</p>
+                )}
               </FocusField>
               <button
                 type="submit"

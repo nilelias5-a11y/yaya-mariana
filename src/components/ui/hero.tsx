@@ -87,6 +87,7 @@ export default function Hero() {
     <>
       {/* Nav sticky */}
       <nav
+        aria-label={t.hero.navLabel}
         className="flex items-center justify-between px-6 md:px-12 bg-white"
         style={{
           position: "sticky",

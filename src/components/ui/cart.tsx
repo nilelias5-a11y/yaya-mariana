@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 export default function Cart() {
   const [open, setOpen] = useState(false);
   const { items, count, total, removeFromCart, updateQuantity } = useCart();
   const router = useRouter();
+
+  /* a11y: focus-trap + Escape close + retorno de foco al cerrar. El
+     drawer es un dialogo modal: el foco no debe escaparse por Tab. */
+  const close = useCallback(() => setOpen(false), []);
+  const panelRef = useFocusTrap<HTMLDivElement>({ active: open, onClose: close });
 
   function handleCheckout() {
     setOpen(false);
@@ -61,9 +67,14 @@ export default function Cart() {
               onClick={() => setOpen(false)}
             />
 
-            {/* Panel */}
+            {/* Panel — dialogo modal accesible (#24). */}
             <motion.div
               key="panel"
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cart-title"
+              tabIndex={-1}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -72,7 +83,7 @@ export default function Cart() {
             >
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#f5c6c2]/60">
-                <h2 className="font-serif text-xl text-[#1a0808]">Tu cesta</h2>
+                <h2 id="cart-title" className="font-serif text-xl text-[#1a0808]">Tu cesta</h2>
                 <button
                   onClick={() => setOpen(false)}
                   className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#fdf0ef] transition-colors text-[#7a3a3a]"

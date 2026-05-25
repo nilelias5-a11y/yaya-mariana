@@ -66,7 +66,15 @@ function useTypewriter(text: string, speed = 55, startDelay = 250) {
   return displayed;
 }
 
-function ProductCarousel({ images, name }: { images: string[]; name: string }) {
+function ProductCarousel({
+  images,
+  name,
+  a11y,
+}: {
+  images: string[];
+  name: string;
+  a11y: { prevPhoto: string; nextPhoto: string; goToPhoto: string; photo: string };
+}) {
   const [current, setCurrent] = useState(0);
   const [hovered, setHovered] = useState(false);
   const [imgOffset, setImgOffset] = useState({ x: 0, y: 0 });
@@ -128,7 +136,7 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
           >
             <Image
               src={images[current]}
-              alt={`${name} foto ${current + 1}`}
+              alt={`${name} ${a11y.photo} ${current + 1}`}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover"
@@ -142,6 +150,8 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
 
       {/* Arrows */}
       <button
+        type="button"
+        aria-label={a11y.prevPhoto}
         onClick={(e) => {
           e.preventDefault();
           prev();
@@ -156,11 +166,14 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           className="w-4 h-4 text-[#c0392b]"
+          aria-hidden
         >
           <path d="M10 4L6 8l4 4" />
         </svg>
       </button>
       <button
+        type="button"
+        aria-label={a11y.nextPhoto}
         onClick={(e) => {
           e.preventDefault();
           next();
@@ -175,6 +188,7 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           className="w-4 h-4 text-[#c0392b]"
+          aria-hidden
         >
           <path d="M6 4l4 4-4 4" />
         </svg>
@@ -185,6 +199,8 @@ function ProductCarousel({ images, name }: { images: string[]; name: string }) {
         {images.map((_, i) => (
           <button
             key={i}
+            type="button"
+            aria-label={`${a11y.goToPhoto} ${i + 1}`}
             onClick={() => setCurrent(i)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
               i === current ? "w-4 bg-white" : "w-1.5 bg-white/50 hover:bg-white/80"
@@ -202,12 +218,14 @@ function ProductCard({
   addToCartLabel,
   addedLabel,
   viewMoreLabel,
+  a11y,
 }: {
   product: (typeof PRODUCTS_BASE)[0] & { description: string };
   index: number;
   addToCartLabel: string;
   addedLabel: string;
   viewMoreLabel: string;
+  a11y: { prevPhoto: string; nextPhoto: string; goToPhoto: string; photo: string };
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -239,7 +257,7 @@ function ProductCard({
     >
       {/* Carousel */}
       <div className="relative">
-        <ProductCarousel images={product.images} name={product.name} />
+        <ProductCarousel images={product.images} name={product.name} a11y={a11y} />
 
         {/* Badge with shine */}
         <div className="absolute top-3 left-3 z-20">
@@ -421,6 +439,7 @@ export default function Products() {
                 addToCartLabel={t.products.addToCart}
                 addedLabel={t.products.added}
                 viewMoreLabel={t.products.viewMore}
+                a11y={t.products.a11y}
               />
             ))}
           </AnimatePresence>

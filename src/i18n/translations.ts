@@ -2,7 +2,13 @@ export type Lang = "es" | "ca" | "en";
 
 export const translations = {
   es: {
+    skipLink: "Saltar al contenido",
+    formErrors: {
+      required: "Este campo es obligatorio.",
+      email: "Introduce un correo electrónico válido.",
+    },
     hero: {
+      navLabel: "Principal",
       eyebrow: "Tarragona · Calidad premium",
       word1: "Fresas",
       subtitle:
@@ -37,6 +43,12 @@ export const translations = {
       addToCart: "Añadir al carrito",
       added: "Añadido",
       viewMore: "Ver más",
+      a11y: {
+        prevPhoto: "Foto anterior",
+        nextPhoto: "Foto siguiente",
+        goToPhoto: "Ir a la foto",
+        photo: "foto",
+      },
       items: [
         { description: "Fresa de gran tamaño y sabor intenso, cultivada en Tarragona. Recogida en su punto óptimo de madurez, sin pesticidas." },
         { description: "Variedad Dream de sabor dulce y textura firme. Cultivo propio de Tarragona, directa del campo a tu mesa." },
@@ -125,7 +137,13 @@ export const translations = {
     },
   },
   ca: {
+    skipLink: "Salta al contingut",
+    formErrors: {
+      required: "Aquest camp és obligatori.",
+      email: "Introdueix una adreça de correu vàlida.",
+    },
     hero: {
+      navLabel: "Principal",
       eyebrow: "Tarragona · Qualitat premium",
       word1: "Maduixes",
       subtitle:
@@ -160,6 +178,12 @@ export const translations = {
       addToCart: "Afegir al carret",
       added: "Afegit",
       viewMore: "Veure més",
+      a11y: {
+        prevPhoto: "Foto anterior",
+        nextPhoto: "Foto següent",
+        goToPhoto: "Anar a la foto",
+        photo: "foto",
+      },
       items: [
         { description: "Maduixa de gran mida i sabor intens, cultivada a Tarragona. Recollida en el seu punt òptim de maduresa, sense pesticides." },
         { description: "Varietat Dream de sabor dolç i textura ferma. Cultiu propi de Tarragona, directa del camp a la teva taula." },
@@ -248,7 +272,13 @@ export const translations = {
     },
   },
   en: {
+    skipLink: "Skip to content",
+    formErrors: {
+      required: "This field is required.",
+      email: "Enter a valid email address.",
+    },
     hero: {
+      navLabel: "Main",
       eyebrow: "Tarragona · Premium quality",
       word1: "Strawberries",
       subtitle:
@@ -283,6 +313,12 @@ export const translations = {
       addToCart: "Add to cart",
       added: "Added",
       viewMore: "View more",
+      a11y: {
+        prevPhoto: "Previous photo",
+        nextPhoto: "Next photo",
+        goToPhoto: "Go to photo",
+        photo: "photo",
+      },
       items: [
         { description: "Large strawberry with intense flavour, grown in Tarragona. Picked at its optimal ripeness, no pesticides." },
         { description: "Dream variety with sweet flavour and firm texture. Own cultivation in Tarragona, straight from the field to your table." },
