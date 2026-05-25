@@ -40,7 +40,7 @@ function InSeasonCTA() {
           superficie deep — no se aplica `.section-header__sub` para no
           duplicar el margen superior). */}
       <motion.p
-        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 mx-auto"
+        className="text-body text-[var(--color-text-on-brand)] mb-8 mx-auto"
         style={{ maxWidth: "var(--measure-header)" }}
         initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -123,7 +123,7 @@ function OffSeasonCTA() {
         <h2 className="text-h2" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
           {o.sentTitle}
         </h2>
-        <p className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed max-w-md mx-auto">
+        <p className="text-body text-[var(--color-text-on-brand)] max-w-md mx-auto">
           {o.sentSubtitle}
         </p>
       </div>
@@ -154,7 +154,7 @@ function OffSeasonCTA() {
       {/* TANDA 1 — subtítulo a la columna de medida única `--measure-header`
           (G-2); banda oscura: ritmo eyebrow mb-4 → H2 mb-4 → subtítulo mb-8. */}
       <motion.p
-        className="text-[var(--color-text-on-brand)] text-[0.9375rem] leading-relaxed mb-8 mx-auto"
+        className="text-body text-[var(--color-text-on-brand)] mb-8 mx-auto"
         style={{ maxWidth: "var(--measure-header)" }}
         initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}

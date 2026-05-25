@@ -58,7 +58,7 @@ export default function Values() {
           </h2>
           {/* TANDA 1 — `mt-3`→`mt-4` (vía `.section-header__sub`): el salto
               título→subtítulo iguala al de eyebrow→título (16px). */}
-          <p className="section-header__sub text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed">
+          <p className="section-header__sub text-body text-[var(--color-text-secondary)]">
             {t.values.subtitle}
           </p>
         </div>

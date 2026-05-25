@@ -27,7 +27,12 @@ export default function AboutUs() {
             {t.about.title}{" "}
             <em className="italic text-[var(--color-brand-primary)]">{t.about.titleEm}</em>
           </h2>
-          <div className="space-y-4 text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed">
+          {/* TANDA 3 (Fase 5) — `.text-body` (token unificado, 15px/1.65) +
+              `max-w-[60ch]` (G-2 / hierarchy-master): el `container-prose`
+              (720px) deja líneas de ~90 chars, fuera del rango cómodo de
+              lectura. La columna del cuerpo se constriñe a ~60 chars sin
+              tocar el ancho del eyebrow/h2/bloque de tributo. */}
+          <div className="space-y-4 text-body text-[var(--color-text-secondary)] max-w-[60ch]">
             <p>{t.about.p1}</p>
             <p>{t.about.p2}</p>
           </div>

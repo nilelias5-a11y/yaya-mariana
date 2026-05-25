@@ -148,7 +148,7 @@ export default function Contact() {
             <h2 className="text-h2 text-[var(--color-text-primary)] leading-[1.1]">
               {t.contact.title}
             </h2>
-            <p className="section-header__sub text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed">
+            <p className="section-header__sub text-body text-[var(--color-text-secondary)]">
               {t.contact.subtitle}
             </p>
           </div>
@@ -167,12 +167,12 @@ export default function Contact() {
                   {href ? (
                     <a
                       href={href}
-                      className="text-[0.9375rem] text-[var(--color-text-secondary)] font-medium hover:text-[var(--color-brand-primary)] transition-colors whitespace-pre-line"
+                      className="text-body text-[var(--color-text-secondary)] font-medium hover:text-[var(--color-brand-primary)] transition-colors whitespace-pre-line"
                     >
                       {value}
                     </a>
                   ) : (
-                    <p className="text-[0.9375rem] text-[var(--color-text-secondary)] font-medium whitespace-pre-line">
+                    <p className="text-body text-[var(--color-text-secondary)] font-medium whitespace-pre-line">
                       {value}
                     </p>
                   )}

@@ -105,7 +105,7 @@ function CheckoutForm() {
       if (apiError) throw new Error(apiError);
 
       const cardElement = elements.getElement(CardElement);
-      if (!cardElement) throw new Error("No se pudo cargar el formulario de pago");
+      if (!cardElement) throw new Error(t.checkout.errors.cardLoad);
 
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -124,7 +124,7 @@ function CheckoutForm() {
         setSuccess(true);
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Error al procesar el pago");
+      setError(err instanceof Error ? err.message : t.checkout.errors.generic);
     } finally {
       setLoading(false);
     }
@@ -136,18 +136,18 @@ function CheckoutForm() {
         {/* TANDA 4 (#37) — confirmación de pedido anunciada por el SR. */}
         <div role="status" aria-live="polite" className="max-w-md w-full text-center">
           <div className="w-20 h-20 rounded-full bg-[var(--color-success-surface)] flex items-center justify-center mx-auto mb-6">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10" aria-hidden>
               <path d="M20 6L9 17l-5-5" />
             </svg>
           </div>
-          <h1 className="font-serif text-3xl text-[var(--color-text-primary)] mb-3">¡Pedido confirmado!</h1>
+          <h1 className="font-serif text-3xl text-[var(--color-text-primary)] mb-3">{t.checkout.success.title}</h1>
           <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed">
-            Gracias por tu compra, {name}. Recibirás un email de confirmación en{" "}
+            {t.checkout.success.body} {name}. {t.checkout.success.emailHint}{" "}
             <span className="font-semibold text-[var(--color-text-primary)]">{email}</span>.
           </p>
           {/* TANDA 2 — botón "Volver al inicio" del sistema (primario md). */}
           <Button variant="primary" size="md" onClick={() => router.push("/")}>
-            Volver al inicio
+            {t.checkout.success.backHome}
           </Button>
         </div>
       </div>
@@ -204,10 +204,10 @@ function CheckoutForm() {
           onClick={() => router.back()}
           className="btn-link mb-10"
         >
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden>
             <path d="M10 4L6 8l4 4" />
           </svg>
-          Volver
+          {t.checkout.back}
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
@@ -215,17 +215,17 @@ function CheckoutForm() {
           {/* #38 — noValidate: validación accesible en lugar del bubble nativo. */}
           <form onSubmit={handleSubmit} noValidate className="space-y-8">
             <div>
-              <h1 className="font-serif text-3xl md:text-4xl text-[var(--color-text-primary)] mb-1">Finalizar pedido</h1>
-              <p className="text-sm text-[var(--color-text-secondary)]">Rellena tus datos para completar la compra</p>
+              <h1 className="font-serif text-3xl md:text-4xl text-[var(--color-text-primary)] mb-1">{t.checkout.title}</h1>
+              <p className="text-sm text-[var(--color-text-secondary)]">{t.checkout.subtitle}</p>
             </div>
 
             {/* Personal info */}
             <fieldset className="space-y-4">
               <legend className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-primary)] mb-3">
-                Datos personales
+                {t.checkout.sections.personal}
               </legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Nombre completo" required htmlFor="co-name" error={fieldErrors.name}>
+                <Field label={t.checkout.fields.name} required htmlFor="co-name" error={fieldErrors.name}>
                   <input
                     id="co-name"
                     name="name"
@@ -235,13 +235,13 @@ function CheckoutForm() {
                     enterKeyHint="next"
                     value={name}
                     onChange={(e) => { setName(e.target.value); clearFieldError("name", e.target); }}
-                    placeholder="Ana García"
+                    placeholder={t.checkout.fields.namePlaceholder}
                     aria-invalid={fieldErrors.name ? true : undefined}
                     aria-describedby={fieldErrors.name ? "co-name-error" : undefined}
                     className={inputClass}
                   />
                 </Field>
-                <Field label="Email" required htmlFor="co-email" error={fieldErrors.email}>
+                <Field label={t.checkout.fields.email} required htmlFor="co-email" error={fieldErrors.email}>
                   <input
                     id="co-email"
                     name="email"
@@ -252,7 +252,7 @@ function CheckoutForm() {
                     enterKeyHint="next"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); clearFieldError("email", e.target); }}
-                    placeholder="ana@ejemplo.com"
+                    placeholder={t.checkout.fields.emailPlaceholder}
                     aria-invalid={fieldErrors.email ? true : undefined}
                     aria-describedby={fieldErrors.email ? "co-email-error" : undefined}
                     className={inputClass}
@@ -264,9 +264,9 @@ function CheckoutForm() {
             {/* Shipping */}
             <fieldset className="space-y-4">
               <legend className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-primary)] mb-3">
-                Dirección de envío
+                {t.checkout.sections.shipping}
               </legend>
-              <Field label="Dirección" required htmlFor="co-address" error={fieldErrors.address}>
+              <Field label={t.checkout.fields.address} required htmlFor="co-address" error={fieldErrors.address}>
                 <input
                   id="co-address"
                   name="address"
@@ -276,14 +276,14 @@ function CheckoutForm() {
                   enterKeyHint="next"
                   value={address}
                   onChange={(e) => { setAddress(e.target.value); clearFieldError("address", e.target); }}
-                  placeholder="Calle Mayor 1, 3ºA"
+                  placeholder={t.checkout.fields.addressPlaceholder}
                   aria-invalid={fieldErrors.address ? true : undefined}
                   aria-describedby={fieldErrors.address ? "co-address-error" : undefined}
                   className={inputClass}
                 />
               </Field>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Ciudad" required htmlFor="co-city" error={fieldErrors.city}>
+                <Field label={t.checkout.fields.city} required htmlFor="co-city" error={fieldErrors.city}>
                   <input
                     id="co-city"
                     name="city"
@@ -293,13 +293,13 @@ function CheckoutForm() {
                     enterKeyHint="next"
                     value={city}
                     onChange={(e) => { setCity(e.target.value); clearFieldError("city", e.target); }}
-                    placeholder="Barcelona"
+                    placeholder={t.checkout.fields.cityPlaceholder}
                     aria-invalid={fieldErrors.city ? true : undefined}
                     aria-describedby={fieldErrors.city ? "co-city-error" : undefined}
                     className={inputClass}
                   />
                 </Field>
-                <Field label="Código postal" required htmlFor="co-zip" error={fieldErrors.zip}>
+                <Field label={t.checkout.fields.zip} required htmlFor="co-zip" error={fieldErrors.zip}>
                   <input
                     id="co-zip"
                     name="zip"
@@ -310,7 +310,7 @@ function CheckoutForm() {
                     enterKeyHint="done"
                     value={zip}
                     onChange={(e) => { setZip(e.target.value); clearFieldError("zip", e.target); }}
-                    placeholder="08001"
+                    placeholder={t.checkout.fields.zipPlaceholder}
                     aria-invalid={fieldErrors.zip ? true : undefined}
                     aria-describedby={fieldErrors.zip ? "co-zip-error" : undefined}
                     className={inputClass}
@@ -322,16 +322,16 @@ function CheckoutForm() {
             {/* Payment */}
             <fieldset className="space-y-4">
               <legend className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-primary)] mb-3">
-                Datos de pago
+                {t.checkout.sections.payment}
               </legend>
               <div className="rounded-xl border-2 border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-4 py-3 focus-within:border-[var(--color-brand-primary)] transition-colors">
                 <CardElement options={CARD_STYLE} />
               </div>
               <p className="text-[0.72rem] text-[var(--color-text-muted)] flex items-center gap-1.5">
-                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[var(--color-brand-primary)] shrink-0">
+                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-[var(--color-brand-primary)] shrink-0" aria-hidden>
                   <path d="M8 1a5 5 0 100 10A5 5 0 008 1zm0 9a4 4 0 110-8 4 4 0 010 8zm0-6a1 1 0 00-1 1v2a1 1 0 002 0V5a1 1 0 00-1-1z" />
                 </svg>
-                Pago seguro gestionado por Stripe. No almacenamos datos de tu tarjeta.
+                {t.checkout.securePayment}
               </p>
             </fieldset>
 
@@ -351,14 +351,14 @@ function CheckoutForm() {
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden>
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                   </svg>
-                  Procesando...
+                  {t.checkout.processing}
                 </span>
               ) : (
-                `Pagar ${total.toFixed(2)}€`
+                `${t.checkout.pay} ${total.toFixed(2)}€`
               )}
             </button>
           </form>
@@ -368,7 +368,7 @@ function CheckoutForm() {
               formulario de Contact son los dos paneles-formulario del sitio;
               ahora comparten padding de superficie (tier "panel grande"). */}
           <aside className="bg-[var(--color-bg-surface)] rounded-2xl p-8 shadow-sm border border-[var(--color-border-subtle)] h-fit sticky top-8">
-            <h2 className="font-serif text-lg text-[var(--color-text-primary)] mb-4">Resumen del pedido</h2>
+            <h2 className="font-serif text-lg text-[var(--color-text-primary)] mb-4">{t.checkout.summary.title}</h2>
             <div className="space-y-3 mb-5">
               {items.map((item) => (
                 <div key={item.name} className="flex justify-between text-sm">
@@ -384,15 +384,15 @@ function CheckoutForm() {
             </div>
             <div className="border-t border-[var(--color-border-subtle)] pt-4 space-y-2">
               <div className="flex justify-between text-sm text-[var(--color-text-secondary)]">
-                <span>Subtotal</span>
+                <span>{t.checkout.summary.subtotal}</span>
                 <span>{total.toFixed(2)}€</span>
               </div>
               <div className="flex justify-between text-sm text-[var(--color-text-secondary)]">
-                <span>Envío</span>
-                <span>A calcular</span>
+                <span>{t.checkout.summary.shipping}</span>
+                <span>{t.checkout.summary.shippingNote}</span>
               </div>
               <div className="flex justify-between font-bold text-[var(--color-text-primary)] pt-1">
-                <span>Total</span>
+                <span>{t.checkout.summary.total}</span>
                 <span>{total.toFixed(2)}€</span>
               </div>
             </div>

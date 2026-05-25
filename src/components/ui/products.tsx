@@ -67,10 +67,12 @@ function ProductCarousel({
   images,
   name,
   priority,
+  a11y,
 }: {
   images: string[];
   name: string;
   priority?: boolean;
+  a11y: { prevPhoto: string; nextPhoto: string; goToPhoto: string; photo: string };
 }) {
   const [current, setCurrent] = useState(0);
   const [hovered, setHovered] = useState(false);
@@ -146,7 +148,7 @@ function ProductCarousel({
           >
             <Image
               src={images[current]}
-              alt={`${name} foto ${current + 1}`}
+              alt={`${name} ${a11y.photo} ${current + 1}`}
               fill
               /* TANDA 4 (#HI-15) — la primera foto del primer producto es el
                  LCP probable en móvil: priority sólo en index 0 del slide 0. */
@@ -170,7 +172,7 @@ function ProductCarousel({
           estado active del sistema. */}
       <button
         type="button"
-        aria-label="Foto anterior"
+        aria-label={a11y.prevPhoto}
         onClick={(e) => {
           e.preventDefault();
           prev();
@@ -191,7 +193,7 @@ function ProductCarousel({
       </button>
       <button
         type="button"
-        aria-label="Foto siguiente"
+        aria-label={a11y.nextPhoto}
         onClick={(e) => {
           e.preventDefault();
           next();
@@ -218,7 +220,7 @@ function ProductCarousel({
           <button
             key={i}
             type="button"
-            aria-label={`Ir a la foto ${i + 1}`}
+            aria-label={`${a11y.goToPhoto} ${i + 1}`}
             onClick={() => setCurrent(i)}
             className="group/dot flex h-11 items-center px-1"
           >
@@ -241,6 +243,7 @@ function ProductCard({
   addedLabel,
   viewMoreLabel,
   harvestLabel,
+  a11y,
 }: {
   product: (typeof PRODUCTS_BASE)[0] & { description: string };
   index: number;
@@ -248,6 +251,7 @@ function ProductCard({
   addedLabel: string;
   viewMoreLabel: string;
   harvestLabel: string;
+  a11y: { prevPhoto: string; nextPhoto: string; goToPhoto: string; photo: string };
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -315,7 +319,7 @@ function ProductCard({
         onTouchMove={isMagnum ? cancelPress : undefined}
         onTouchCancel={isMagnum ? cancelPress : undefined}
       >
-        <ProductCarousel images={product.images} name={product.name} priority={index === 0} />
+        <ProductCarousel images={product.images} name={product.name} priority={index === 0} a11y={a11y} />
 
         {/* L4 — pétalo del easter egg Mágnum: cae una vez, 1s, y se desmonta. */}
         {petal && (
@@ -484,7 +488,7 @@ export default function Products() {
           {/* TANDA 1 — `mt-3`→`mt-4`: el salto título→subtítulo iguala al de
               eyebrow→título (16px); antes 12px invertía la progresión. */}
           <motion.p
-            className="section-header__sub text-[var(--color-text-secondary)] text-[0.9375rem] leading-relaxed"
+            className="section-header__sub text-body text-[var(--color-text-secondary)]"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -548,6 +552,7 @@ export default function Products() {
                 addedLabel={t.products.added}
                 viewMoreLabel={t.products.viewMore}
                 harvestLabel={t.products.harvestLabel}
+                a11y={t.products.a11y}
               />
             ))}
           </AnimatePresence>

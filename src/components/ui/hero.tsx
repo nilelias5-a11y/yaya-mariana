@@ -419,7 +419,7 @@ export default function Hero() {
             }}
           >
             <p className="text-overline" style={{ color: "var(--color-brand-primary)", margin: 0 }}>
-              Tres variedades
+              {t.hero.varieties}
             </p>
             {/* TANDA 1 (Fase 5) — divisor con margen simétrico (12px arriba y
                 abajo, antes "20px 0 4px" asimétrico): la pila interna queda
