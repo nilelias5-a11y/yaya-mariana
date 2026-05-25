@@ -155,3 +155,98 @@
 .skip-link:focus {
   top: 8px;
 }
+
+/* ============================================================
+   ENHANCE-1 — Fundación del sistema (E1, 2026-05-25)
+   Tokens, utilities y bases aditivas para los enhancements estilo
+   La Nonna. Cero modificación de fondos, paleta, tipografia ni
+   layouts existentes. Nada de esto altera lo ya pintado a no ser
+   que un componente opt-in a las clases nuevas.
+   ============================================================ */
+
+/* Tokens de motion warm-lux: curva "film-beat" y duraciones canónicas
+   para todos los enhancements aditivos. Convive con las animaciones
+   framer-motion existentes (las canónicas siguen con
+   `cubic-bezier(0.22, 1, 0.36, 1)` directamente). */
+:root {
+  --ease-warm-lux: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-warm-inout: cubic-bezier(0.6, 0.04, 0.24, 1);
+  --dur-reveal: 760ms;
+  --dur-hover: 220ms;
+}
+
+/* Hairline-accent — utilidad reutilizable: barra fina de 1px x 60w
+   color de marca a alpha bajo, animable con scaleX desde la izquierda.
+   Componer con `<span class="hairline-accent" />` o `::after`. */
+.hairline-accent {
+  display: block;
+  width: 60px;
+  height: 1px;
+  background-color: rgba(192, 57, 43, 0.28);
+  transform-origin: left center;
+}
+.hairline-accent--animate {
+  animation: hairline-accent-draw var(--dur-reveal) var(--ease-warm-lux) both;
+}
+@keyframes hairline-accent-draw {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+/* Sistema reveal IO-driven opt-in: cualquier elemento con
+   `class="reveal"` arranca trasladado 22px y fade 0; al recibir
+   `data-revealed="true"` (lo activa un hook cliente en su useEffect
+   sobre IntersectionObserver) entra con la curva warm-lux. Convive
+   con framer-motion: framer maneja secciones canonicas; .reveal es
+   para elementos nuevos aditivos. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity var(--dur-reveal) var(--ease-warm-lux),
+              transform var(--dur-reveal) var(--ease-warm-lux);
+  will-change: opacity, transform;
+}
+.reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* OpenType refinements en la familia serif (Playfair Display).
+   Activa ligadures discretas, kerning fino y numerales oldstyle
+   para que el tono editorial sienta voz Playfair, no solo glifo.
+   Inter (sans) recibe kerning y solo. */
+.font-serif,
+[class*="font-serif"],
+[style*="font-playfair"] {
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "onum" 1;
+}
+.font-sans {
+  font-feature-settings: "kern" 1;
+}
+
+/* tabular-nums-lining utility: numerales tabulares lining para
+   evitar "baile" de cifras (count-up del StatsStrip, precios
+   Products, totales del Cart/Checkout). Opt-in: la clase nueva
+   convive con la tipografía existente. */
+.numerals-tabular {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Reduced-motion gate global para los enhancements aditivos.
+   Neutraliza .reveal (mantiene visible sin movimiento), hairline
+   draw, halos. NO modifica las animaciones framer-motion canonicas
+   (Nil aprobó esas como VALOR, y MotionConfig reducedMotion="user"
+   ya las gatea en su sitio). */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hairline-accent--animate {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -93,7 +93,7 @@ export default function StatsStrip() {
             style={{ cursor: "default" }}
           >
             <div className="text-[#e74c3c]">{icon}</div>
-            <span className="font-serif text-[3.25rem] font-bold leading-none mt-1">
+            <span className="numerals-tabular font-serif text-[3.25rem] font-bold leading-none mt-1">
               <AnimatedValue raw={value} />
             </span>
             <span className="text-sm text-white/65 leading-snug max-w-[14ch]">

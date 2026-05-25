@@ -296,7 +296,7 @@ function ProductCard({
         <div className="pt-3 border-t border-[#f5c6c2]/50 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
+              <span className="numerals-tabular text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
               <span className="text-xs text-[#7a3a3a]/50 ml-1.5">/ 500g</span>
             </div>
             <a
