@@ -135,6 +135,8 @@ export const translations = {
       myAccount: "Mi cuenta",
       rights: "Todos los derechos reservados.",
       designBy: "Diseño por",
+      inMemory: "En memoria de Mariana",
+      inMemoryHint: "En su memoria",
     },
     cart: {
       title: "Tu cesta",
@@ -323,6 +325,8 @@ export const translations = {
       myAccount: "El meu compte",
       rights: "Tots els drets reservats.",
       designBy: "Disseny per",
+      inMemory: "En memòria de la Mariana",
+      inMemoryHint: "En la seva memòria",
     },
     cart: {
       title: "La teva cistella",
@@ -511,6 +515,8 @@ export const translations = {
       myAccount: "My account",
       rights: "All rights reserved.",
       designBy: "Design by",
+      inMemory: "In memory of Mariana",
+      inMemoryHint: "In her memory",
     },
     cart: {
       title: "Your basket",

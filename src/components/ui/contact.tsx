@@ -124,8 +124,38 @@ export default function Contact() {
   }
 
   return (
-    <section id="contacto" className="bg-[#fdf6f5] py-20 px-6">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14">
+    /* ENHANCE-5: section `relative` para anclar la capa de grano sutil
+       (opacity 0.012, mismo turbulence que Hero pero al limite minimo) y
+       el hairline de cierre antes del Footer. */
+    <section id="contacto" className="relative bg-[#fdf6f5] py-20 px-6">
+      {/* Grano filmografico minimo, cose visualmente Hero <-> Contacto. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          mixBlendMode: "multiply",
+          opacity: 0.012,
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>\")",
+          backgroundRepeat: "repeat",
+        }}
+      />
+      {/* Hairline de cierre antes del Footer (junta cromatica). */}
+      <div
+        aria-hidden
+        className="absolute left-0 right-0 bottom-0 h-px"
+        style={{ backgroundColor: "rgba(192,57,43,0.08)" }}
+      />
+      <div className="relative max-w-6xl mx-auto">
+        {/* Divisor vertical decorativo entre columnas info/form (lg+ only).
+            Centro horizontal, 70% de la altura del contenedor, color
+            `rgba(192,57,43,0.08)`. Solo decorativo. */}
+        <div
+          aria-hidden
+          className="hidden lg:block absolute left-1/2 top-[15%] bottom-[15%] -translate-x-1/2 w-px"
+          style={{ backgroundColor: "rgba(192,57,43,0.08)" }}
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
         {/* Info */}
         <motion.div
           initial={{ opacity: 0, x: -80 }}
@@ -146,7 +176,13 @@ export default function Contact() {
           <div className="space-y-6">
             {contactInfo.map(({ icon, label, value, href }) => (
               <div key={label} className="flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0">
+                {/* ENHANCE-5: icon chip con borde 1px cream-rosa que lo separa
+                    del fondo `#fdf6f5` (antes solo confiaba en bg-[#fdf0ef]
+                    casi-igual al de la seccion). */}
+                <div
+                  className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0"
+                  style={{ border: "1px solid #f5c6c2" }}
+                >
                   {icon}
                 </div>
                 <div>
@@ -154,11 +190,20 @@ export default function Contact() {
                     {label}
                   </p>
                   {href ? (
+                    /* ENHANCE-5: a[mailto|tel] hover/focus underline hairline
+                        scaleX origin-left + tinte terracota en focus-within.
+                        Implementado con utility tailwind para mantener todo
+                        en la clase y no acoplar a framer-motion. */
                     <a
                       href={href}
-                      className="text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] transition-colors whitespace-pre-line"
+                      className="relative inline-block text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] focus-visible:text-[#c0392b] transition-colors whitespace-pre-line outline-none group/link"
                     >
                       {value}
+                      <span
+                        aria-hidden
+                        className="absolute left-0 right-0 -bottom-0.5 h-px scale-x-0 group-hover/link:scale-x-100 group-focus-visible/link:scale-x-100 transition-transform duration-300 origin-left"
+                        style={{ backgroundColor: "rgba(192,57,43,0.7)" }}
+                      />
                     </a>
                   ) : (
                     <p className="text-[0.9375rem] text-[#7a3a3a] font-medium whitespace-pre-line">
@@ -171,13 +216,19 @@ export default function Contact() {
           </div>
         </motion.div>
 
-        {/* Form */}
+        {/* Form — ENHANCE-5: definicion de papeleria. Border cream-rosa
+            70% alpha + inset shadow blanco 80% para sensacion impresa. */}
         <motion.div
-          className="bg-white rounded-2xl p-8 shadow-sm"
+          className="bg-white rounded-2xl p-8"
           initial={{ opacity: 0, x: 80 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            border: "1px solid rgba(245,198,194,0.7)",
+            boxShadow:
+              "0 1px 0 rgba(255,255,255,0.8) inset, 0 1px 12px rgba(192,57,43,0.04)",
+          }}
         >
           {sent ? (
             /* a11y (#37) — bloque de exito anunciado por lectores de pantalla. */
@@ -201,7 +252,7 @@ export default function Contact() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <FocusField>
                   <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
-                    {t.contact.nameLabel} *
+                    {t.contact.nameLabel} · *
                   </label>
                   <input
                     id="name"
@@ -223,7 +274,7 @@ export default function Contact() {
                 </FocusField>
                 <FocusField>
                   <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
-                    {t.contact.emailLabel} *
+                    {t.contact.emailLabel} · *
                   </label>
                   <input
                     id="email"
@@ -247,7 +298,7 @@ export default function Contact() {
               </div>
               <FocusField>
                 <label htmlFor="subject" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
-                  {t.contact.subjectLabel} *
+                  {t.contact.subjectLabel} · *
                 </label>
                 <input
                   id="subject"
@@ -298,6 +349,7 @@ export default function Contact() {
             </form>
           )}
         </motion.div>
+        </div>
       </div>
     </section>
   );
