@@ -16,7 +16,9 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const CARD_STYLE = {
   style: {
     base: {
-      fontSize: "15px",
+      /* mobile: 16px evita el auto-zoom de iOS Safari (antes 15px lo
+         disparaba). El CardElement no acepta var() — valor crudo. */
+      fontSize: "16px",
       color: "#1a0808",
       fontFamily: "Inter, system-ui, sans-serif",
       "::placeholder": { color: "#c0a0a0" },
@@ -182,6 +184,8 @@ function CheckoutForm() {
                     name="name"
                     type="text"
                     required
+                    autoComplete="name"
+                    enterKeyHint="next"
                     value={name}
                     onChange={(e) => { setName(e.target.value); clearFieldError("name", e.target); }}
                     placeholder={t.checkout.fields.namePlaceholder}
@@ -196,6 +200,9 @@ function CheckoutForm() {
                     name="email"
                     type="email"
                     required
+                    inputMode="email"
+                    autoComplete="email"
+                    enterKeyHint="next"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); clearFieldError("email", e.target); }}
                     placeholder={t.checkout.fields.emailPlaceholder}
@@ -218,6 +225,8 @@ function CheckoutForm() {
                   name="address"
                   type="text"
                   required
+                  autoComplete="street-address"
+                  enterKeyHint="next"
                   value={address}
                   onChange={(e) => { setAddress(e.target.value); clearFieldError("address", e.target); }}
                   placeholder={t.checkout.fields.addressPlaceholder}
@@ -233,6 +242,8 @@ function CheckoutForm() {
                     name="city"
                     type="text"
                     required
+                    autoComplete="address-level2"
+                    enterKeyHint="next"
                     value={city}
                     onChange={(e) => { setCity(e.target.value); clearFieldError("city", e.target); }}
                     placeholder={t.checkout.fields.cityPlaceholder}
@@ -247,6 +258,9 @@ function CheckoutForm() {
                     name="zip"
                     type="text"
                     required
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    enterKeyHint="done"
                     value={zip}
                     onChange={(e) => { setZip(e.target.value); clearFieldError("zip", e.target); }}
                     placeholder={t.checkout.fields.zipPlaceholder}
@@ -337,8 +351,9 @@ function CheckoutForm() {
   );
 }
 
+/* mobile: text-base (16px) anti auto-zoom iOS (antes text-sm = 13px). */
 const inputClass =
-  "w-full rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3 text-sm text-[#1a0808] placeholder-[#c0a0a0] focus:outline-none focus:border-[#c0392b] transition-colors";
+  "w-full rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3 text-base text-[#1a0808] placeholder-[#c0a0a0] focus:outline-none focus:border-[#c0392b] transition-colors";
 
 function Field({
   label,

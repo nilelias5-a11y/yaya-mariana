@@ -208,12 +208,14 @@ export default function Contact() {
                     name="name"
                     type="text"
                     required
+                    autoComplete="name"
+                    enterKeyHint="next"
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t.contact.namePlaceholder}
                     aria-invalid={errors.name ? true : undefined}
                     aria-describedby={errors.name ? "name-error" : undefined}
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
                   {errors.name && (
                     <p id="name-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.name}</p>
@@ -228,12 +230,15 @@ export default function Contact() {
                     name="email"
                     type="email"
                     required
+                    inputMode="email"
+                    autoComplete="email"
+                    enterKeyHint="next"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
                     aria-invalid={errors.email ? true : undefined}
                     aria-describedby={errors.email ? "email-error" : undefined}
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
                   {errors.email && (
                     <p id="email-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.email}</p>
@@ -249,12 +254,13 @@ export default function Contact() {
                   name="subject"
                   type="text"
                   required
+                  enterKeyHint="next"
                   value={form.subject}
                   onChange={handleChange}
                   placeholder={t.contact.subjectPlaceholder}
                   aria-invalid={errors.subject ? true : undefined}
                   aria-describedby={errors.subject ? "subject-error" : undefined}
-                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                 />
                 {errors.subject && (
                   <p id="subject-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.subject}</p>
@@ -268,6 +274,7 @@ export default function Contact() {
                   id="message"
                   name="message"
                   rows={4}
+                  enterKeyHint="send"
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}

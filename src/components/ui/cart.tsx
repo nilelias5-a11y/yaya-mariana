@@ -26,13 +26,18 @@ export default function Cart() {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button — respeta safe-area-inset en dispositivos con
+          notch / barra de gestos para no caer sobre el sistema. */}
       <motion.button
         onClick={() => setOpen(true)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
-        style={{ background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)" }}
+        className="fixed z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
+        style={{
+          background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
+          bottom: "calc(1.5rem + env(safe-area-inset-bottom))",
+          right: "calc(1.5rem + env(safe-area-inset-right))",
+        }}
         aria-label={t.cart.ariaOpen}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
@@ -86,11 +91,15 @@ export default function Cart() {
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#f5c6c2]/60">
                 <h2 id="cart-title" className="font-serif text-xl text-[#1a0808]">{t.cart.title}</h2>
+                {/* Cerrar — caja de toque 44x44 (WCAG 2.5.5); circulo
+                    visible 32px se mantiene como antes via padding. */}
                 <button
+                  type="button"
                   onClick={() => setOpen(false)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#fdf0ef] transition-colors text-[#7a3a3a]"
+                  className="-mr-2 inline-flex items-center justify-center w-11 h-11 rounded-full hover:bg-[#fdf0ef] transition-colors text-[#7a3a3a]"
+                  aria-label="Close"
                 >
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="w-4 h-4">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="w-4 h-4" aria-hidden>
                     <path d="M4 4l12 12M16 4L4 16" />
                   </svg>
                 </button>
@@ -123,20 +132,29 @@ export default function Cart() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-[#1a0808] truncate">{item.name}</p>
                         <p className="text-xs text-[#7a3a3a]/60">500g · {item.price.toFixed(2)}€</p>
-                        {/* Quantity controls */}
-                        <div className="flex items-center gap-2 mt-1.5">
+                        {/* Quantity controls — caja de toque 44x44; circulo
+                            visible 24px (w-6 h-6) sigue siendo el de antes. */}
+                        <div className="flex items-center gap-1 mt-1 -ml-1.5">
                           <button
+                            type="button"
                             onClick={() => updateQuantity(item.name, -1)}
-                            className="w-6 h-6 rounded-full border border-[#c0392b]/30 flex items-center justify-center text-[#c0392b] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
+                            className="inline-flex items-center justify-center w-11 h-11 text-[#c0392b]"
+                            aria-label="−"
                           >
-                            −
+                            <span className="flex w-6 h-6 items-center justify-center rounded-full border border-[#c0392b]/30 hover:bg-[#fdf0ef] transition-colors text-sm leading-none">
+                              −
+                            </span>
                           </button>
                           <span className="text-sm font-semibold text-[#1a0808] w-4 text-center">{item.quantity}</span>
                           <button
+                            type="button"
                             onClick={() => updateQuantity(item.name, +1)}
-                            className="w-6 h-6 rounded-full border border-[#c0392b]/30 flex items-center justify-center text-[#c0392b] hover:bg-[#fdf0ef] transition-colors text-sm leading-none"
+                            className="inline-flex items-center justify-center w-11 h-11 text-[#c0392b]"
+                            aria-label="+"
                           >
-                            +
+                            <span className="flex w-6 h-6 items-center justify-center rounded-full border border-[#c0392b]/30 hover:bg-[#fdf0ef] transition-colors text-sm leading-none">
+                              +
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -144,9 +162,12 @@ export default function Cart() {
                         <p className="text-sm font-bold text-[#1a0808]">
                           {(item.price * item.quantity).toFixed(2)}€
                         </p>
+                        {/* Eliminar — hit area 44px (padded), label
+                            tipograficamente identica a antes. */}
                         <button
+                          type="button"
                           onClick={() => removeFromCart(item.name)}
-                          className="text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#c0392b] transition-colors mt-0.5"
+                          className="inline-flex items-center justify-end h-11 -my-2 -mr-1 pl-3 text-[0.65rem] text-[#7a3a3a]/40 hover:text-[#c0392b] transition-colors"
                         >
                           {t.cart.remove}
                         </button>

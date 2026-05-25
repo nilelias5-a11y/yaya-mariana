@@ -3,8 +3,9 @@
 import { MeshGradient } from "@paper-design/shaders-react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import type { Lang } from "@/i18n/translations";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -75,6 +76,76 @@ function LanguageSelector() {
   );
 }
 
+/* Hamburguesa movil — autorizada en gate 2.5 #2.
+   Replica los 3 enlaces de nav + el CTA tienda en un panel desplegable
+   bajo la barra. <768px hoy el nav movil queda vacio. focus-trap +
+   Escape close + retorno de foco al boton al cerrar. */
+function MobileNav({
+  navLinks,
+  verTienda,
+  menuLabel,
+}: {
+  navLinks: { label: string; href: string }[];
+  verTienda: string;
+  menuLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const close = useCallback(() => setOpen(false), []);
+  const panelRef = useFocusTrap<HTMLDivElement>({ active: open, onClose: close });
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="mobile-nav-panel"
+        aria-label={menuLabel}
+        className="md:hidden inline-flex items-center justify-center w-11 h-11 -mr-2 text-[#1a0808]"
+      >
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="w-5 h-5" aria-hidden>
+          {open ? <path d="M4 4l12 12M16 4L4 16" /> : <path d="M3 6h14M3 10h14M3 14h14" />}
+        </svg>
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            ref={panelRef}
+            id="mobile-nav-panel"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+            className="md:hidden absolute left-0 right-0 top-full bg-white px-6 py-4 flex flex-col"
+            style={{ borderBottom: "1px solid #f0e0e0", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
+          >
+            {navLinks.map(({ label, href }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="font-sans font-medium flex items-center min-h-[44px]"
+                style={{ fontSize: 15, color: "#1a0808" }}
+              >
+                {label}
+              </a>
+            ))}
+            <a
+              href="/checkout"
+              onClick={() => setOpen(false)}
+              className="mt-3 inline-flex items-center justify-center font-sans font-semibold text-white"
+              style={{ backgroundColor: "#c0392b", borderRadius: 6, padding: "11px 20px", fontSize: 14, minHeight: 44 }}
+            >
+              {verTienda}
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
 export default function Hero() {
   const { t } = useLanguage();
 
@@ -85,15 +156,18 @@ export default function Hero() {
 
   return (
     <>
-      {/* Nav sticky */}
+      {/* Nav sticky — relative para que el panel MobileNav (absolute) se
+          ancle al borde inferior del propio nav. paddingTop respeta el
+          notch / barra de gestos en dispositivos con safe-area-inset-top. */}
       <nav
         aria-label={t.hero.navLabel}
-        className="flex items-center justify-between px-6 md:px-12 bg-white"
+        className="relative flex items-center justify-between px-6 md:px-12 bg-white"
         style={{
           position: "sticky",
           top: 0,
           zIndex: 50,
           height: 72,
+          paddingTop: "env(safe-area-inset-top)",
           borderBottom: "1px solid #f0e0e0",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}
@@ -140,7 +214,7 @@ export default function Hero() {
           ))}
         </ul>
 
-        {/* Derecha: idioma + botón */}
+        {/* Derecha: idioma + botón desktop + hamburguesa movil */}
         <div className="flex items-center gap-5">
           <LanguageSelector />
           <motion.a
@@ -161,6 +235,11 @@ export default function Hero() {
               {t.nav.menu.verTienda}
             </motion.span>
           </motion.a>
+          <MobileNav
+            navLinks={navLinks}
+            verTienda={t.nav.menu.verTienda}
+            menuLabel={t.nav.menu.label}
+          />
         </div>
       </nav>
 
@@ -172,7 +251,7 @@ export default function Hero() {
         />
 
       {/* Hero — 2 columnas */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 pt-16 pb-20 min-h-[calc(100vh-72px)]">
+      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-0 px-6 md:px-12 pt-16 pb-20 min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)]">
 
         {/* Columna izquierda */}
         <motion.div
