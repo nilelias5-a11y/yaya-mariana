@@ -106,7 +106,6 @@ export default function Hero() {
             height={56}
             priority
             loading="eager"
-            unoptimized
             className="w-auto"
             style={{ height: 56 }}
           />
@@ -278,7 +277,6 @@ export default function Hero() {
               alt="Yaya Mariana"
               width={380}
               height={380}
-              unoptimized
               priority
               className="h-auto"
               style={{ maxWidth: 380, width: "100%" }}
