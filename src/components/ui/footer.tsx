@@ -60,6 +60,12 @@ const SOCIALS = [
 export default function Footer() {
   const { t } = useLanguage();
 
+  /* E9 (BUG fix): los 6 enlaces que apuntaban a `yayamariana.com`
+     (dominio legacy lechugas, abandonado) son ahora stub `#`. Cuando
+     existan paginas internas reales (privacy/devoluciones/etc.) se
+     sustituye stub por la ruta /legal/...
+     blog -> #sobre-nosotros (lo mas cercano a "story" sin pagina propia);
+     shipping -> #contacto (preguntar por envios via contacto). */
   const navLinks = [
     {
       heading: t.footer.shop,
@@ -74,18 +80,18 @@ export default function Footer() {
       heading: t.footer.company,
       items: [
         { label: t.footer.aboutUs, href: "#sobre-nosotros" },
-        { label: t.footer.blog, href: "https://yayamariana.com/blog/" },
-        { label: t.footer.shipping, href: "https://yayamariana.com/envios/" },
+        { label: t.footer.blog, href: "#sobre-nosotros" },
+        { label: t.footer.shipping, href: "#contacto" },
         { label: t.footer.contact, href: "#contacto" },
       ],
     },
     {
       heading: t.footer.legal,
       items: [
-        { label: t.footer.privacy, href: "https://yayamariana.com/politica-de-privacidad/" },
-        { label: t.footer.returns, href: "https://yayamariana.com/politica-de-devolucion/" },
-        { label: t.footer.legalNotice, href: "https://yayamariana.com/aviso-legal/" },
-        { label: t.footer.myAccount, href: "https://yayamariana.com/mi-cuenta/" },
+        { label: t.footer.privacy, href: "#" },
+        { label: t.footer.returns, href: "#" },
+        { label: t.footer.legalNotice, href: "#" },
+        { label: t.footer.myAccount, href: "#" },
       ],
     },
   ];
@@ -124,13 +130,17 @@ export default function Footer() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
             >
+              {/* E9 (BUG fix): src antes apuntaba al PNG vectorial alojado
+                  en `yayamariana.com` (dominio legacy lechugas) — riesgo
+                  de servir el logo de la marca abandonada o un 404. Ahora
+                  usa el asset local del Hero. `brightness-0 invert` lo
+                  blanquea sobre el footer maroon. */}
               <Image
-                src="https://yayamariana.com/wp-content/uploads/2024/11/YAYA_MARIANA_VECTORIAL-01.png"
+                src="/logo-nuevo.jpg"
                 alt="Yaya Mariana"
                 width={140}
                 height={40}
                 className="h-[38px] w-auto brightness-0 invert mb-3"
-                unoptimized
               />
               {/* ENHANCE-5: wordmark caligrafico secundario (Playfair italic).
                   ONE script element of the footer viewport — refuerza tono
