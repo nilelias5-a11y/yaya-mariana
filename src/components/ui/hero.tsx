@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useActiveSection } from "@/hooks/use-active-section";
 import QuoteAuthorHalo from "@/components/easter-eggs/quote-author-halo";
 import type { Lang } from "@/i18n/translations";
 
@@ -51,9 +52,8 @@ function LanguageSelector() {
         {open && (
           <motion.div
             initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
+            animate={{ opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.19, 1, 0.22, 1] } }}
+            exit={{ opacity: 0, y: -4, transition: { duration: 0.14, ease: [0.6, 0.04, 0.24, 1] } }}
             role="listbox"
             className="absolute right-0 top-[calc(100%+8px)] w-20 bg-white rounded-lg overflow-hidden z-50"
             style={{ border: "1px solid #f0e0e0", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
@@ -115,9 +115,8 @@ function MobileNav({
             ref={panelRef}
             id="mobile-nav-panel"
             initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18 }}
+            animate={{ opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.19, 1, 0.22, 1] } }}
+            exit={{ opacity: 0, y: -8, transition: { duration: 0.18, ease: [0.6, 0.04, 0.24, 1] } }}
             className="md:hidden absolute left-0 right-0 top-full bg-white px-6 py-4 flex flex-col"
             style={{ borderBottom: "1px solid #f0e0e0", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
           >
@@ -150,31 +149,77 @@ function MobileNav({
 export default function Hero() {
   const { t } = useLanguage();
 
+  /* VP-01 + HS-09 — scroll-state para backdrop-blur + hairline terracota */
+  const [scrolled, setScrolled] = useState(false);
+  const scrollThrottleRef = useRef<number | null>(null);
+  useEffect(() => {
+    function handleScroll() {
+      if (scrollThrottleRef.current !== null) return;
+      scrollThrottleRef.current = window.setTimeout(() => {
+        setScrolled(window.scrollY > 8);
+        scrollThrottleRef.current = null;
+      }, 40);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Inicializar estado al montar (por si la página carga con scroll)
+    setScrolled(window.scrollY > 8);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollThrottleRef.current !== null) window.clearTimeout(scrollThrottleRef.current);
+    };
+  }, []);
+
   const navLinks = t.nav.menu.items.slice(1).map((item, i) => ({
     label: item.label,
     href: NAV_HREFS[i],
   }));
 
+  /* VP-09 — sección activa via IntersectionObserver */
+  const activeSection = useActiveSection(NAV_HREFS);
+
   return (
     <>
       {/* Nav sticky — relative para que el panel MobileNav (absolute) se
           ancle al borde inferior del propio nav. paddingTop respeta el
-          notch / barra de gestos en dispositivos con safe-area-inset-top. */}
+          notch / barra de gestos en dispositivos con safe-area-inset-top.
+          VP-01+HS-09: bg y blur varían con scroll. */}
       <nav
         aria-label={t.hero.navLabel}
-        className="relative flex items-center justify-between px-6 md:px-12 bg-white"
+        className="relative flex items-center justify-between px-6 md:px-12"
         style={{
           position: "sticky",
           top: 0,
           zIndex: 50,
           height: 72,
           paddingTop: "env(safe-area-inset-top)",
-          borderBottom: "1px solid #f0e0e0",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          /* VP-01+HS-09: sin borde en top, opaco+blurred al scroll */
+          backgroundColor: scrolled ? "rgba(255,255,255,0.88)" : "rgb(255,255,255)",
+          backdropFilter: scrolled ? "blur(12px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+          borderBottom: scrolled ? "none" : "none",
+          boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
+          transition: "background-color 220ms ease, backdrop-filter 220ms ease, -webkit-backdrop-filter 220ms ease, box-shadow 220ms ease",
         }}
       >
-        {/* Logo */}
-        <a href="/" className="shrink-0">
+        {/* VP-01+HS-09 — hairline 1px terracota condensado: gradient fade extremos,
+            visible solo cuando scrolled. aria-hidden, puramente decorativo. */}
+        {scrolled && (
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 1,
+              background: "linear-gradient(to right, transparent, rgba(192,57,43,0.12), transparent)",
+              pointerEvents: "none",
+            }}
+          />
+        )}
+
+        {/* Logo — CD-08: hover opacity-80 */}
+        <a href="/" className="shrink-0 transition-opacity duration-200 hover:opacity-80">
           <Image
             src="/logo-nuevo.jpg"
             alt="Yaya Mariana"
@@ -187,32 +232,55 @@ export default function Hero() {
           />
         </a>
 
-        {/* Links centrales */}
+        {/* Links centrales — VP-09: aria-current + underline activo a opacity-50 */}
         <ul className="hidden md:flex items-center list-none m-0 p-0">
-          {navLinks.map(({ label, href }, i, arr) => (
-            <li key={href} className="flex items-center">
-              <motion.a
-                href={href}
-                className="relative font-sans font-medium pb-[3px]"
-                style={{ fontSize: 14 }}
-                variants={{ rest: { y: 0, color: "#1a0808" }, hover: { y: -2, color: "#c0392b" } }}
-                initial="rest"
-                whileHover="hover"
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              >
-                {label}
-                <motion.span
-                  className="absolute bottom-0 left-0 h-[2px] bg-[#c0392b] w-full block"
-                  variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+          {navLinks.map(({ label, href }, i, arr) => {
+            const isActive = activeSection === href;
+            return (
+              <li key={href} className="flex items-center">
+                <motion.a
+                  href={href}
+                  aria-current={isActive ? "page" : undefined}
+                  className="relative font-sans font-medium pb-[3px]"
+                  style={{ fontSize: 14 }}
+                  variants={{ rest: { y: 0, color: "#1a0808" }, hover: { y: -2, color: "#c0392b" } }}
+                  initial="rest"
+                  whileHover="hover"
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  style={{ transformOrigin: "left" }}
-                />
-              </motion.a>
-              {i < arr.length - 1 && (
-                <span aria-hidden className="select-none" style={{ color: "#c8b8b8", padding: "0 14px" }}>·</span>
-              )}
-            </li>
-          ))}
+                >
+                  {label}
+                  {/* Underline hover (full opacity, scaleX on hover) */}
+                  <motion.span
+                    className="absolute bottom-0 left-0 h-[2px] bg-[#c0392b] w-full block"
+                    variants={{ rest: { scaleX: 0, opacity: 1 }, hover: { scaleX: 1, opacity: 1 } }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    style={{ transformOrigin: "left" }}
+                  />
+                  {/* VP-09 — underline sección activa: permanente opacity-50, no depende del hover */}
+                  {isActive && (
+                    <span
+                      aria-hidden
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: 2,
+                        background: "#c0392b",
+                        opacity: 0.5,
+                        transformOrigin: "left",
+                        transform: "scaleX(1)",
+                        transition: "transform 220ms ease, opacity 220ms ease",
+                      }}
+                    />
+                  )}
+                </motion.a>
+                {i < arr.length - 1 && (
+                  <span aria-hidden className="select-none" style={{ color: "#c8b8b8", padding: "0 14px" }}>·</span>
+                )}
+              </li>
+            );
+          })}
         </ul>
 
         {/* Derecha: idioma + botón desktop + hamburguesa movil */}
