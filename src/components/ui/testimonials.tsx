@@ -8,9 +8,15 @@
  * Google Reviews, etc.) bastará sustituir los strings de `testimonials.items`
  * en es/ca/en — el carrusel, animaciones y a11y se mantienen sin tocar.
  *
- * Disclaimer "reseñas de ejemplo" visible bajo el carrusel
- * (`testimonials.demo`) — coherente con el patrón La Nonna ReviewsWidget
- * y con el principio Nil "no exponer datos no confirmados".
+ * Layout responsive:
+ *   - mobile  (<768px): 1 reseña visible (la central)
+ *   - tablet  (768-1023px): 2 reseñas visibles (central + derecha)
+ *   - desktop (>=1024px): 3 reseñas visibles (izq + central + der)
+ *
+ * El slot central queda destacado (scale 1, opacity 1). Los slots laterales
+ * más sutiles (scale 0.95, opacity 0.7). Auto-rotate avanza 1 reseña por
+ * ciclo (no 3). Dots indicator = total reseñas; cada dot apunta a "esa
+ * reseña como central".
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -20,6 +26,97 @@ import { useLanguage } from "@/context/language-context";
 const AUTO_ROTATE_MS = 5000;
 const WARM_LUX: [number, number, number, number] = [0.19, 1, 0.22, 1];
 
+type TestimonialItem = {
+  quote: string;
+  initial: string;
+  name: string;
+  city: string;
+  date: string;
+};
+
+function CardContent({ card }: { card: TestimonialItem }) {
+  return (
+    <div
+      className="relative h-full rounded-lg bg-white px-5 py-6 md:px-6 md:py-7 flex flex-col"
+      style={{
+        border: "1px solid rgba(245,198,194,0.6)",
+        boxShadow:
+          "0 1px 0 rgba(255,255,255,0.85) inset, 0 6px 18px rgba(192,57,43,0.05)",
+      }}
+    >
+      {/* Estrellas — terracota desaturado, NO amarillo */}
+      <p
+        aria-hidden="true"
+        className="select-none text-center"
+        style={{
+          color: "rgba(192,57,43,0.55)",
+          letterSpacing: "0.08em",
+          fontSize: "0.95rem",
+        }}
+      >
+        {"★".repeat(5)}
+      </p>
+
+      {/* Cita */}
+      <blockquote
+        className="font-serif italic text-center mt-4 leading-relaxed flex-1"
+        style={{
+          color: "#5c1a1a",
+          fontSize: "clamp(0.95rem, 1.4vw, 1.05rem)",
+        }}
+      >
+        &ldquo;{card.quote}&rdquo;
+      </blockquote>
+
+      {/* Separador editorial cream-rosa */}
+      <span
+        aria-hidden="true"
+        className="block mx-auto mt-5 mb-3.5"
+        style={{
+          width: 36,
+          height: 1,
+          backgroundColor: "rgba(245,198,194,0.9)",
+        }}
+      />
+
+      {/* Atribución: iniciales + nombre + ciudad + fecha */}
+      <div className="flex items-center justify-center gap-3">
+        <span
+          aria-hidden="true"
+          className="flex h-9 w-9 items-center justify-center rounded-full select-none flex-shrink-0"
+          style={{
+            backgroundColor: "rgba(245,198,194,0.35)",
+            color: "#7a3a3a",
+            fontFamily: "var(--font-playfair)",
+            fontStyle: "italic",
+            fontSize: "0.85rem",
+          }}
+        >
+          {card.initial}
+        </span>
+        <div className="text-left min-w-0">
+          <p
+            className="font-sans font-semibold truncate"
+            style={{ color: "#5c1a1a", fontSize: "0.82rem" }}
+          >
+            {card.name}
+            <span className="font-normal" style={{ color: "#7a3a3a" }}>
+              {", "}
+              {card.city}
+            </span>
+          </p>
+          <p
+            className="font-sans"
+            style={{ color: "#7a3a3a", opacity: 0.75, fontSize: "0.7rem" }}
+          >
+            {card.date}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Testimonials() {
   const { t } = useLanguage();
   const reduceMotion = useReducedMotion();
@@ -27,7 +124,6 @@ export default function Testimonials() {
   const total = items.length;
 
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -46,21 +142,19 @@ export default function Testimonials() {
   const go = useCallback(
     (next: number) => {
       const normalized = ((next % total) + total) % total;
-      setDirection(normalized >= index ? 1 : -1);
       setIndex(normalized);
     },
-    [index, total],
+    [total],
   );
 
   const next = useCallback(() => go(index + 1), [go, index]);
   const prev = useCallback(() => go(index - 1), [go, index]);
 
   /* Auto-rotate solo cuando: no touch + no reduced-motion + no pausa hover
-     + más de 1 reseña. Cualquiera de esos blockers detiene el loop. */
+     + más de 1 reseña. Avanza 1 reseña por ciclo (no 3). */
   useEffect(() => {
     if (isTouch || reduceMotion || paused || total <= 1) return;
     const id = window.setInterval(() => {
-      setDirection(1);
       setIndex((i) => (i + 1) % total);
     }, AUTO_ROTATE_MS);
     return () => window.clearInterval(id);
@@ -77,21 +171,56 @@ export default function Testimonials() {
     }
   };
 
-  const current = items[index];
+  const prevIndex = ((index - 1) % total + total) % total;
+  const nextIndex = (index + 1) % total;
 
-  /* Variants para slide. En reduced-motion el slide se reduce a opacity
+  /* Variants para cross-fade. En reduced-motion el slide se reduce a opacity
      puro (sin desplazamiento). */
-  const slideVariants = reduceMotion
+  const cardVariants = reduceMotion
     ? {
         enter: { opacity: 0 },
         center: { opacity: 1 },
         exit: { opacity: 0 },
       }
     : {
-        enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 24 : -24 }),
-        center: { opacity: 1, x: 0 },
-        exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -24 : 24 }),
+        enter: { opacity: 0, y: 8 },
+        center: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -6 },
       };
+
+  /* Definición de slots: visibilidad por breakpoint + estilo reposo
+     (escala/opacidad del slot, no de la animación). */
+  const slots: Array<{
+    key: "left" | "center" | "right";
+    cardIndex: number;
+    /* Tailwind responsive visibility */
+    visibilityClass: string;
+    /* Estado de reposo: central destacado, laterales sutiles */
+    restStyle: React.CSSProperties;
+    isCenter: boolean;
+  }> = [
+    {
+      key: "left",
+      cardIndex: prevIndex,
+      visibilityClass: "hidden lg:block",
+      restStyle: { transform: "scale(0.95)", opacity: 0.7 },
+      isCenter: false,
+    },
+    {
+      key: "center",
+      cardIndex: index,
+      visibilityClass: "block",
+      restStyle: { transform: "scale(1)", opacity: 1 },
+      isCenter: true,
+    },
+    {
+      key: "right",
+      cardIndex: nextIndex,
+      visibilityClass: "hidden md:block",
+      restStyle: { transform: "scale(0.95)", opacity: 0.7 },
+      isCenter: false,
+    },
+  ];
 
   return (
     <section
@@ -126,9 +255,9 @@ export default function Testimonials() {
         &ldquo;
       </span>
 
-      <div className="relative max-w-2xl mx-auto px-6">
+      <div className="relative max-w-6xl mx-auto px-6">
         <motion.header
-          className="text-center mb-10 md:mb-12"
+          className="text-center mb-10 md:mb-12 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
@@ -177,110 +306,54 @@ export default function Testimonials() {
           onBlur={() => setPaused(false)}
           className="relative"
         >
-          {/* Card actual con AnimatePresence */}
-          <div className="relative min-h-[260px] md:min-h-[280px]" aria-live="polite">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.article
-                key={index}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.42, ease: WARM_LUX }}
-                aria-roledescription={t.testimonials.slideLabel}
-                aria-label={`${index + 1} / ${total}`}
-                className="relative rounded-lg bg-white px-6 py-7 md:px-9 md:py-9"
-                style={{
-                  border: "1px solid rgba(245,198,194,0.6)",
-                  boxShadow:
-                    "0 1px 0 rgba(255,255,255,0.85) inset, 0 6px 18px rgba(192,57,43,0.05)",
-                }}
+          {/* Grid responsive de 3 slots: mobile 1-col, tablet 2-col, desktop 3-col.
+              gap-stretch para que las cards laterales mantengan altura coherente
+              con la central. */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 items-stretch min-h-[260px] md:min-h-[280px]">
+            {slots.map((slot) => (
+              <div
+                key={slot.key}
+                className={slot.visibilityClass}
+                aria-hidden={!slot.isCenter ? "true" : undefined}
               >
-                {/* Estrellas — terracota desaturado, NO amarillo */}
-                <p
-                  aria-hidden="true"
-                  className="select-none text-center"
-                  style={{
-                    color: "rgba(192,57,43,0.55)",
-                    letterSpacing: "0.08em",
-                    fontSize: "1rem",
-                  }}
+                <div
+                  className="h-full transition-all duration-300 ease-[cubic-bezier(0.19,1,0.22,1)]"
+                  style={slot.restStyle}
+                  aria-live={slot.isCenter ? "polite" : undefined}
                 >
-                  {"★".repeat(5)}
-                </p>
-                <span className="sr-only">{t.testimonials.starsAria}</span>
-
-                {/* Cita */}
-                <blockquote
-                  className="font-serif italic text-center mt-5 leading-relaxed"
-                  style={{
-                    color: "#5c1a1a",
-                    fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
-                  }}
-                >
-                  &ldquo;{current.quote}&rdquo;
-                </blockquote>
-
-                {/* Separador editorial cream-rosa */}
-                <span
-                  aria-hidden="true"
-                  className="block mx-auto mt-6 mb-4"
-                  style={{
-                    width: 40,
-                    height: 1,
-                    backgroundColor: "rgba(245,198,194,0.9)",
-                  }}
-                />
-
-                {/* Atribución: iniciales + nombre + ciudad + fecha */}
-                <div className="flex items-center justify-center gap-3">
-                  <span
-                    aria-hidden="true"
-                    className="flex h-10 w-10 items-center justify-center rounded-full select-none"
-                    style={{
-                      backgroundColor: "rgba(245,198,194,0.35)",
-                      color: "#7a3a3a",
-                      fontFamily: "var(--font-playfair)",
-                      fontStyle: "italic",
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    {current.initial}
-                  </span>
-                  <div className="text-left">
-                    <p
-                      className="font-sans font-semibold"
-                      style={{ color: "#5c1a1a", fontSize: "0.875rem" }}
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={slot.cardIndex}
+                      variants={cardVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.42, ease: WARM_LUX }}
+                      aria-roledescription={slot.isCenter ? t.testimonials.slideLabel : undefined}
+                      aria-label={slot.isCenter ? `${slot.cardIndex + 1} / ${total}` : undefined}
+                      className="h-full"
                     >
-                      {current.name}
-                      <span className="font-normal" style={{ color: "#7a3a3a" }}>
-                        {", "}
-                        {current.city}
-                      </span>
-                    </p>
-                    <p
-                      className="font-sans"
-                      style={{ color: "#7a3a3a", opacity: 0.75, fontSize: "0.72rem" }}
-                    >
-                      {current.date}
-                    </p>
-                  </div>
+                      <CardContent card={items[slot.cardIndex]} />
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
-              </motion.article>
-            </AnimatePresence>
+              </div>
+            ))}
           </div>
 
-          {/* Flechas — siempre visibles md+. En mobile aparecen también para
-              soportar interacción explícita además del swipe (no implementado:
-              touch nativo es suficiente; las flechas son la palanca accesible). */}
+          {/* sr-only para SR — la rating de la card central */}
+          <span className="sr-only" aria-live="polite">
+            {t.testimonials.starsAria} — {items[index].name}, {items[index].city}
+          </span>
+
+          {/* Flechas — siempre visibles. Posición sobre la card central. */}
           {total > 1 && (
             <>
               <button
                 type="button"
                 onClick={prev}
                 aria-label={t.testimonials.prev}
-                className="absolute top-1/2 -translate-y-1/2 left-0 md:-left-4 lg:-left-12 flex items-center justify-center w-11 h-11 rounded-full text-[#7a3a3a] transition-colors hover:bg-[rgba(192,57,43,0.08)] focus-visible:bg-[rgba(192,57,43,0.10)]"
+                className="absolute top-1/2 -translate-y-1/2 -left-2 md:-left-4 lg:-left-6 z-10 flex items-center justify-center w-11 h-11 rounded-full text-[#7a3a3a] transition-colors hover:bg-[rgba(192,57,43,0.08)] focus-visible:bg-[rgba(192,57,43,0.10)] bg-[rgba(253,246,245,0.85)]"
               >
                 <svg
                   aria-hidden="true"
@@ -300,7 +373,7 @@ export default function Testimonials() {
                 type="button"
                 onClick={next}
                 aria-label={t.testimonials.next}
-                className="absolute top-1/2 -translate-y-1/2 right-0 md:-right-4 lg:-right-12 flex items-center justify-center w-11 h-11 rounded-full text-[#7a3a3a] transition-colors hover:bg-[rgba(192,57,43,0.08)] focus-visible:bg-[rgba(192,57,43,0.10)]"
+                className="absolute top-1/2 -translate-y-1/2 -right-2 md:-right-4 lg:-right-6 z-10 flex items-center justify-center w-11 h-11 rounded-full text-[#7a3a3a] transition-colors hover:bg-[rgba(192,57,43,0.08)] focus-visible:bg-[rgba(192,57,43,0.10)] bg-[rgba(253,246,245,0.85)]"
               >
                 <svg
                   aria-hidden="true"
@@ -319,9 +392,10 @@ export default function Testimonials() {
             </>
           )}
 
-          {/* Dots indicator */}
+          {/* Dots indicator — un dot por reseña total. Activo = la que está
+              en el slot central. */}
           {total > 1 && (
-            <div className="flex items-center justify-center gap-2.5 mt-7">
+            <div className="flex items-center justify-center gap-2.5 mt-8">
               {items.map((_, i) => {
                 const active = i === index;
                 return (
@@ -351,19 +425,6 @@ export default function Testimonials() {
             </div>
           )}
         </div>
-
-        {/* Demo disclaimer — visible. Coherente con La Nonna Phase 5b §C-4
-            y con el patrón Nil "no exponer datos no confirmados". */}
-        <p
-          className="text-center mt-8 italic"
-          style={{
-            color: "rgba(122,58,58,0.55)",
-            fontSize: "0.78rem",
-            fontFamily: "var(--font-playfair)",
-          }}
-        >
-          {t.testimonials.demo}
-        </p>
       </div>
     </section>
   );

@@ -112,7 +112,6 @@ export const translations = {
       starsAria: "5 de 5 estrellas",
       carouselLabel: "carrusel",
       slideLabel: "reseña",
-      demo: "Reseñas de ejemplo — pronto las sustituiremos por valoraciones reales.",
       items: [
         { quote: "Las mejores fresas que he probado en años. Se nota el cuidado.", initial: "M.G.", name: "M.G.", city: "Barcelona", date: "Mayo 2026" },
         { quote: "Llegaron perfectas, en su punto. Repetiré sin duda.", initial: "A.R.", name: "A.R.", city: "Tarragona", date: "Mayo 2026" },
@@ -360,7 +359,6 @@ export const translations = {
       starsAria: "5 de 5 estrelles",
       carouselLabel: "carrusel",
       slideLabel: "ressenya",
-      demo: "Ressenyes d'exemple — aviat les substituirem per valoracions reals.",
       items: [
         { quote: "Les millors maduixes que he tastat en anys. Es nota la cura.", initial: "M.G.", name: "M.G.", city: "Barcelona", date: "Maig 2026" },
         { quote: "Van arribar perfectes, al seu punt. Repetiré sense dubte.", initial: "A.R.", name: "A.R.", city: "Tarragona", date: "Maig 2026" },
@@ -608,7 +606,6 @@ export const translations = {
       starsAria: "5 out of 5 stars",
       carouselLabel: "carousel",
       slideLabel: "review",
-      demo: "Sample reviews — to be replaced with real ratings soon.",
       items: [
         { quote: "The best strawberries I've had in years. The care really shows.", initial: "M.G.", name: "M.G.", city: "Barcelona", date: "May 2026" },
         { quote: "They arrived perfect, at their best. I'll order again.", initial: "A.R.", name: "A.R.", city: "Tarragona", date: "May 2026" },
