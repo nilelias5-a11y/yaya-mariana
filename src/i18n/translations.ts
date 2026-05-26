@@ -141,6 +141,7 @@ export const translations = {
     cart: {
       title: "Tu cesta",
       ariaOpen: "Abrir la cesta",
+      ariaClose: "Cerrar la cesta",
       empty: "La cesta está vacía",
       remove: "Eliminar",
       subtotal: "Subtotal",
@@ -331,6 +332,7 @@ export const translations = {
     cart: {
       title: "La teva cistella",
       ariaOpen: "Obrir la cistella",
+      ariaClose: "Tancar la cistella",
       empty: "La cistella és buida",
       remove: "Eliminar",
       subtotal: "Subtotal",
@@ -521,6 +523,7 @@ export const translations = {
     cart: {
       title: "Your basket",
       ariaOpen: "Open basket",
+      ariaClose: "Close basket",
       empty: "Your basket is empty",
       remove: "Remove",
       subtotal: "Subtotal",

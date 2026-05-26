@@ -46,7 +46,7 @@ export default function Values() {
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-3">
             {t.values.eyebrow}
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808]">
+          <h2 className="heading-balanced font-serif text-4xl md:text-5xl text-[#1a0808]">
             {t.values.title}
           </h2>
           <p className="mt-3 text-[#7a3a3a]/65 max-w-md mx-auto text-[0.9375rem] leading-relaxed">

@@ -166,10 +166,10 @@ export default function Contact() {
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.contact.eyebrow}
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
+          <h2 className="heading-balanced font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
             {t.contact.title}
           </h2>
-          <p className="text-[#7a3a3a]/65 text-[0.9375rem] leading-relaxed mb-10">
+          <p className="body-pretty text-[#7a3a3a]/65 text-[0.9375rem] leading-relaxed mb-10">
             {t.contact.subtitle}
           </p>
 

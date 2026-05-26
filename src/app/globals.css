@@ -218,7 +218,7 @@
 .font-serif,
 [class*="font-serif"],
 [style*="font-playfair"] {
-  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "onum" 1;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "onum" 1, "calt" 1;
 }
 .font-sans {
   font-feature-settings: "kern" 1;
@@ -230,7 +230,7 @@
    convive con la tipografía existente. */
 .numerals-tabular {
   font-variant-numeric: tabular-nums lining-nums;
-  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-feature-settings: "tnum" 1, "lnum" 1, "onum" 0, "kern" 1;
 }
 
 /* Reduced-motion gate global para los enhancements aditivos.
@@ -249,6 +249,48 @@
     opacity: 1;
     transform: none;
   }
+}
+
+/* ============================================================
+   ENHANCE-2 TANDA 1 — Utilities y globals aditivos
+   ============================================================ */
+
+/* TM-01 — text-wrap: balance en headings de sección */
+.heading-balanced {
+  text-wrap: balance;
+}
+
+/* TM-02 — text-wrap: pretty en párrafos de cuerpo */
+.body-pretty {
+  text-wrap: pretty;
+}
+
+/* CP-01 — ::selection terracota */
+::selection {
+  background: rgba(192, 57, 43, 0.18);
+  color: #7a3a3a;
+}
+
+/* CP-03 — :focus-visible outline terracota global.
+   Los inputs/botones del formulario Contact ya tienen
+   `focus:ring-2 focus:ring-[#e74c3c]/40` propio — este
+   global actúa como fallback para el resto de elementos
+   que no definen focus state propio. */
+:focus-visible {
+  outline: 2px solid rgba(192, 57, 43, 0.55);
+  outline-offset: 3px;
+}
+
+/* CP-02 — caret-color terracota en campos de texto */
+input, textarea, select {
+  caret-color: #c0392b;
+}
+
+/* CD-07 — scroll-margin-top en anchors de sección.
+   Restringido a `main [id]` para no afectar a elementos
+   no-ancla fuera del contenido principal. */
+main [id] {
+  scroll-margin-top: 80px;
 }
 
 /* ENHANCE-3 — Dropcap editorial AboutUs p1.

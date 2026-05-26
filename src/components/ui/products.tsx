@@ -351,7 +351,7 @@ function TypewriterHeading({ text }: { text: string }) {
   return (
     <h2
       ref={ref}
-      className="font-serif text-4xl md:text-5xl text-[#1a0808] min-h-[1.2em]"
+      className="heading-balanced font-serif text-4xl md:text-5xl text-[#1a0808] min-h-[1.2em]"
     >
       {displayed}
       {inView && displayed.length < text.length && (

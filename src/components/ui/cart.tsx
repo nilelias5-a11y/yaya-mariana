@@ -97,7 +97,7 @@ export default function Cart() {
                   type="button"
                   onClick={() => setOpen(false)}
                   className="-mr-2 inline-flex items-center justify-center w-11 h-11 rounded-full hover:bg-[#fdf0ef] transition-colors text-[#7a3a3a]"
-                  aria-label="Close"
+                  aria-label={t.cart.ariaClose}
                 >
                   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="w-4 h-4" aria-hidden>
                     <path d="M4 4l12 12M16 4L4 16" />

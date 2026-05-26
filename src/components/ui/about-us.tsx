@@ -44,7 +44,7 @@ export default function AboutUs() {
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.about.eyebrow}
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-6">
+          <h2 className="heading-balanced font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-6">
             {t.about.title}{" "}
             {/* ENHANCE-3 — Highlight wipe terracota sobre <em> del titulo
                 (capa abs detras del texto, scaleX origin-left 820ms warm-lux
@@ -75,7 +75,7 @@ export default function AboutUs() {
           {/* ENHANCE-3 — Drop cap en la primera letra del primer parrafo.
               Activado por .about-dropcap (regla en globals.css §ENHANCE-3).
               Solo afecta a `p:first-of-type`. */}
-          <div className="about-dropcap space-y-4 text-[#7a3a3a]/72 text-[0.9375rem] leading-relaxed">
+          <div className="about-dropcap body-pretty space-y-4 text-[#7a3a3a]/72 text-[0.9375rem] leading-relaxed">
             <p>{t.about.p1}</p>
             <p>{t.about.p2}</p>
           </div>

@@ -156,7 +156,7 @@ export default function Footer() {
             {/* ENHANCE-5: brand description max-w-[18ch] (truncaba media
                 frase) → max-w-[28ch] / ~prose para dejar respirar el alma
                 del tributo. */}
-            <p className="text-sm text-white/50 leading-relaxed max-w-[28ch]">
+            <p className="body-pretty text-sm text-white/50 leading-relaxed max-w-[28ch]">
               {t.footer.description}
             </p>
             {/* Socials.
