@@ -6,6 +6,7 @@ import AboutUs from "@/components/ui/about-us";
 import Timeline from "@/components/ui/timeline";
 import Values from "@/components/ui/values";
 import CTA from "@/components/ui/cta";
+import FAQ from "@/components/ui/faq";
 import Contact from "@/components/ui/contact";
 import Footer from "@/components/ui/footer";
 import Cart from "@/components/ui/cart";
@@ -37,6 +38,7 @@ export default function Home() {
         <Timeline />
         <Values />
         <CTA />
+        <FAQ />
         <Contact />
       </main>
       <Footer />
