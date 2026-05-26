@@ -103,6 +103,33 @@ export const translations = {
         { title: "Cadena de frío", body: "Envío refrigerado 24-48h hasta tu mesa. Sabor intacto." },
       ],
     },
+    timeline: {
+      eyebrow: "Historia con calma",
+      title: "Cuatro momentos",
+      subtitle: "Lo que sostiene este proyecto — cuatro hitos que lo explican todo.",
+      items: [
+        {
+          year: "1950",
+          title: "Las primeras fresas",
+          text: "Mariana siembra las primeras fresas en el huerto familiar de Tarragona.",
+        },
+        {
+          year: "1985",
+          title: "La receta de la yaya",
+          text: "Cada fresa se elegía a mano, con la calma que pedía la planta.",
+        },
+        {
+          year: "2020",
+          title: "Decidimos honrar su legado",
+          text: "La familia recupera el método que ella enseñó, sin cambiar nada esencial.",
+        },
+        {
+          year: "2026",
+          title: "Primera cosecha Yaya Mariana",
+          text: "Sale al mundo el resultado de tantos años de paciencia y cuidado.",
+        },
+      ],
+    },
     cta: {
       eyebrow: "Directo de la granja a tu mesa",
       title: "¿Listo para probar las fresas",
@@ -316,6 +343,33 @@ export const translations = {
         { title: "Cadena de fred", body: "Enviament refrigerat 24-48h fins a la teva taula. Sabor intacte." },
       ],
     },
+    timeline: {
+      eyebrow: "Història amb calma",
+      title: "Quatre moments",
+      subtitle: "El que sosté aquest projecte — quatre fites que ho expliquen tot.",
+      items: [
+        {
+          year: "1950",
+          title: "Les primeres maduixes",
+          text: "La Mariana sembra les primeres maduixes a l'hort familiar de Tarragona.",
+        },
+        {
+          year: "1985",
+          title: "La recepta de la iaia",
+          text: "Cada maduixa es triava a mà, amb la calma que demanava la planta.",
+        },
+        {
+          year: "2020",
+          title: "Decidim honrar el seu llegat",
+          text: "La família recupera el mètode que ella va ensenyar, sense canviar res essencial.",
+        },
+        {
+          year: "2026",
+          title: "Primera collita Yaya Mariana",
+          text: "Surt al món el resultat de tants anys de paciència i cura.",
+        },
+      ],
+    },
     cta: {
       eyebrow: "Directe de la granja a la teva taula",
       title: "Llest per tastar les maduixes",
@@ -527,6 +581,33 @@ export const translations = {
         { title: "Natural care", body: "Controlled hydroponics, no pesticides. The time each plant needs." },
         { title: "Picked at peak", body: "Every strawberry chosen by hand when ripe. Not a day before." },
         { title: "Cold chain", body: "Refrigerated delivery 24-48h to your table. Flavour intact." },
+      ],
+    },
+    timeline: {
+      eyebrow: "History, unhurried",
+      title: "Four moments",
+      subtitle: "What holds this project together — four milestones that tell the whole story.",
+      items: [
+        {
+          year: "1950",
+          title: "The first strawberries",
+          text: "Mariana plants the first strawberries in the family's Tarragona plot.",
+        },
+        {
+          year: "1985",
+          title: "The way she taught",
+          text: "Every strawberry was chosen by hand, with the patience the plant required.",
+        },
+        {
+          year: "2020",
+          title: "We chose to honour her",
+          text: "The family brings back the method she passed down, unchanged in anything essential.",
+        },
+        {
+          year: "2026",
+          title: "First harvest, Yaya Mariana",
+          text: "The result of so many years of patience and care reaches the world.",
+        },
       ],
     },
     cta: {
