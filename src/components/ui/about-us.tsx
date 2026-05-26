@@ -77,7 +77,7 @@ export default function AboutUs() {
           {/* ENHANCE-3 — Drop cap en la primera letra del primer parrafo.
               Activado por .about-dropcap (regla en globals.css §ENHANCE-3).
               Solo afecta a `p:first-of-type`. */}
-          <div className="about-dropcap body-pretty space-y-4 text-[#7a3a3a]/72 text-[0.9375rem] leading-relaxed">
+          <div className="about-dropcap body-pretty body-hyphens space-y-4 text-[#7a3a3a]/72 text-[0.9375rem] leading-relaxed">
             <p>{t.about.p1}</p>
             <p>{t.about.p2}</p>
           </div>

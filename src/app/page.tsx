@@ -11,6 +11,8 @@ import SkipLink from "@/components/ui/skip-link";
 import HtmlLangSync from "@/components/html-lang-sync";
 import ConsoleTribute from "@/components/easter-eggs/console-tribute";
 import FooterPetal from "@/components/easter-eggs/footer-petal";
+import KonamiTribute from "@/components/easter-eggs/konami-tribute";
+import QuietudMessage from "@/components/easter-eggs/quietud-message";
 
 export default function Home() {
   /* a11y: landmark de contenido principal y skip-link.
@@ -38,6 +40,9 @@ export default function Home() {
       {/* ENHANCE-7: easter eggs sutiles montados a nivel raiz. */}
       <ConsoleTribute />
       <FooterPetal />
+      {/* ENHANCE-2 T9: EE-02 Konami code tributo, EE-03 Quietud 28s */}
+      <KonamiTribute />
+      <QuietudMessage />
     </>
   );
 }

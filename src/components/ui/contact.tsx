@@ -189,7 +189,7 @@ export default function Contact() {
           <h2 className="heading-balanced font-serif text-4xl md:text-5xl text-[#1a0808] leading-[1.1] mb-4">
             {t.contact.title}
           </h2>
-          <p className="body-pretty text-[#7a3a3a]/65 text-[0.9375rem] leading-relaxed mb-10">
+          <p className="body-pretty body-hyphens text-[#7a3a3a]/65 text-[0.9375rem] leading-relaxed mb-10">
             {t.contact.subtitle}
           </p>
 

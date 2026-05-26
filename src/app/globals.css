@@ -412,3 +412,79 @@ textarea::placeholder {
   pointer-events: none;
   z-index: 0;
 }
+
+/* ============================================================
+   ENHANCE-2 TANDA 9 — Sistema fino tipográfico/cromático
+   ============================================================ */
+
+/* TM-03 — hyphens: auto contextual.
+   Aplicar a párrafos largos (AboutUs cuerpo, Contact subtítulo,
+   Footer brand description) para corte silábico idiomático.
+   <html lang> se sincroniza dinámicamente (es/ca/en) → el motor
+   de hyphenation usa el idioma correcto en cada caso. */
+.body-hyphens {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* TM-05 — font-optical-sizing: auto en la familia serif.
+   Playfair Display VF entrega el eje opsz; el navegador
+   delegará automáticamente sin font-variation-settings explícito. */
+.font-serif,
+[class*="font-serif"],
+[style*="font-playfair"] {
+  font-optical-sizing: auto;
+}
+
+/* TM-06 — text-underline-offset + text-decoration-skip-ink global.
+   Aplica a todos los <a> del sitio: mejora la legibilidad del
+   subrayado separándolo de los descendentes y evitando colisiones
+   con las astas. Solución global más limpia que una utility opt-in,
+   ya que todos los links del proyecto se benefician. */
+a {
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: auto;
+}
+
+/* CP-05 — Scrollbar custom paleta terracota/cream-rosa.
+   Firefox: scrollbar-color + scrollbar-width thin.
+   Webkit (Chrome/Edge/Safari): thumb terracota a alpha muy bajo
+   (0.22 base, 0.40 hover) sobre track cream-rosa 30%.
+   Mantiene el scroll funcional sin alterar el layout. */
+
+/* Firefox */
+html {
+  scrollbar-color: rgba(192,57,43,0.30) rgba(245,198,194,0.25);
+  scrollbar-width: thin;
+}
+
+/* Webkit (Chrome/Edge/Safari) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(245,198,194,0.30);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(192,57,43,0.22);
+  border-radius: 6px;
+  transition: background 200ms ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(192,57,43,0.40);
+}
+
+/* CP-09 — :visited / :active tonal maroon.
+   :visited: maroon 80% alpha — identidad cromática coherente con
+   la paleta, evita el azul/morado por defecto del navegador.
+   :active: maroon sólido para feedback táctil nítido.
+   Restringido a <a> dentro de <p> y <li> para no afectar botones
+   con fondo oscuro (nav CTA, footer CTA) donde el maroon chocaría. */
+p a:visited,
+li a:visited {
+  color: rgba(122, 58, 58, 0.80);
+}
+p a:active,
+li a:active {
+  color: #7a1a1a;
+}

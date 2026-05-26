@@ -208,12 +208,16 @@ export default function Hero() {
           height: 72,
           paddingTop: "env(safe-area-inset-top)",
           /* VP-01+HS-09: sin borde en top, opaco+blurred al scroll */
-          backgroundColor: scrolled ? "rgba(255,255,255,0.88)" : "rgb(255,255,255)",
+          /* CP-10 — gradient mesh cream→rosa pálido 20% cuando scrolled */
+          backgroundColor: scrolled ? "transparent" : "rgb(255,255,255)",
+          background: scrolled
+            ? "linear-gradient(135deg, rgba(253,246,245,0.88) 78%, rgba(245,198,194,0.20) 100%)"
+            : "rgb(255,255,255)",
           backdropFilter: scrolled ? "blur(12px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
           borderBottom: scrolled ? "none" : "none",
           boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
-          transition: "background-color 220ms ease, backdrop-filter 220ms ease, -webkit-backdrop-filter 220ms ease, box-shadow 220ms ease",
+          transition: "background 220ms ease, backdrop-filter 220ms ease, -webkit-backdrop-filter 220ms ease, box-shadow 220ms ease",
         }}
       >
         {/* VP-01+HS-09 — hairline 1px terracota condensado: gradient fade extremos,
