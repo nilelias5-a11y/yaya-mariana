@@ -207,7 +207,7 @@ function CheckoutForm() {
           </div>
           <h1 className="font-serif text-3xl text-[#1a0808] mb-3">{t.checkout.success.title}</h1>
           <p className="text-[#7a3a3a]/70 mb-8 leading-relaxed">
-            {t.checkout.success.body} {name}. {t.checkout.success.emailHint}{" "}
+            {t.checkout.success.body}{" "}{t.checkout.success.emailHint}{" "}
             <span className="font-semibold text-[#1a0808]">{email}</span>.
           </p>
           {/* CD-06 — tributeHint ornamental italic. */}
