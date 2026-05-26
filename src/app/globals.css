@@ -293,6 +293,20 @@ main [id] {
   scroll-margin-top: 80px;
 }
 
+/* ============================================================
+   ENHANCE-2 TANDA 2 — Utilities y globals aditivos
+   ============================================================ */
+
+/* TM-12 — Superíndice .unit-suffix para sufijos % y h en StatsStrip.
+   Reduce el tamaño del sufijo y lo eleva levemente sin romper el
+   ritmo tipográfico del valor numérico. */
+.unit-suffix {
+  font-size: 0.55em;
+  vertical-align: 0.3em;
+  font-feature-settings: inherit;
+  letter-spacing: 0;
+}
+
 /* ENHANCE-3 — Dropcap editorial AboutUs p1.
    Aplicable al wrapper de los parrafos del cuerpo de AboutUs.
    Solo afecta a la primera letra del PRIMER <p>; el segundo

@@ -43,21 +43,39 @@ const STATS = [
   },
 ];
 
+/** Warm-lux easing canónico para los enhancements aditivos. */
+const EASE_WARM_LUX: [number, number, number, number] = [0.19, 1, 0.22, 1];
+
+/**
+ * Parsea un string de valor numérico y devuelve { numeric, suffix }.
+ * "100%" → { numeric: "100", suffix: "%" }
+ * "24h"  → { numeric: "24",  suffix: "h" }
+ * "0"    → { numeric: "0",   suffix: "" }
+ * "+"    → { numeric: "",    suffix: "+" }
+ */
+function parseValue(raw: string): { numeric: string; suffix: string } {
+  const match = raw.match(/^(\d+)([%h]?)(.*)$/);
+  if (!match) return { numeric: "", suffix: raw };
+  const [, numeric, unitSuffix, rest] = match;
+  return { numeric, suffix: unitSuffix + rest };
+}
+
 function AnimatedValue({ raw }: { raw: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const [display, setDisplay] = useState("0");
+  const [displayNum, setDisplayNum] = useState("0");
+
+  const { numeric, suffix } = parseValue(raw);
+  const isStyledSuffix = suffix === "%" || suffix === "h";
 
   useEffect(() => {
-    const match = raw.match(/^(\d+)(.*)$/);
-    if (!match) {
-      setDisplay(raw);
+    if (!numeric) {
+      setDisplayNum("");
       return;
     }
     if (!inView) return;
 
-    const [, numStr, suffix] = match;
-    const target = parseInt(numStr, 10);
+    const target = parseInt(numeric, 10);
     const duration = 1400;
     const startTime = Date.now();
 
@@ -65,41 +83,110 @@ function AnimatedValue({ raw }: { raw: string }) {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - (1 - progress) ** 3;
-      setDisplay(Math.round(eased * target) + suffix);
+      setDisplayNum(String(Math.round(eased * target)));
       if (progress >= 1) clearInterval(timer);
     }, 16);
 
     return () => clearInterval(timer);
-  }, [inView, raw]);
+  }, [inView, numeric]);
 
-  return <span ref={ref}>{display}</span>;
+  return (
+    <span ref={ref}>
+      {numeric ? displayNum : ""}
+      {suffix ? (
+        isStyledSuffix ? (
+          <span className="unit-suffix">{suffix}</span>
+        ) : (
+          suffix
+        )
+      ) : null}
+    </span>
+  );
 }
 
 export default function StatsStrip() {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-[#5c1a1a] text-white py-14 px-6">
+    <section className="relative bg-[#5c1a1a] text-white py-14 px-6">
+      {/* CD-02 — Hairline top edge: gradiente luz blanca, entrada animada */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 right-0 h-px"
+        style={{
+          background:
+            "linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent)",
+          transformOrigin: "center",
+        }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.62, ease: EASE_WARM_LUX }}
+      />
+
+      {/* CD-02 — Hairline bottom edge */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-px"
+        style={{
+          background:
+            "linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent)",
+          transformOrigin: "center",
+        }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.62, delay: 0.08, ease: EASE_WARM_LUX }}
+      />
+
       <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6">
         {STATS.map(({ value, icon }, i) => (
-          <motion.div
-            key={i}
-            className="flex flex-col items-center text-center gap-2"
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.75, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{ scale: 1.08, filter: "brightness(1.3)" }}
-            style={{ cursor: "default" }}
-          >
-            <div className="text-[#e74c3c]">{icon}</div>
-            <span className="numerals-tabular font-serif text-[3.25rem] font-bold leading-none mt-1">
-              <AnimatedValue raw={value} />
-            </span>
-            <span className="text-sm text-white/65 leading-snug max-w-[14ch]">
-              {t.stats.labels[i]}
-            </span>
-          </motion.div>
+          <div key={i} className="relative">
+            {/* VP-02 — Divisor vertical interno (md+, excepto último ítem) */}
+            {i < STATS.length - 1 && (
+              <span
+                aria-hidden
+                className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-px"
+                style={{
+                  height: "50%",
+                  background: "rgba(255,255,255,0.07)",
+                }}
+              />
+            )}
+
+            {/* AP-05 — motion.div con easing warm-lux y delay refinado */}
+            <motion.div
+              className="flex flex-col items-center text-center gap-2"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.75, delay: i * 0.12, ease: EASE_WARM_LUX }}
+              whileHover={{ scale: 1.08, filter: "brightness(1.3)" }}
+              style={{ cursor: "default" }}
+            >
+              {/* AP-05 — Icono con entrada escalonada 150ms tras el contenedor */}
+              <motion.div
+                className="text-[#e74c3c]"
+                initial={{ opacity: 0, scale: 0.7 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  duration: 0.45,
+                  delay: i * 0.12 + 0.15,
+                  ease: EASE_WARM_LUX,
+                }}
+              >
+                {icon}
+              </motion.div>
+
+              <span className="numerals-tabular font-serif text-[3.25rem] font-bold leading-none mt-1">
+                <AnimatedValue raw={value} />
+              </span>
+              <span className="text-sm text-white/65 leading-snug max-w-[14ch]">
+                {t.stats.labels[i]}
+              </span>
+            </motion.div>
+          </div>
         ))}
       </div>
     </section>
