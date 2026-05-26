@@ -8,8 +8,22 @@ function FocusField({ children }: { children: React.ReactNode }) {
   const [focused, setFocused] = useState(false);
   return (
     <motion.div
-      animate={{ scale: focused ? 1.01 : 1 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      animate={{
+        scale: focused ? 1.01 : 1,
+        /* AP-04 — focus-glow warm terracota 12% */
+        boxShadow: focused
+          ? "0 0 0 3px rgba(192,57,43,0.12), 0 1px 6px rgba(192,57,43,0.08)"
+          : "none",
+      }}
+      transition={{
+        duration: 0.2,
+        ease: "easeOut",
+        boxShadow: {
+          duration: 0.22,
+          ease: [0.6, 0.04, 0.24, 1],
+        },
+      }}
+      style={{ borderRadius: "0.75rem" }}
       onFocusCapture={() => setFocused(true)}
       onBlurCapture={() => setFocused(false)}
     >
@@ -57,6 +71,10 @@ export default function Contact() {
     message: "",
   });
   const [sent, setSent] = useState(false);
+  /* AP-08 — chips entrada escalonada: estado que se activa cuando
+     el panel de info entra en viewport (via onViewportEnter del
+     motion.div padre), para propagar data-revealed a cada chip. */
+  const [chipsRevealed, setChipsRevealed] = useState(false);
   /* a11y (#38) — validacion accesible: errores por campo asociados
      via aria-describedby; aria-invalid en los campos que fallan. */
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -162,6 +180,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          onViewportEnter={() => setChipsRevealed(true)}
         >
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.contact.eyebrow}
@@ -174,8 +193,16 @@ export default function Contact() {
           </p>
 
           <div className="space-y-6">
-            {contactInfo.map(({ icon, label, value, href }) => (
-              <div key={label} className="flex gap-4">
+            {contactInfo.map(({ icon, label, value, href }, idx) => (
+              /* AP-08 — entrada escalonada: cada chip usa .reveal con
+                 transitionDelay 0/100/200ms; data-revealed se activa
+                 cuando el panel padre entra en viewport. */
+              <div
+                key={label}
+                className="flex gap-4 reveal"
+                data-revealed={chipsRevealed ? "true" : undefined}
+                style={{ transitionDelay: `${idx * 100}ms` }}
+              >
                 {/* ENHANCE-5: icon chip con borde 1px cream-rosa que lo separa
                     del fondo `#fdf6f5` (antes solo confiaba en bg-[#fdf0ef]
                     casi-igual al de la seccion). */}
@@ -186,7 +213,9 @@ export default function Contact() {
                   {icon}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase tracking-wide mb-0.5">
+                  {/* TM-10 — label-caps: letter-spacing 0.10em + cpsp
+                      (sobrescribe tracking-wide 0.025em de Tailwind) */}
+                  <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase mb-0.5 label-caps">
                     {label}
                   </p>
                   {href ? (
@@ -226,8 +255,10 @@ export default function Contact() {
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           style={{
             border: "1px solid rgba(245,198,194,0.7)",
+            /* CP-06 — segunda capa cream-rosa superior-izquierda +
+               capas existentes terracota 4% e inset blanco 80%. */
             boxShadow:
-              "0 1px 0 rgba(255,255,255,0.8) inset, 0 1px 12px rgba(192,57,43,0.04)",
+              "0 -1px 8px rgba(245,198,194,0.10), 0 1px 0 rgba(255,255,255,0.8) inset, 0 1px 12px rgba(192,57,43,0.04)",
           }}
         >
           {sent ? (
@@ -251,7 +282,7 @@ export default function Contact() {
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <FocusField>
-                  <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                  <label htmlFor="name" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase mb-1.5 label-caps">
                     {t.contact.nameLabel} · *
                   </label>
                   <input
@@ -266,14 +297,14 @@ export default function Contact() {
                     placeholder={t.contact.namePlaceholder}
                     aria-invalid={errors.name ? true : undefined}
                     aria-describedby={errors.name ? "name-error" : undefined}
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] focus:outline-none focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
                   {errors.name && (
                     <p id="name-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.name}</p>
                   )}
                 </FocusField>
                 <FocusField>
-                  <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                  <label htmlFor="email" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase mb-1.5 label-caps">
                     {t.contact.emailLabel} · *
                   </label>
                   <input
@@ -289,7 +320,7 @@ export default function Contact() {
                     placeholder="tu@email.com"
                     aria-invalid={errors.email ? true : undefined}
                     aria-describedby={errors.email ? "email-error" : undefined}
-                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                    className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] focus:outline-none focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                   />
                   {errors.email && (
                     <p id="email-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.email}</p>
@@ -297,7 +328,7 @@ export default function Contact() {
                 </FocusField>
               </div>
               <FocusField>
-                <label htmlFor="subject" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                <label htmlFor="subject" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase mb-1.5 label-caps">
                   {t.contact.subjectLabel} · *
                 </label>
                 <input
@@ -311,14 +342,14 @@ export default function Contact() {
                   placeholder={t.contact.subjectPlaceholder}
                   aria-invalid={errors.subject ? true : undefined}
                   aria-describedby={errors.subject ? "subject-error" : undefined}
-                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
+                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-3 text-base text-[#7a3a3a] focus:outline-none focus:border-[#e74c3c] transition-colors bg-[#fdf6f5]"
                 />
                 {errors.subject && (
                   <p id="subject-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.subject}</p>
                 )}
               </FocusField>
               <FocusField>
-                <label htmlFor="message" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase tracking-wide mb-1.5">
+                <label htmlFor="message" className="block text-xs font-semibold text-[#7a3a3a]/60 uppercase mb-1.5 label-caps">
                   {t.contact.messageLabel}
                 </label>
                 <textarea
@@ -331,21 +362,25 @@ export default function Contact() {
                   placeholder={t.contact.messagePlaceholder}
                   aria-invalid={errors.message ? true : undefined}
                   aria-describedby={errors.message ? "message-error" : undefined}
-                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] placeholder:text-[#7a3a3a]/35 focus:outline-none focus:ring-2 focus:ring-[#e74c3c]/40 focus:border-[#e74c3c] transition-colors bg-[#fdf6f5] resize-none"
+                  className="w-full border border-[#f5c6c2] rounded-xl px-4 py-2.5 text-sm text-[#7a3a3a] focus:outline-none focus:border-[#e74c3c] transition-colors bg-[#fdf6f5] resize-none"
                 />
                 {errors.message && (
                   <p id="message-error" className="mt-1.5 text-xs text-[#b91c1c]">{errors.message}</p>
                 )}
               </FocusField>
-              <button
+              {/* AP-09 — micro-lift: y:-2 + shadow expansion on hover */}
+              <motion.button
                 type="submit"
                 className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
                 style={{
                   background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
                 }}
+                whileHover={{ y: -2, boxShadow: "0 8px 20px rgba(192,57,43,0.32)" }}
+                whileTap={{ scale: 0.98, y: 0 }}
+                transition={{ duration: 0.22, ease: [0.6, 0.04, 0.24, 1] }}
               >
                 {t.contact.send}
-              </button>
+              </motion.button>
             </form>
           )}
         </motion.div>

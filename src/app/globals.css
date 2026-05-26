@@ -320,6 +320,27 @@ main [id] {
   font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "onum" 1, "calt" 1;
 }
 
+/* ============================================================
+   ENHANCE-2 TANDA 5 — Utilities y globals aditivos
+   ============================================================ */
+
+/* TM-10 — .label-caps: tracking de 0.10em + OpenType cpsp para
+   labels uppercase del formulario Contact y chips de info.
+   Sobrescribe tracking-wide de Tailwind (0.025em). */
+.label-caps {
+  letter-spacing: 0.10em;
+  font-feature-settings: "cpsp" 1;
+}
+
+/* CP-04 — placeholder color maroon 45%.
+   Sustituye la variante neutra gris/terracota diluida previa.
+   Aplica a inputs y textarea del formulario Contact y cualquier
+   otro campo del sitio. */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(122, 58, 58, 0.45);
+}
+
 /* ENHANCE-3 — Dropcap editorial AboutUs p1.
    Aplicable al wrapper de los parrafos del cuerpo de AboutUs.
    Solo afecta a la primera letra del PRIMER <p>; el segundo
