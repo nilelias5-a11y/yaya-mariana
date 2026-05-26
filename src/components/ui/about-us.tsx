@@ -2,14 +2,16 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
+import OrnamentBreath from "@/components/easter-eggs/ornament-breath";
 
 export default function AboutUs() {
   const { t } = useLanguage();
 
   return (
     /* ENHANCE-3 — `relative` para anclar la capa de textura de papel
-       absoluta sobre la seccion sin tocar fondo bg-white. */
-    <section id="sobre-nosotros" className="relative bg-white py-20 px-6">
+       absoluta sobre la seccion sin tocar fondo bg-white.
+       CP-07 — `section-warm-veil` añade velo terracota 2% via ::before. */
+    <section id="sobre-nosotros" className="relative section-warm-veil bg-white py-20 px-6">
       {/* ENHANCE-3 — Overlay textura de papel envejecido. SVG turbulence
           tintando hacia ink-warm (#7a3a3a) via mix-blend-multiply al 3%.
           Da sensacion de carta de receta, no de marketing. Cero impacto
@@ -112,15 +114,11 @@ export default function AboutUs() {
             </footer>
           </blockquote>
 
-          {/* ENHANCE-3 — Glifo ornamental tras el blockquote: cierre
-              editorial sutil entre la cita y los CTAs. */}
-          <div
-            aria-hidden
-            className="mt-6 text-center"
-            style={{ color: "rgba(192,57,43,0.4)", fontSize: "1.1rem", lineHeight: 1 }}
-          >
-            ❦
-          </div>
+          {/* EE-01 — Glifo ornamental ❦ con aliento sostenido (hover/focus
+              >=1.8s): rotación + fade warm-lux 2.2s, dedup sessionStorage.
+              Extraído a OrnamentBreath para mantener el estado fuera del
+              árbol de motion ya existente. */}
+          <OrnamentBreath />
 
           <div className="mt-8 flex items-center gap-4">
             <motion.a

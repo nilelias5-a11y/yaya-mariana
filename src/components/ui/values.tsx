@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
+/** Easing warm-lux canónico. */
+const EASE_WARM_LUX: [number, number, number, number] = [0.19, 1, 0.22, 1];
+
 const ICONS = [
   // Vitamina C — hoja/planta
   <svg key="leaf" viewBox="0 0 24 24" fill="none" stroke="#c0392b" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
@@ -40,12 +43,39 @@ export default function Values() {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-[#fdf0ef] py-20 px-6">
+    <section className="relative bg-[#fdf0ef] py-20 px-6">
+      {/* VP-04 — Hairline superior de sección: divisor 1px gradient
+          horizontal entre AboutUs↓ y Values↑. Aria-hidden decorativo. */}
+      <div
+        aria-hidden
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to right, transparent, rgba(192,57,43,0.10), transparent)",
+        }}
+      />
+
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <span className="inline-block text-[#c0392b] text-xs font-bold uppercase tracking-[0.18em] mb-3">
             {t.values.eyebrow}
           </span>
+          {/* VP-05 — Hairline-rule centrado bajo el eyebrow: 40×1px terracota
+              22% alpha, scaleX 0→1 warm-lux 520ms al entrar en viewport. */}
+          <motion.div
+            aria-hidden
+            className="mx-auto mb-3"
+            style={{
+              width: 40,
+              height: 1,
+              backgroundColor: "rgba(192,57,43,0.22)",
+              transformOrigin: "center",
+            }}
+            initial={{ scaleX: 0, opacity: 0 }}
+            whileInView={{ scaleX: 1, opacity: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.52, ease: EASE_WARM_LUX }}
+          />
           <h2 className="heading-balanced font-serif text-4xl md:text-5xl text-[#1a0808]">
             {t.values.title}
           </h2>

@@ -387,6 +387,28 @@ export default function Products() {
         backgroundSize: "22px 22px",
       }}
     >
+      {/* CD-11 — Hairline perímetro Products TOP: amortiguación 1px
+          rgba(192,57,43,0.06) entre StatsStrip oscuro y Products claro.
+          No toca el grid de cards (BLOQUEADO). */}
+      <div
+        aria-hidden
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ backgroundColor: "rgba(192,57,43,0.06)" }}
+      />
+      {/* VP-10 — Hairline junta Products↓ → StatsStrip: 1px gradient
+          horizontal en el BOTTOM de Products. El hairline blanco de CD-02
+          ya cubre el TOP de StatsStrip (blanco puro rgba(255,255,255,0.08));
+          este es un acento terracota adicional desde la cara Products,
+          complementario, sin duplicar. */}
+      <div
+        aria-hidden
+        className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to right, transparent, rgba(192,57,43,0.10), transparent)",
+        }}
+      />
+
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">

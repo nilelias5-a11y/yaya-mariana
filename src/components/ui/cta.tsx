@@ -8,11 +8,28 @@ export default function CTA() {
 
   return (
     <section
-      className="py-20 px-6 text-white text-center"
+      className="relative py-20 px-6 text-white text-center"
       style={{
         background: "linear-gradient(135deg, #5c1a1a 0%, #c0392b 50%, #a93226 100%)",
       }}
     >
+      {/* CD-04 — Hairline curvo SVG en borde SUPERIOR del CTA.
+          Path ondulado 100% ancho × 8px alto, stroke cream-rosa diluido.
+          El fondo rojo y la estructura interna NO se tocan. */}
+      <svg
+        aria-hidden
+        viewBox="0 0 1200 8"
+        preserveAspectRatio="none"
+        className="absolute top-0 left-0 w-full h-2 pointer-events-none"
+      >
+        <path
+          d="M0,4 Q300,0 600,4 T1200,4"
+          stroke="rgba(245,198,194,0.18)"
+          strokeWidth="1"
+          fill="none"
+        />
+      </svg>
+
       <div className="max-w-2xl mx-auto">
           <span className="inline-block text-[#f5c6c2] text-xs font-bold uppercase tracking-[0.18em] mb-4">
             {t.cta.eyebrow}

@@ -144,8 +144,9 @@ export default function Contact() {
   return (
     /* ENHANCE-5: section `relative` para anclar la capa de grano sutil
        (opacity 0.012, mismo turbulence que Hero pero al limite minimo) y
-       el hairline de cierre antes del Footer. */
-    <section id="contacto" className="relative bg-[#fdf6f5] py-20 px-6">
+       el hairline de cierre antes del Footer.
+       CP-08 — `section-cool-veil` añade velo maroon 2.5% via ::before. */
+    <section id="contacto" className="relative section-cool-veil bg-[#fdf6f5] py-20 px-6">
       {/* Grano filmografico minimo, cose visualmente Hero <-> Contacto. */}
       <div
         aria-hidden

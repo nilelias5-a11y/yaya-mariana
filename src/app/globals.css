@@ -380,3 +380,35 @@ textarea::placeholder {
     0 0 0 1px rgba(192, 57, 43, 0.70);
   outline: none;
 }
+
+/* ============================================================
+   ENHANCE-2 TANDA 8 — Decorativos seccionales
+   ============================================================ */
+
+/* CP-07 — Velo warm AboutUs 2%: pseudo-elemento absoluto terracota
+   muy diluido que cose visualmente el fondo blanco de la sección. */
+.section-warm-veil {
+  position: relative;
+}
+.section-warm-veil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(192, 57, 43, 0.02);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* CP-08 — Velo neutro-fresco Contact 2.5% (maroon): mismo patrón
+   que CP-07 pero con tono maroon para Contact. */
+.section-cool-veil {
+  position: relative;
+}
+.section-cool-veil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(122, 58, 58, 0.025);
+  pointer-events: none;
+  z-index: 0;
+}
