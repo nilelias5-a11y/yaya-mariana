@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
+import { ChatWidget } from "@/components/chat-widget";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -187,6 +188,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-[#fdf6f5]">
         <Providers>{children}</Providers>
+        <ChatWidget />
       </body>
     </html>
   );
