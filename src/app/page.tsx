@@ -1,9 +1,7 @@
 import Hero from "@/components/ui/hero";
 import StatsStrip from "@/components/ui/stats-strip";
-import ProcessSteps from "@/components/ui/process-steps";
 import Products from "@/components/ui/products";
 import AboutUs from "@/components/ui/about-us";
-import Timeline from "@/components/ui/timeline";
 import Values from "@/components/ui/values";
 import CTA from "@/components/ui/cta";
 import FAQ from "@/components/ui/faq";
@@ -33,10 +31,8 @@ export default function Home() {
       <Hero />
       <main id="contenido" tabIndex={-1}>
         <StatsStrip />
-        <ProcessSteps />
         <Products />
         <AboutUs />
-        <Timeline />
         <Values />
         <CTA />
         <FAQ />

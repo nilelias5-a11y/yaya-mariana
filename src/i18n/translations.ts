@@ -28,6 +28,7 @@ export const translations = {
           { label: "Inicio", subtitle: "Volver al principio" },
           { label: "Productos", subtitle: "Nuestras fresas premium" },
           { label: "Sobre nosotros", subtitle: "La historia de la Yaya" },
+          { label: "FAQ", subtitle: "Resolvemos lo más habitual" },
           { label: "Contacto", subtitle: "Escríbenos" },
         ],
         verTienda: "Ver tienda →",
@@ -71,12 +72,6 @@ export const translations = {
       photoAlt3: "Fresas premium Yaya Mariana, cada una elegida a mano",
       viewStore: "Ver tienda",
       contact: "Contactar →",
-      farmer: {
-        eyebrow: "El agricultor",
-        name: "Joan Carles",
-        role: "Cultiva las fresas en Tarragona",
-        quote: "Cada fresa se recoge cuando ella enseñaba: en su punto justo, sin prisa.",
-      },
     },
     values: {
       eyebrow: "Por qué elegirnos",
@@ -90,44 +85,6 @@ export const translations = {
         { title: "Huella mínima", description: "Nuestro sistema de cultivo controlado minimiza el impacto ambiental y reduce drásticamente el uso de recursos hídricos." },
         { title: "Antioxidantes", description: "Alto contenido en antocianinas y polifenoles que protegen las células del estrés oxidativo y favorecen la salud cardiovascular." },
         { title: "Sabor intenso", description: "El cultivo controlado y el punto óptimo de cosecha garantizan un sabor dulce e intenso en cada fresa que llega a tu mesa." },
-      ],
-    },
-    process: {
-      eyebrow: "Nuestro proceso",
-      title: "Cómo llegan a tu mesa",
-      subtitle: "Cuatro pasos sin prisa, como las hacía ella.",
-      steps: [
-        { title: "Siembra", body: "Variedades elegidas con cuidado. Semilla limpia, tierra preparada con calma." },
-        { title: "Cuidado natural", body: "Hidroponía controlada, sin pesticidas. El tiempo que cada planta necesita." },
-        { title: "Recogida en su punto", body: "Cada fresa elegida a mano cuando está madura. Ni un día antes." },
-        { title: "Cadena de frío", body: "Envío refrigerado 24-48h hasta tu mesa. Sabor intacto." },
-      ],
-    },
-    timeline: {
-      eyebrow: "Historia con calma",
-      title: "Cuatro momentos",
-      subtitle: "Lo que sostiene este proyecto — cuatro hitos que lo explican todo.",
-      items: [
-        {
-          year: "1950",
-          title: "Las primeras fresas",
-          text: "Mariana siembra las primeras fresas en el huerto familiar de Tarragona.",
-        },
-        {
-          year: "1985",
-          title: "La receta de la yaya",
-          text: "Cada fresa se elegía a mano, con la calma que pedía la planta.",
-        },
-        {
-          year: "2020",
-          title: "Decidimos honrar su legado",
-          text: "La familia recupera el método que ella enseñó, sin cambiar nada esencial.",
-        },
-        {
-          year: "2026",
-          title: "Primera cosecha Yaya Mariana",
-          text: "Sale al mundo el resultado de tantos años de paciencia y cuidado.",
-        },
       ],
     },
     cta: {
@@ -300,6 +257,7 @@ export const translations = {
           { label: "Inici", subtitle: "Tornar a l'inici" },
           { label: "Productes", subtitle: "Les nostres maduixes premium" },
           { label: "Sobre nosaltres", subtitle: "La història de la Yaya" },
+          { label: "FAQ", subtitle: "El més habitual, resolt" },
           { label: "Contacte", subtitle: "Escriu-nos" },
         ],
         verTienda: "Veure botiga →",
@@ -343,12 +301,6 @@ export const translations = {
       photoAlt3: "Maduixes premium Yaya Mariana, cada una triada a mà",
       viewStore: "Veure botiga",
       contact: "Contactar →",
-      farmer: {
-        eyebrow: "Qui les cuida ara",
-        name: "Joan Carles",
-        role: "Cultiva les maduixes a Tarragona",
-        quote: "Cada maduixa es cull quan ella ensenyava: al seu punt just, sense pressa.",
-      },
     },
     values: {
       eyebrow: "Per què triar-nos",
@@ -362,44 +314,6 @@ export const translations = {
         { title: "Petjada mínima", description: "El nostre sistema de cultiu controlat minimitza l'impacte ambiental i redueix dràsticament l'ús de recursos hídrics." },
         { title: "Antioxidants", description: "Alt contingut en antocianines i polifenols que protegeixen les cèl·lules de l'estrès oxidatiu i afavoreixen la salut cardiovascular." },
         { title: "Sabor intens", description: "El cultiu controlat i el punt òptim de collita garanteixen un sabor dolç i intens en cada maduixa que arriba a la teva taula." },
-      ],
-    },
-    process: {
-      eyebrow: "El nostre procés",
-      title: "Com arriben a la teva taula",
-      subtitle: "Quatre passos sense pressa, com les feia ella.",
-      steps: [
-        { title: "Sembra", body: "Varietats triades amb cura. Llavor neta, terra preparada amb calma." },
-        { title: "Cura natural", body: "Hidroponia controlada, sense pesticides. El temps que cada planta necessita." },
-        { title: "Collita al punt", body: "Cada maduixa triada a mà quan és madura. Ni un dia abans." },
-        { title: "Cadena de fred", body: "Enviament refrigerat 24-48h fins a la teva taula. Sabor intacte." },
-      ],
-    },
-    timeline: {
-      eyebrow: "Història amb calma",
-      title: "Quatre moments",
-      subtitle: "El que sosté aquest projecte — quatre fites que ho expliquen tot.",
-      items: [
-        {
-          year: "1950",
-          title: "Les primeres maduixes",
-          text: "La Mariana sembra les primeres maduixes a l'hort familiar de Tarragona.",
-        },
-        {
-          year: "1985",
-          title: "La recepta de la iaia",
-          text: "Cada maduixa es triava a mà, amb la calma que demanava la planta.",
-        },
-        {
-          year: "2020",
-          title: "Decidim honrar el seu llegat",
-          text: "La família recupera el mètode que ella va ensenyar, sense canviar res essencial.",
-        },
-        {
-          year: "2026",
-          title: "Primera collita Yaya Mariana",
-          text: "Surt al món el resultat de tants anys de paciència i cura.",
-        },
       ],
     },
     cta: {
@@ -572,6 +486,7 @@ export const translations = {
           { label: "Home", subtitle: "Back to top" },
           { label: "Products", subtitle: "Our premium strawberries" },
           { label: "About us", subtitle: "Yaya's story" },
+          { label: "FAQ", subtitle: "Common questions answered" },
           { label: "Contact", subtitle: "Write to us" },
         ],
         verTienda: "See shop →",
@@ -615,12 +530,6 @@ export const translations = {
       photoAlt3: "Premium Yaya Mariana strawberries, each chosen by hand",
       viewStore: "See shop",
       contact: "Contact →",
-      farmer: {
-        eyebrow: "Who tends them now",
-        name: "Joan Carles",
-        role: "Grows the strawberries in Tarragona",
-        quote: "Each strawberry is picked the way she taught: at exactly the right moment, unhurried.",
-      },
     },
     values: {
       eyebrow: "Why choose us",
@@ -634,44 +543,6 @@ export const translations = {
         { title: "Minimal footprint", description: "Our controlled cultivation system minimises environmental impact and drastically reduces water usage." },
         { title: "Antioxidants", description: "High content of anthocyanins and polyphenols that protect cells from oxidative stress and support cardiovascular health." },
         { title: "Intense flavour", description: "Controlled cultivation and optimal harvest timing guarantee a sweet, intense flavour in every strawberry that reaches your table." },
-      ],
-    },
-    process: {
-      eyebrow: "Our process",
-      title: "How they reach your table",
-      subtitle: "Four unhurried steps, the way she used to do it.",
-      steps: [
-        { title: "Sowing", body: "Varieties chosen with care. Clean seed, soil prepared with calm." },
-        { title: "Natural care", body: "Controlled hydroponics, no pesticides. The time each plant needs." },
-        { title: "Picked at peak", body: "Every strawberry chosen by hand when ripe. Not a day before." },
-        { title: "Cold chain", body: "Refrigerated delivery 24-48h to your table. Flavour intact." },
-      ],
-    },
-    timeline: {
-      eyebrow: "History, unhurried",
-      title: "Four moments",
-      subtitle: "What holds this project together — four milestones that tell the whole story.",
-      items: [
-        {
-          year: "1950",
-          title: "The first strawberries",
-          text: "Mariana plants the first strawberries in the family's Tarragona plot.",
-        },
-        {
-          year: "1985",
-          title: "The way she taught",
-          text: "Every strawberry was chosen by hand, with the patience the plant required.",
-        },
-        {
-          year: "2020",
-          title: "We chose to honour her",
-          text: "The family brings back the method she passed down, unchanged in anything essential.",
-        },
-        {
-          year: "2026",
-          title: "First harvest, Yaya Mariana",
-          text: "The result of so many years of patience and care reaches the world.",
-        },
       ],
     },
     cta: {

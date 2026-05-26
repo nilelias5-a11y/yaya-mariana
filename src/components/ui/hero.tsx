@@ -25,7 +25,7 @@ const LANG_OPTIONS: { code: Lang; label: string }[] = [
   { code: "en", label: "EN" },
 ];
 
-const NAV_HREFS = ["#productos", "#sobre-nosotros", "#contacto"];
+const NAV_HREFS = ["#productos", "#sobre-nosotros", "#faq", "#contacto"];
 
 function LanguageSelector() {
   const { lang, setLang } = useLanguage();
