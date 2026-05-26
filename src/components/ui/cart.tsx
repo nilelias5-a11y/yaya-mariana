@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -19,6 +19,55 @@ export default function Cart() {
   const close = useCallback(() => setOpen(false), []);
   const panelRef = useFocusTrap<HTMLDivElement>({ active: open, onClose: close });
 
+  /* AP-02 — badge micro-spring al añadir ítem.
+     VP-11 — FAB hover easing warm-lux.
+     CD-13 — FAB micro-rebote en primer ítem / ítem adicional. */
+  const [badgeScope, badgeAnimate] = useAnimate();
+  const [fabScope, fabAnimate] = useAnimate();
+  const prevCountRef = useRef<number>(count);
+
+  useEffect(() => {
+    const prev = prevCountRef.current;
+    prevCountRef.current = count;
+
+    /* Solo disparar cuando count crece (no en mount ni en decrementos). */
+    if (count <= prev) return;
+
+    const reducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!reducedMotion) {
+      /* AP-02 — badge spring numérico (solo si badge existe, i.e. count > 0). */
+      if (count > 0 && badgeScope.current) {
+        badgeAnimate(
+          badgeScope.current,
+          { scale: [1, 1.38, 0.92, 1.06, 1] },
+          { duration: 0.44, ease: [0.19, 1, 0.22, 1] },
+        );
+      }
+
+      /* CD-13 — FAB rebote ambiental: más pronunciado en primer ítem. */
+      if (fabScope.current) {
+        if (prev === 0) {
+          /* primer ítem: rebote más amplio */
+          fabAnimate(
+            fabScope.current,
+            { scale: [1, 1.18, 0.96, 1.04, 1] },
+            { type: "spring", stiffness: 270, damping: 22 },
+          );
+        } else {
+          /* ítems adicionales: rebote sutil */
+          fabAnimate(
+            fabScope.current,
+            { scale: [1, 1.08, 1] },
+            { type: "spring", stiffness: 280, damping: 20 },
+          );
+        }
+      }
+    }
+  }, [count, badgeAnimate, badgeScope, fabAnimate, fabScope]);
+
   function handleCheckout() {
     setOpen(false);
     router.push("/checkout");
@@ -27,11 +76,14 @@ export default function Cart() {
   return (
     <>
       {/* Floating button — respeta safe-area-inset en dispositivos con
-          notch / barra de gestos para no caer sobre el sistema. */}
+          notch / barra de gestos para no caer sobre el sistema.
+          VP-11: FAB hover easing warm-lux.
+          CD-13: ref para rebote programático. */}
       <motion.button
+        ref={fabScope}
         onClick={() => setOpen(true)}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.08, transition: { duration: 0.22, ease: [0.19, 1, 0.22, 1] } }}
+        whileTap={{ scale: 0.95, transition: { duration: 0.22, ease: [0.19, 1, 0.22, 1] } }}
         className="fixed z-40 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl"
         style={{
           background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
@@ -45,9 +97,11 @@ export default function Cart() {
           <line x1="3" y1="6" x2="21" y2="6" />
           <path d="M16 10a4 4 0 01-8 0" />
         </svg>
+        {/* AP-02: badge con ref para spring programático. */}
         <AnimatePresence>
           {count > 0 && (
             <motion.span
+              ref={badgeScope}
               key="badge"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -63,7 +117,7 @@ export default function Cart() {
       <AnimatePresence>
         {open && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop — duration:0.2 sin cambios. */}
             <motion.div
               key="backdrop"
               initial={{ opacity: 0 }}
@@ -74,7 +128,8 @@ export default function Cart() {
               onClick={() => setOpen(false)}
             />
 
-            {/* Panel — dialogo modal accesible (#24). */}
+            {/* Panel — dialogo modal accesible (#24).
+                AP-03: entrada warm-lux 520ms; salida warm-inout 320ms. */}
             <motion.div
               key="panel"
               ref={panelRef}
@@ -83,13 +138,15 @@ export default function Cart() {
               aria-labelledby="cart-title"
               tabIndex={-1}
               initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 320, damping: 34 }}
+              animate={{ x: 0, transition: { duration: 0.52, ease: [0.19, 1, 0.22, 1] } }}
+              exit={{ x: "100%", transition: { duration: 0.32, ease: [0.6, 0.04, 0.24, 1] } }}
               className="fixed right-0 top-0 h-full w-full max-w-[22rem] bg-white shadow-2xl z-50 flex flex-col"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-[#f5c6c2]/60">
+              {/* Header — VP-06: hairline fantasma aditiva. */}
+              <div
+                className="flex items-center justify-between px-5 py-4 border-b border-[#f5c6c2]/60"
+                style={{ boxShadow: "0 3px 0 -2px rgba(255,255,255,0.06)" }}
+              >
                 <h2 id="cart-title" className="font-serif text-xl text-[#1a0808]">{t.cart.title}</h2>
                 {/* Cerrar — caja de toque 44x44 (WCAG 2.5.5); circulo
                     visible 32px se mantiene como antes via padding. */}
@@ -114,7 +171,9 @@ export default function Cart() {
                       <line x1="6" y1="12" x2="42" y2="12" />
                       <path d="M32 20a8 8 0 01-16 0" />
                     </svg>
+                    {/* MC-A-01: hint secundario en estado vacío. */}
                     <p className="text-sm">{t.cart.empty}</p>
+                    <p className="font-serif italic text-[#7a3a3a]/35 text-xs mt-2">{t.cart.emptyHint}</p>
                   </div>
                 ) : (
                   items.map((item) => (
@@ -177,9 +236,12 @@ export default function Cart() {
                 )}
               </div>
 
-              {/* Footer */}
+              {/* Footer — VP-06: hairline fantasma aditiva. */}
               {items.length > 0 && (
-                <div className="px-5 py-4 border-t border-[#f5c6c2]/60 space-y-3">
+                <div
+                  className="px-5 py-4 border-t border-[#f5c6c2]/60 space-y-3"
+                  style={{ boxShadow: "0 3px 0 -2px rgba(255,255,255,0.06)" }}
+                >
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-[#7a3a3a]/70">{t.cart.subtotal}</span>
                     <span className="font-bold text-[#1a0808]">{total.toFixed(2)}€</span>

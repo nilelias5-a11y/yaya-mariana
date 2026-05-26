@@ -1,9 +1,10 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { CardElement, Elements, useElements, useStripe } from "@stripe/react-stripe-js";
+import { motion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
 
@@ -28,8 +29,38 @@ const CARD_STYLE = {
   },
 };
 
+/* CD-09 — microtextura papel: mismo SVG que Contact/Hero (baseFrequency
+   0.85, numOctaves 2, 160×160). Inline como background-image, opacity 0.012,
+   mix-blend-multiply. Compartido entre el form y la pantalla de éxito. */
+const PAPER_TEXTURE_STYLE: React.CSSProperties = {
+  backgroundImage:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>\")",
+  opacity: 0.012,
+  mixBlendMode: "multiply" as const,
+  backgroundRepeat: "repeat",
+};
+
 type CheckoutField = "name" | "email" | "address" | "city" | "zip";
 type CheckoutErrors = Partial<Record<CheckoutField, string>>;
+
+/* VP-07 — hairline-rule bajo cada legend, animada whileInView. */
+function LegendRule() {
+  return (
+    <motion.div
+      aria-hidden="true"
+      initial={{ scaleX: 0 }}
+      whileInView={{ scaleX: 1 }}
+      viewport={{ once: true, amount: 0.6 }}
+      transition={{ duration: 0.52, ease: [0.19, 1, 0.22, 1] }}
+      style={{
+        height: 1,
+        backgroundColor: "rgba(192,57,43,0.15)",
+        transformOrigin: "left center",
+        marginTop: "0.375rem",
+      }}
+    />
+  );
+}
 
 function CheckoutForm() {
   const stripe = useStripe();
@@ -49,6 +80,29 @@ function CheckoutForm() {
   /* C4-deferred (a11y #38) — validacion accesible por campo
      (aria-invalid + aria-describedby). */
   const [fieldErrors, setFieldErrors] = useState<CheckoutErrors>({});
+
+  /* CD-10 — document.title "Un momento" durante Stripe processing.
+     Guardamos el titulo original antes del cambio y lo restauramos. */
+  const originalTitleRef = useRef<string>("");
+  useEffect(() => {
+    if (loading) {
+      if (!originalTitleRef.current) {
+        originalTitleRef.current = document.title;
+      }
+      document.title = "Un momento · Yaya Mariana";
+    } else {
+      if (originalTitleRef.current) {
+        document.title = originalTitleRef.current;
+        originalTitleRef.current = "";
+      }
+    }
+    return () => {
+      if (originalTitleRef.current) {
+        document.title = originalTitleRef.current;
+        originalTitleRef.current = "";
+      }
+    };
+  }, [loading]);
 
   function messageFor(field: HTMLInputElement): string | null {
     if (field.validity.valid) return null;
@@ -125,9 +179,27 @@ function CheckoutForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: "#fdf6f5" }}>
-        {/* a11y (#37) — confirmacion de pedido anunciada por el SR. */}
-        <div role="status" aria-live="polite" className="max-w-md w-full text-center">
+      <div className="relative min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: "#fdf6f5" }}>
+        {/* CD-09 — microtextura papel en la pantalla de éxito. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={PAPER_TEXTURE_STYLE}
+        />
+        {/* a11y (#37) — confirmacion de pedido anunciada por el SR.
+            VP-08: paper-card treatment. */}
+        <div
+          role="status"
+          aria-live="polite"
+          className="relative max-w-md w-full text-center"
+          style={{
+            backgroundColor: "#ffffff",
+            border: "1px solid rgba(245,198,194,0.5)",
+            borderRadius: "24px",
+            padding: "3rem",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.9) inset, 0 2px 24px rgba(192,57,43,0.06)",
+          }}
+        >
           <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
             <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10" aria-hidden>
               <path d="M20 6L9 17l-5-5" />
@@ -138,9 +210,14 @@ function CheckoutForm() {
             {t.checkout.success.body} {name}. {t.checkout.success.emailHint}{" "}
             <span className="font-semibold text-[#1a0808]">{email}</span>.
           </p>
+          {/* CD-06 — tributeHint ornamental italic. */}
+          <p className="font-serif italic text-[#7a3a3a]/45 text-sm mt-4 mb-6">
+            {t.checkout.success.tributeHint}
+          </p>
+          {/* VP-13 — back button warm-lux chevron. */}
           <button
             onClick={() => router.push("/")}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-bold shadow-lg"
+            className="group inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-bold shadow-lg"
             style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
           >
             {t.checkout.success.backHome}
@@ -151,14 +228,29 @@ function CheckoutForm() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-16" style={{ backgroundColor: "#fdf6f5" }}>
-      <div className="max-w-5xl mx-auto">
-        {/* Back button */}
+    <div className="relative min-h-screen px-6 py-16" style={{ backgroundColor: "#fdf6f5" }}>
+      {/* CD-09 — microtextura papel en el form de checkout. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={PAPER_TEXTURE_STYLE}
+      />
+      <div className="relative max-w-5xl mx-auto">
+        {/* VP-13 — back button warm-lux chevron: group + group-hover en el SVG. */}
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-sm text-[#7a3a3a]/60 hover:text-[#c0392b] transition-colors mb-10"
+          className="group flex items-center gap-1.5 text-sm text-[#7a3a3a]/60 hover:text-[#c0392b] transition-colors mb-10"
         >
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden>
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200 ease-[cubic-bezier(0.19,1,0.22,1)]"
+            aria-hidden
+          >
             <path d="M10 4L6 8l4 4" />
           </svg>
           {t.checkout.back}
@@ -174,9 +266,14 @@ function CheckoutForm() {
 
             {/* Personal info */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3">
+              {/* CD-12 — legend OpenType cpsp. VP-07 — hairline-rule bajo legend. */}
+              <legend
+                className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3"
+                style={{ fontFeatureSettings: '"cpsp" 1' }}
+              >
                 {t.checkout.sections.personal}
               </legend>
+              <LegendRule />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label={t.checkout.fields.name} required htmlFor="co-name" error={fieldErrors.name}>
                   <input
@@ -216,9 +313,14 @@ function CheckoutForm() {
 
             {/* Shipping */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3">
+              {/* CD-12 + VP-07 */}
+              <legend
+                className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3"
+                style={{ fontFeatureSettings: '"cpsp" 1' }}
+              >
                 {t.checkout.sections.shipping}
               </legend>
+              <LegendRule />
               <Field label={t.checkout.fields.address} required htmlFor="co-address" error={fieldErrors.address}>
                 <input
                   id="co-address"
@@ -274,9 +376,14 @@ function CheckoutForm() {
 
             {/* Payment */}
             <fieldset className="space-y-4">
-              <legend className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3">
+              {/* CD-12 + VP-07 */}
+              <legend
+                className="text-xs font-bold uppercase tracking-widest text-[#c0392b] mb-3"
+                style={{ fontFeatureSettings: '"cpsp" 1' }}
+              >
                 {t.checkout.sections.payment}
               </legend>
+              <LegendRule />
               <div className="rounded-xl border-2 border-[#f5c6c2] bg-white px-4 py-3.5 focus-within:border-[#c0392b] transition-colors">
                 <CardElement options={CARD_STYLE} />
               </div>
@@ -291,6 +398,8 @@ function CheckoutForm() {
             {error && (
               <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700" role="alert">
                 {error}
+                {/* MC-A-04 — genericHint bajo el error genérico. */}
+                <p className="text-xs text-red-500 mt-1">{t.checkout.errors.genericHint}</p>
               </div>
             )}
 
@@ -301,12 +410,16 @@ function CheckoutForm() {
               style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
             >
               {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                  </svg>
-                  {t.checkout.processing}
+                <span className="flex flex-col items-center justify-center gap-1">
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                    {t.checkout.processing}
+                  </span>
+                  {/* MC-A-03 — processingHint secundario más cálido. */}
+                  <span className="text-sm text-white/70 mt-1 font-normal">{t.checkout.processingHint}</span>
                 </span>
               ) : (
                 `${t.checkout.pay} ${total.toFixed(2)}€`

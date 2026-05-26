@@ -144,6 +144,7 @@ export const translations = {
       ariaOpen: "Abrir la cesta",
       ariaClose: "Cerrar la cesta",
       empty: "La cesta está vacía",
+      emptyHint: "Cuando elijas tus fresas las verás aquí.",
       remove: "Eliminar",
       subtotal: "Subtotal",
       shipping: "Envío",
@@ -174,14 +175,17 @@ export const translations = {
       securePayment: "Pago seguro gestionado por Stripe. No almacenamos datos de tu tarjeta.",
       pay: "Pagar",
       processing: "Procesando...",
+      processingHint: "Un momento — estamos tramitando tu pedido con cuidado.",
       errors: {
         generic: "Error al procesar el pago",
+        genericHint: "Puedes volver a intentarlo o escribirnos si el problema persiste.",
         cardLoad: "No se pudo cargar el formulario de pago",
       },
       success: {
         title: "¡Pedido confirmado!",
         body: "Gracias por tu compra,",
         emailHint: "Recibirás un email de confirmación en",
+        tributeHint: "Con el mismo cariño de siempre.",
         backHome: "Volver al inicio",
       },
       summary: {
@@ -336,6 +340,7 @@ export const translations = {
       ariaOpen: "Obrir la cistella",
       ariaClose: "Tancar la cistella",
       empty: "La cistella és buida",
+      emptyHint: "Quan triïs les teves maduixes les veuràs aquí.",
       remove: "Eliminar",
       subtotal: "Subtotal",
       shipping: "Enviament",
@@ -366,14 +371,17 @@ export const translations = {
       securePayment: "Pagament segur gestionat per Stripe. No emmagatzemem les dades de la teva targeta.",
       pay: "Pagar",
       processing: "Processant...",
+      processingHint: "Un moment — estem tramitant la teva comanda amb cura.",
       errors: {
         generic: "Error en processar el pagament",
+        genericHint: "Pots tornar-ho a intentar o escriure'ns si el problema persisteix.",
         cardLoad: "No s'ha pogut carregar el formulari de pagament",
       },
       success: {
         title: "Comanda confirmada!",
         body: "Gràcies per la teva compra,",
         emailHint: "Rebràs un correu de confirmació a",
+        tributeHint: "Amb la mateixa cura de sempre.",
         backHome: "Tornar a l'inici",
       },
       summary: {
@@ -528,6 +536,7 @@ export const translations = {
       ariaOpen: "Open basket",
       ariaClose: "Close basket",
       empty: "Your basket is empty",
+      emptyHint: "Once you pick your strawberries, they'll appear here.",
       remove: "Remove",
       subtotal: "Subtotal",
       shipping: "Shipping",
@@ -558,14 +567,17 @@ export const translations = {
       securePayment: "Secure payment handled by Stripe. We don't store your card details.",
       pay: "Pay",
       processing: "Processing...",
+      processingHint: "One moment — we're carefully processing your order.",
       errors: {
         generic: "Error processing payment",
+        genericHint: "You can try again or write to us if the problem persists.",
         cardLoad: "Could not load the payment form",
       },
       success: {
         title: "Order confirmed!",
         body: "Thank you for your purchase,",
         emailHint: "We'll send your confirmation to",
+        tributeHint: "With the same care as always.",
         backHome: "Back to home",
       },
       summary: {
