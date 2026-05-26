@@ -71,6 +71,12 @@ export const translations = {
       photoAlt3: "Fresas premium Yaya Mariana, cada una elegida a mano",
       viewStore: "Ver tienda",
       contact: "Contactar →",
+      farmer: {
+        eyebrow: "El agricultor",
+        name: "Joan Carles",
+        role: "Cultiva las fresas en Tarragona",
+        quote: "Cada fresa se recoge cuando ella enseñaba: en su punto justo, sin prisa.",
+      },
     },
     values: {
       eyebrow: "Por qué elegirnos",
@@ -278,6 +284,12 @@ export const translations = {
       photoAlt3: "Maduixes premium Yaya Mariana, cada una triada a mà",
       viewStore: "Veure botiga",
       contact: "Contactar →",
+      farmer: {
+        eyebrow: "Qui les cuida ara",
+        name: "Joan Carles",
+        role: "Cultiva les maduixes a Tarragona",
+        quote: "Cada maduixa es cull quan ella ensenyava: al seu punt just, sense pressa.",
+      },
     },
     values: {
       eyebrow: "Per què triar-nos",
@@ -485,6 +497,12 @@ export const translations = {
       photoAlt3: "Premium Yaya Mariana strawberries, each chosen by hand",
       viewStore: "See shop",
       contact: "Contact →",
+      farmer: {
+        eyebrow: "Who tends them now",
+        name: "Joan Carles",
+        role: "Grows the strawberries in Tarragona",
+        quote: "Each strawberry is picked the way she taught: at exactly the right moment, unhurried.",
+      },
     },
     values: {
       eyebrow: "Why choose us",

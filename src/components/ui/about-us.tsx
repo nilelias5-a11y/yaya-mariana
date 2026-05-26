@@ -148,6 +148,60 @@ export default function AboutUs() {
               />
             </motion.a>
           </div>
+          {/* F3-2 — Bloque additive "El agricultor / Qui les cuida ara / Who tends them now"
+              Tarjeta tipográfica sin foto. Placeholder iniciales JC en círculo.
+              motion.div con mismo patrón whileInView que el resto del componente.
+              Reduced-motion gateado por framer-motion (useReducedMotion). */}
+          <motion.div
+            className="mt-16 md:mt-20 max-w-[680px] mx-auto"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          >
+            <div
+              className="relative rounded-lg bg-white px-6 py-7 md:px-8 md:py-9"
+              style={{
+                border: "1px solid rgba(245,198,194,0.6)",
+                boxShadow:
+                  "0 1px 0 rgba(255,255,255,0.85) inset, 0 6px 18px rgba(192,57,43,0.06)",
+              }}
+            >
+              <p
+                className="text-xs font-bold uppercase"
+                style={{ color: "rgba(192,57,43,0.75)", letterSpacing: "0.2em" }}
+              >
+                {t.about.farmer.eyebrow}
+              </p>
+              <div className="mt-4 grid grid-cols-[auto_1fr] gap-5 items-start">
+                {/* Placeholder tipográfico — iniciales en lugar de foto */}
+                <div
+                  aria-hidden="true"
+                  className="flex h-16 w-16 items-center justify-center rounded-full select-none"
+                  style={{
+                    backgroundColor: "rgba(245,198,194,0.35)",
+                    color: "#7a3a3a",
+                    fontFamily: "var(--font-playfair)",
+                    fontStyle: "italic",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  JC
+                </div>
+                <div>
+                  <h3 className="font-serif italic text-[1.25rem] text-[#5c1a1a]">
+                    {t.about.farmer.name}
+                  </h3>
+                  <p className="text-[0.8rem] text-[#7a3a3a]/75 mt-0.5">
+                    {t.about.farmer.role}
+                  </p>
+                </div>
+              </div>
+              <blockquote className="mt-5 font-serif italic text-[1rem] text-[#7a3a3a] leading-relaxed">
+                &ldquo;{t.about.farmer.quote}&rdquo;
+              </blockquote>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
