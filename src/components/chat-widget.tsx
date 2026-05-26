@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ChatMessage, type ChatRole } from "./chat-message";
+import { useChat } from "@/context/chat-context";
 
 interface Message {
   role: ChatRole;
@@ -18,7 +19,7 @@ const INITIAL_GREETING: Message = {
 
 export function ChatWidget() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, toggleChat, closeChat } = useChat();
   const [messages, setMessages] = useState<Message[]>([INITIAL_GREETING]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
@@ -142,7 +143,7 @@ export function ChatWidget() {
     <>
       <button
         type="button"
-        onClick={() => setIsOpen((v) => !v)}
+        onClick={toggleChat}
         aria-label={isOpen ? "Cerrar chat" : "Abrir chat con el asistente"}
         aria-expanded={isOpen}
         className="fixed z-40 flex items-center justify-center transition-shadow duration-200"
@@ -232,7 +233,7 @@ export function ChatWidget() {
             </div>
             <button
               type="button"
-              onClick={() => setIsOpen(false)}
+              onClick={closeChat}
               aria-label="Cerrar chat"
               className="flex h-9 w-9 items-center justify-center rounded-md text-[#7a3a3a] transition-colors hover:bg-[rgba(192,57,43,0.08)]"
             >

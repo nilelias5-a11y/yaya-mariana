@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
+import { useChat } from "@/context/chat-context";
 
 function FocusField({ children }: { children: React.ReactNode }) {
   const [focused, setFocused] = useState(false);
@@ -75,8 +76,15 @@ const CLOCK_ICON = (
   </svg>
 );
 
+const CHAT_ICON = (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
 export default function Contact() {
   const { t } = useLanguage();
+  const { openChat } = useChat();
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -291,11 +299,69 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* F3-6 — Horario de atención chip (additive) */}
+            {/* Chip "Chat con el asistente" — abre el ChatWidget vía
+                ChatContext.openChat(). Botón clickable (no <a>), patrón
+                visual coherente con email/phone/whatsapp (label uppercase
+                + link-style underline draw-in en hover/focus). */}
             <div
               className="flex gap-4 reveal"
               data-revealed={chipsRevealed ? "true" : undefined}
               style={{ transitionDelay: "400ms" }}
+            >
+              <div
+                aria-hidden
+                className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0"
+                style={{ border: "1px solid #f5c6c2" }}
+              >
+                {CHAT_ICON}
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase mb-0.5 label-caps">
+                  {t.contact.chatOption.title}
+                </p>
+                <button
+                  type="button"
+                  onClick={openChat}
+                  className="relative inline-flex items-center gap-1.5 text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] focus-visible:text-[#c0392b] transition-colors outline-none group/link"
+                >
+                  {t.contact.chatOption.cta}
+                  <svg
+                    aria-hidden
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                  <span
+                    aria-hidden
+                    className="absolute left-0 right-4 -bottom-0.5 h-px scale-x-0 group-hover/link:scale-x-100 group-focus-visible/link:scale-x-100 transition-transform duration-300 origin-left"
+                    style={{ backgroundColor: "rgba(192,57,43,0.7)" }}
+                  />
+                </button>
+                <p
+                  className="italic mt-0.5"
+                  style={{
+                    color: "rgba(122,58,58,0.65)",
+                    fontSize: "0.78rem",
+                    fontFamily: "var(--font-playfair)",
+                  }}
+                >
+                  {t.contact.chatOption.subtitle}
+                </p>
+              </div>
+            </div>
+
+            {/* F3-6 — Horario de atención chip (additive) */}
+            <div
+              className="flex gap-4 reveal"
+              data-revealed={chipsRevealed ? "true" : undefined}
+              style={{ transitionDelay: "500ms" }}
             >
               <div
                 aria-hidden

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/context/language-context";
+import { useChat } from "@/context/chat-context";
 
 const ChevronDown = () => (
   <svg
@@ -20,6 +21,7 @@ const ChevronDown = () => (
 
 export default function FAQ() {
   const { t } = useLanguage();
+  const { openChat } = useChat();
   const items = t.faq.items;
   const [open, setOpen] = useState<number | null>(null);
 
@@ -112,6 +114,45 @@ export default function FAQ() {
             );
           })}
         </ul>
+
+        {/* CTA chat IA — al final de las FAQ, para quien no encuentre su pregunta.
+            Estilo secundario (border terracota 40%, no botón sólido) para no
+            competir con los CTAs principales "Ver tienda" del nav/Hero. Hover
+            halo cream-rosa (mismo patrón socials footer). */}
+        <div className="mt-12 md:mt-14 text-center">
+          <p
+            className="font-serif italic"
+            style={{ fontSize: "0.95rem", color: "#7a3a3a" }}
+          >
+            {t.faq.chatPrompt}
+          </p>
+          <button
+            type="button"
+            onClick={openChat}
+            aria-label={t.faq.chatCta}
+            className="mt-4 inline-flex items-center justify-center gap-2 px-5 min-h-[44px] rounded-md text-sm font-semibold transition-all duration-200 hover:bg-[rgba(245,198,194,0.18)] focus-visible:bg-[rgba(245,198,194,0.25)] motion-safe:hover:shadow-[0_0_0_5px_rgba(232,196,191,0.22)]"
+            style={{
+              color: "#c0392b",
+              border: "1px solid rgba(192,57,43,0.42)",
+              backgroundColor: "transparent",
+            }}
+          >
+            <svg
+              aria-hidden="true"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+            {t.faq.chatCta}
+          </button>
+        </div>
       </div>
 
       {/* Hairline bottom */}

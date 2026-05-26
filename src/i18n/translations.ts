@@ -124,6 +124,8 @@ export const translations = {
       eyebrow: "Preguntas frecuentes",
       title: "Antes de que preguntes",
       subtitle: "Lo más habitual, resuelto en pocas líneas.",
+      chatPrompt: "¿No encuentras tu pregunta?",
+      chatCta: "Hablar con el asistente",
       items: [
         { q: "¿Cuánto tardan en llegar las fresas?", a: "Aproximadamente 24-48h desde Tarragona, con cadena de frío durante todo el trayecto para preservar el frescor." },
         { q: "¿Cómo conservarlas frescas en casa?", a: "Refrigeradas, entre 5 y 7 días. No las laves hasta el momento de consumirlas — el agua acorta su vida." },
@@ -157,6 +159,11 @@ export const translations = {
         label: "WhatsApp",
         value: "+34 666 777 888",
         aria: "Escríbenos por WhatsApp al +34 666 777 888",
+      },
+      chatOption: {
+        title: "Chat con el asistente",
+        subtitle: "Respuesta inmediata",
+        cta: "Abrir chat",
       },
       hours: {
         label: "Horario",
@@ -371,6 +378,8 @@ export const translations = {
       eyebrow: "Preguntes freqüents",
       title: "Abans que ho preguntis",
       subtitle: "El més habitual, resolt en poques línies.",
+      chatPrompt: "No trobes la teva pregunta?",
+      chatCta: "Parla amb l'assistent",
       items: [
         { q: "Quant triguen a arribar les maduixes?", a: "Aproximadament 24-48h des de Tarragona, amb cadena de fred durant tot el trajecte per preservar la frescor." },
         { q: "Com conservar-les fresques a casa?", a: "Refrigerades, entre 5 i 7 dies. No les rentis fins al moment de consumir-les — l'aigua escurça la seva vida." },
@@ -404,6 +413,11 @@ export const translations = {
         label: "WhatsApp",
         value: "+34 666 777 888",
         aria: "Escriu-nos per WhatsApp al +34 666 777 888",
+      },
+      chatOption: {
+        title: "Xat amb l'assistent",
+        subtitle: "Resposta immediata",
+        cta: "Obrir xat",
       },
       hours: {
         label: "Horari",
@@ -618,6 +632,8 @@ export const translations = {
       eyebrow: "Frequently asked questions",
       title: "Before you ask",
       subtitle: "The most common questions, answered in a few lines.",
+      chatPrompt: "Can't find your question?",
+      chatCta: "Chat with the assistant",
       items: [
         { q: "How long do the strawberries take to arrive?", a: "Around 24-48h from Tarragona, with a cold chain throughout the journey to preserve freshness." },
         { q: "How do I keep them fresh at home?", a: "Refrigerated, between 5 and 7 days. Don't wash them until you're ready to eat them — water shortens their life." },
@@ -651,6 +667,11 @@ export const translations = {
         label: "WhatsApp",
         value: "+34 666 777 888",
         aria: "Message us on WhatsApp at +34 666 777 888",
+      },
+      chatOption: {
+        title: "Chat with the assistant",
+        subtitle: "Instant reply",
+        cta: "Open chat",
       },
       hours: {
         label: "Hours",
