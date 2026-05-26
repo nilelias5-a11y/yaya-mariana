@@ -8,6 +8,7 @@ import Values from "@/components/ui/values";
 import CTA from "@/components/ui/cta";
 import FAQ from "@/components/ui/faq";
 import Contact from "@/components/ui/contact";
+import RouteMap from "@/components/ui/route-map";
 import Footer from "@/components/ui/footer";
 import Cart from "@/components/ui/cart";
 import SkipLink from "@/components/ui/skip-link";
@@ -40,6 +41,7 @@ export default function Home() {
         <CTA />
         <FAQ />
         <Contact />
+        <RouteMap />
       </main>
       <Footer />
       <Cart />

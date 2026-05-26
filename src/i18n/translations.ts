@@ -179,6 +179,14 @@ export const translations = {
       sentSubtitle: "Gracias por escribirnos. Te leeremos pronto, con calma.",
       sendAnother: "Enviar otro mensaje",
     },
+    routeMap: {
+      eyebrow: "El recorrido",
+      title: "De Tarragona a tu mesa",
+      tarragona: "Tarragona",
+      yourTable: "Tu mesa",
+      delivery: "24-48h con cadena de frío",
+      svgAria: "Recorrido de las fresas desde Tarragona hasta tu mesa",
+    },
     footer: {
       description: "Fresas frescas de Tarragona, cultivadas con amor y sin pesticidas.",
       shop: "Tienda",
@@ -434,6 +442,14 @@ export const translations = {
       sentSubtitle: "Gràcies per escriure'ns. Et llegirem aviat, amb calma.",
       sendAnother: "Enviar un altre missatge",
     },
+    routeMap: {
+      eyebrow: "El recorregut",
+      title: "De Tarragona a la teva taula",
+      tarragona: "Tarragona",
+      yourTable: "La teva taula",
+      delivery: "24-48h amb cadena de fred",
+      svgAria: "Recorregut de les maduixes des de Tarragona fins a la teva taula",
+    },
     footer: {
       description: "Maduixes fresques de Tarragona, cultivades amb amor i sense pesticides.",
       shop: "Botiga",
@@ -688,6 +704,14 @@ export const translations = {
       sent: "Message sent",
       sentSubtitle: "Thank you for writing to us. We'll read your message soon, unhurriedly.",
       sendAnother: "Send another message",
+    },
+    routeMap: {
+      eyebrow: "The journey",
+      title: "From Tarragona to your table",
+      tarragona: "Tarragona",
+      yourTable: "Your table",
+      delivery: "24-48h cold chain",
+      svgAria: "Journey of the strawberries from Tarragona to your table",
     },
     footer: {
       description: "Fresh strawberries from Tarragona, grown with love and no pesticides.",
