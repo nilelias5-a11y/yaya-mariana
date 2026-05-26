@@ -10,7 +10,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
    Una vez por sesion (sessionStorage `ym_halo_v1`). Sin click, sin
    tooltip, sin texto extra. Respeta prefers-reduced-motion:
    render estatico one-frame al 40% opacidad. */
-export default function QuoteAuthorHalo({ children }: { children: ReactNode }) {
+/* MC-A-07: acepta `title` opcional para tooltip nativo en el span del nombre. */
+export default function QuoteAuthorHalo({ children, title }: { children: ReactNode; title?: string }) {
   const [show, setShow] = useState(false);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fired = useRef(false);
@@ -58,6 +59,7 @@ export default function QuoteAuthorHalo({ children }: { children: ReactNode }) {
       onMouseLeave={cancel}
       onFocus={start}
       onBlur={cancel}
+      title={title}
     >
       <AnimatePresence>
         {show && (

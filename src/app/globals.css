@@ -307,6 +307,19 @@ main [id] {
   letter-spacing: 0;
 }
 
+/* ============================================================
+   ENHANCE-2 TANDA 4 — Utilities y globals aditivos
+   ============================================================ */
+
+/* TM-08 — Italic real + OT completo para la cita Hero.
+   Activa ligaduras discretas, kerning, numerales oldstyle y
+   variantes contextuales. Coexiste con el motion.div padre. */
+.serif-italic-quote {
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "onum" 1, "calt" 1;
+}
+
 /* ENHANCE-3 — Dropcap editorial AboutUs p1.
    Aplicable al wrapper de los parrafos del cuerpo de AboutUs.
    Solo afecta a la primera letra del PRIMER <p>; el segundo

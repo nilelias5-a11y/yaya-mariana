@@ -17,6 +17,7 @@ export const translations = {
       btn2: "Nuestra historia",
       quoteText: "Todo lo bueno de la vida requiere paciencia, trabajo y amor.",
       quoteAuthor: "Yaya Mariana",
+      quoteAuthorTitle: "Mariana Elías — de quien nació este proyecto",
       scrollCue: "Sigue leyendo",
     },
     nav: {
@@ -208,6 +209,7 @@ export const translations = {
       btn2: "La nostra història",
       quoteText: "Tot el bo de la vida requereix paciència, treball i amor.",
       quoteAuthor: "Yaya Mariana",
+      quoteAuthorTitle: "Mariana Elías — de qui va néixer aquest projecte",
       scrollCue: "Continua",
     },
     nav: {
@@ -399,6 +401,7 @@ export const translations = {
       btn2: "Our story",
       quoteText: "All the good things in life require patience, work and love.",
       quoteAuthor: "Yaya Mariana",
+      quoteAuthorTitle: "Mariana Elías — from whom this project was born",
       scrollCue: "Read on",
     },
     nav: {

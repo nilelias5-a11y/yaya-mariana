@@ -1,7 +1,7 @@
 "use client";
 
 import { MeshGradient } from "@paper-design/shaders-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
@@ -9,6 +9,13 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useActiveSection } from "@/hooks/use-active-section";
 import QuoteAuthorHalo from "@/components/easter-eggs/quote-author-halo";
 import type { Lang } from "@/i18n/translations";
+
+/* HS-04 — keyword sets per lang for emphasis delay boost */
+const EMPHASIS_WORDS: Record<Lang, string[]> = {
+  es: ["paciencia", "trabajo", "amor"],
+  ca: ["paciència", "treball", "amor"],
+  en: ["patience", "work", "love"],
+};
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -147,22 +154,29 @@ function MobileNav({
 }
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   /* VP-01 + HS-09 — scroll-state para backdrop-blur + hairline terracota */
   const [scrolled, setScrolled] = useState(false);
+  /* AP-01 — scroll-cue visibility: visible until scrollY>40, reappears when scrollY<10 */
+  const [scrollCueVisible, setScrollCueVisible] = useState(true);
   const scrollThrottleRef = useRef<number | null>(null);
   useEffect(() => {
     function handleScroll() {
       if (scrollThrottleRef.current !== null) return;
       scrollThrottleRef.current = window.setTimeout(() => {
-        setScrolled(window.scrollY > 8);
+        const y = window.scrollY;
+        setScrolled(y > 8);
+        if (y > 40) setScrollCueVisible(false);
+        else if (y < 10) setScrollCueVisible(true);
         scrollThrottleRef.current = null;
       }, 40);
     }
     window.addEventListener("scroll", handleScroll, { passive: true });
     // Inicializar estado al montar (por si la página carga con scroll)
-    setScrolled(window.scrollY > 8);
+    const y0 = window.scrollY;
+    setScrolled(y0 > 8);
+    if (y0 > 40) setScrollCueVisible(false);
     return () => {
       window.removeEventListener("scroll", handleScroll);
       if (scrollThrottleRef.current !== null) window.clearTimeout(scrollThrottleRef.current);
@@ -178,6 +192,7 @@ export default function Hero() {
   const activeSection = useActiveSection(NAV_HREFS);
 
   return (
+    <MotionConfig reducedMotion="user">
     <>
       {/* Nav sticky — relative para que el panel MobileNav (absolute) se
           ancle al borde inferior del propio nav. paddingTop respeta el
@@ -321,13 +336,16 @@ export default function Hero() {
         {/* ENHANCE-2 — Grano filmográfico 4% sobre MeshGradient. SVG
             feTurbulence inlineado como background-image; mix-blend-multiply
             tinta el grano gris hacia los tonos cream/melocotón de la mesh
-            sin introducir nuevos hex. Estático: cero impacto en motion. */}
-        <div
+            sin introducir nuevos hex.
+            HS-02: settle moment — emerge 1.4s post-carga, fade-in 1.8s. */}
+        <motion.div
           aria-hidden
           className="absolute inset-0 pointer-events-none z-[1]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.04 }}
+          transition={{ delay: 1.4, duration: 1.8, ease: "easeOut" }}
           style={{
             mixBlendMode: "multiply",
-            opacity: 0.04,
             backgroundImage:
               "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>\")",
             backgroundRepeat: "repeat",
@@ -389,19 +407,41 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Headline — cita en Yellowtail */}
+          {/* Headline — cita en Playfair italic.
+              HS-04: word-reveal escalonado; TM-08: .serif-italic-quote OT;
+              TM-09: smart quotes tipográficas; MC-A-07: tooltip en author. */}
           <div className="mb-0">
             <p
+              className="serif-italic-quote"
               style={{
-                fontFamily: "var(--font-playfair)",
-                fontStyle: "italic",
                 fontSize: "clamp(2rem, 4vw, 3rem)",
                 color: "#c0392b",
                 lineHeight: 1.3,
                 margin: 0,
               }}
             >
-              "{t.hero.quoteText}"
+              {/* TM-09 — smart quotes: " y " en lugar de ASCII " */}
+              {"“"}
+              {/* HS-04 — word-reveal escalonado */}
+              {t.hero.quoteText.split(" ").map((word, i, arr) => {
+                const clean = word.replace(/["".,!?]/g, "").toLowerCase();
+                const emphasisWords = EMPHASIS_WORDS[lang as Lang] ?? EMPHASIS_WORDS.es;
+                const isEmphasis = emphasisWords.includes(clean);
+                const baseDelay = 0.5 + i * 0.04;
+                const delay = isEmphasis ? baseDelay + 0.04 : baseDelay;
+                return (
+                  <motion.span
+                    key={i}
+                    style={{ display: "inline-block" }}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay, duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+                  >
+                    {word}{i < arr.length - 1 ? " " : ""}
+                  </motion.span>
+                );
+              })}
+              {"”"}
             </p>
             <p
               style={{
@@ -413,8 +453,10 @@ export default function Hero() {
               }}
             >
               {/* ENHANCE-7: easter egg #3 — halo en hover sostenido >=1.5s
-                  sobre el nombre. Una vez por sesion (sessionStorage). */}
-              — <QuoteAuthorHalo>{t.hero.quoteAuthor}</QuoteAuthorHalo>
+                  sobre el nombre. Una vez por sesion (sessionStorage).
+                  MC-A-07: quoteAuthorTitle tooltip en el span del nombre. */}
+              {"— "}
+              <QuoteAuthorHalo title={t.hero.quoteAuthorTitle}>{t.hero.quoteAuthor}</QuoteAuthorHalo>
             </p>
           </div>
 
@@ -436,20 +478,25 @@ export default function Hero() {
 
           {/* Botones */}
           <div className="flex items-center gap-5 flex-wrap">
+            {/* HS-07 — CTA primario: y:-2 lift, shadow elevada, gap expansivo en hover */}
             <motion.a
               href="#productos"
               className="inline-flex items-center justify-center text-sm font-semibold text-white overflow-hidden"
               style={{ backgroundColor: "#c0392b", borderRadius: 8, paddingLeft: 28, paddingRight: 28, paddingTop: 13, paddingBottom: 13 }}
-              variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(192,57,43,0)" }, hover: { scale: 1.04, boxShadow: "0 8px 24px rgba(192,57,43,0.4)", backgroundColor: "#a93226" } }}
+              variants={{
+                rest: { scale: 1, y: 0, boxShadow: "0 0 0 0px rgba(192,57,43,0)" },
+                hover: { scale: 1.04, y: -2, boxShadow: "0 12px 28px rgba(192,57,43,0.38)", backgroundColor: "#a93226" },
+              }}
               initial="rest"
               whileHover="hover"
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
               <motion.span
-                className="flex items-center gap-1.5"
-                variants={{ rest: { x: 0 }, hover: { x: 4 } }}
+                className="flex items-center"
+                variants={{ rest: { x: 0, gap: "0.375rem" }, hover: { x: 4, gap: "0.625rem" } }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
+                style={{ gap: "0.375rem" }}
               >
                 {t.hero.btn1}
                 <motion.span
@@ -476,19 +523,22 @@ export default function Hero() {
         {/* Columna derecha — logo oficial.
             ENHANCE-2: aura radial cream-rosa (#f5c6c2 35% alpha) detrás
             del logo, blur 40px. Sibling absolute al motion.div del logo
-            para que la `mixBlendMode: multiply` del logo no toque el halo. */}
+            para que la `mixBlendMode: multiply` del logo no toque el halo.
+            AP-06: aura respiración idle loop 10s opacity 32↔44%. */}
         <div className="w-full md:w-[45%] relative flex items-center justify-center">
           <div
             aria-hidden
             className="absolute inset-0 pointer-events-none flex items-center justify-center"
           >
-            <div
+            <motion.div
+              animate={{ opacity: [0.32, 0.44, 0.32] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
               style={{
                 width: 420,
                 height: 420,
                 maxWidth: "90%",
                 background:
-                  "radial-gradient(circle at center, rgba(245,198,194,0.35) 0%, transparent 60%)",
+                  "radial-gradient(circle at center, rgba(245,198,194,1) 0%, transparent 60%)",
                 filter: "blur(40px)",
               }}
             />
@@ -518,37 +568,44 @@ export default function Hero() {
 
       {/* ENHANCE-2 — Scroll cue idle abajo-centrado (solo md+). Label
           uppercase + chevron drift. MotionConfig reducedMotion="user"
-          neutraliza el bounce automáticamente. */}
-      <motion.div
-        aria-hidden
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-10 hidden md:flex flex-col items-center gap-2 pointer-events-none"
-      >
-        <span
-          className="font-sans font-semibold uppercase"
-          style={{ color: "#c0392b", fontSize: 10, letterSpacing: "0.22em", opacity: 0.7 }}
-        >
-          {t.hero.scrollCue}
-        </span>
-        <motion.svg
-          viewBox="0 0 16 16"
-          width={14}
-          height={14}
-          fill="none"
-          stroke="#c0392b"
-          strokeOpacity={0.7}
-          strokeWidth={1.6}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          animate={{ y: [0, 4, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <path d="M4 6l4 4 4-4" />
-        </motion.svg>
-      </motion.div>
+          neutraliza el bounce automáticamente.
+          AP-01: auto-fade en primer scroll (scrollY>40 → oculto, <10 → visible). */}
+      <AnimatePresence>
+        {scrollCueVisible && (
+          <motion.div
+            aria-hidden
+            key="scroll-cue"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 1.2, duration: 0.36, ease: [0.19, 1, 0.22, 1] } }}
+            exit={{ opacity: 0, y: 8, transition: { duration: 0.28, ease: [0.6, 0.04, 0.24, 1] } }}
+            className="absolute left-1/2 -translate-x-1/2 bottom-6 z-10 hidden md:flex flex-col items-center gap-2 pointer-events-none"
+          >
+            <span
+              className="font-sans font-semibold uppercase"
+              style={{ color: "#c0392b", fontSize: 10, letterSpacing: "0.22em", opacity: 0.7 }}
+            >
+              {t.hero.scrollCue}
+            </span>
+            <motion.svg
+              viewBox="0 0 16 16"
+              width={14}
+              height={14}
+              fill="none"
+              stroke="#c0392b"
+              strokeOpacity={0.7}
+              strokeWidth={1.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              animate={{ y: [0, 4, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <path d="M4 6l4 4 4-4" />
+            </motion.svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </section>
     </>
+    </MotionConfig>
   );
 }
