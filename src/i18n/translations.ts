@@ -86,6 +86,17 @@ export const translations = {
         { title: "Sabor intenso", description: "El cultivo controlado y el punto óptimo de cosecha garantizan un sabor dulce e intenso en cada fresa que llega a tu mesa." },
       ],
     },
+    process: {
+      eyebrow: "Nuestro proceso",
+      title: "Cómo llegan a tu mesa",
+      subtitle: "Cuatro pasos sin prisa, como las hacía ella.",
+      steps: [
+        { title: "Siembra", body: "Variedades elegidas con cuidado. Semilla limpia, tierra preparada con calma." },
+        { title: "Cuidado natural", body: "Hidroponía controlada, sin pesticidas. El tiempo que cada planta necesita." },
+        { title: "Recogida en su punto", body: "Cada fresa elegida a mano cuando está madura. Ni un día antes." },
+        { title: "Cadena de frío", body: "Envío refrigerado 24-48h hasta tu mesa. Sabor intacto." },
+      ],
+    },
     cta: {
       eyebrow: "Directo de la granja a tu mesa",
       title: "¿Listo para probar las fresas",
@@ -282,6 +293,17 @@ export const translations = {
         { title: "Sabor intens", description: "El cultiu controlat i el punt òptim de collita garanteixen un sabor dolç i intens en cada maduixa que arriba a la teva taula." },
       ],
     },
+    process: {
+      eyebrow: "El nostre procés",
+      title: "Com arriben a la teva taula",
+      subtitle: "Quatre passos sense pressa, com les feia ella.",
+      steps: [
+        { title: "Sembra", body: "Varietats triades amb cura. Llavor neta, terra preparada amb calma." },
+        { title: "Cura natural", body: "Hidroponia controlada, sense pesticides. El temps que cada planta necessita." },
+        { title: "Collita al punt", body: "Cada maduixa triada a mà quan és madura. Ni un dia abans." },
+        { title: "Cadena de fred", body: "Enviament refrigerat 24-48h fins a la teva taula. Sabor intacte." },
+      ],
+    },
     cta: {
       eyebrow: "Directe de la granja a la teva taula",
       title: "Llest per tastar les maduixes",
@@ -476,6 +498,17 @@ export const translations = {
         { title: "Minimal footprint", description: "Our controlled cultivation system minimises environmental impact and drastically reduces water usage." },
         { title: "Antioxidants", description: "High content of anthocyanins and polyphenols that protect cells from oxidative stress and support cardiovascular health." },
         { title: "Intense flavour", description: "Controlled cultivation and optimal harvest timing guarantee a sweet, intense flavour in every strawberry that reaches your table." },
+      ],
+    },
+    process: {
+      eyebrow: "Our process",
+      title: "How they reach your table",
+      subtitle: "Four unhurried steps, the way she used to do it.",
+      steps: [
+        { title: "Sowing", body: "Varieties chosen with care. Clean seed, soil prepared with calm." },
+        { title: "Natural care", body: "Controlled hydroponics, no pesticides. The time each plant needs." },
+        { title: "Picked at peak", body: "Every strawberry chosen by hand when ripe. Not a day before." },
+        { title: "Cold chain", body: "Refrigerated delivery 24-48h to your table. Flavour intact." },
       ],
     },
     cta: {
