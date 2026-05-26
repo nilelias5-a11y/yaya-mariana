@@ -86,3 +86,66 @@ firmados por el sujeto.
     - Añadir nuevo item `{ label: "FAQ", subtitle: ... }` en `nav.menu.items` en es/ca/en (3 × 1 línea)
 
 Build verde y tsc 0 verificados antes del commit.
+
+---
+
+## 2026-05-26 — Sección de testimonios (placeholders elegantes)
+
+Tras la limpieza de las 3 secciones sin contenido real (HEAD `e4f750a`), Nil
+añade una **sección de testimonios** post-CTA estilo La Nonna ReviewsWidget,
+pero adaptada al tono restraint editorial de Yaya Mariana (no review-card
+comercial).
+
+### Decisión aplicada — patrón "placeholders elegantes hasta tener reseñas reales"
+
+A diferencia de las 3 secciones eliminadas (Process/Farmer/Timeline) que se
+quitaron por **falta de contenido real**, los testimonios se shippan **CON
+placeholders elegantes y disclaimer visible**. Es una excepción razonada al
+patrón "no exponer datos no confirmados":
+
+| Pieza | Por qué los placeholders SÍ encajan aquí |
+|---|---|
+| **Estructura UI** | El carrusel, las animaciones y la a11y se diseñan una vez. Mientras llegan reseñas reales, el componente vive en producción con copy temporal claramente marcado. |
+| **Iniciales + ciudad + fecha** | No identifican a personas reales (M.G./A.R./N.P./L.B./J.M. son iniciales placeholder). No hay foto, no hay nombre completo. |
+| **Disclaimer obligatorio** | `testimonials.demo` ("Reseñas de ejemplo — pronto las sustituiremos por valoraciones reales") visible bajo el carrusel. Coherente con el `t("demo")` de La Nonna ReviewsWidget §C-4. |
+| **Tono** | Las 5 citas son sobrias, sin marketing, sin exclamaciones. Si suenan creíbles es porque están redactadas con el patrón Yaya, no porque inventen experiencias reales. |
+| **Sustitución sin riesgo** | Cuando lleguen reseñas reales (Trustpilot, Google Reviews, etc.) basta sustituir el array `testimonials.items` en `translations.ts` — el componente no cambia. |
+
+### Diferencia con las 3 eliminadas — por qué este SÍ y aquellos NO
+
+- **Process/Farmer/Timeline:** mezclaban afirmaciones DEL PROYECTO (datos
+  reales sin confirmar) con diseño. Sin confirmación, exponer "Joan Carles
+  cultiva en Tarragona" o "1950 — Mariana siembra" presentaba datos del
+  negocio o de personas reales como hechos.
+- **Testimonios placeholder:** no afirman datos del proyecto. Son citas
+  inventadas de perfiles inventados, marcadas explícitamente como demo.
+  Ningún visitante leerá "M.G., Barcelona" y pensará que es real — el
+  disclaimer lo cubre.
+
+### Aplicación práctica de este matiz para futuros commits
+
+- **Datos del proyecto / personas reales** (agricultor, familia, fundador,
+  fechas históricas, fotos del proceso, prensa) → siguen la regla estricta
+  "requiere confirmación explícita antes de publicar".
+- **Estructuras UI con copy demo** (testimonios, reseñas, casos de uso,
+  ejemplos) → pueden shipparse con placeholders **siempre que el disclaimer
+  sea inequívoco y los datos no se atribuyan a personas o entidades reales**.
+
+### Commit consolidado de la sección
+
+- Hash: pendiente al cierre del commit
+- Archivos:
+  - ADD `src/components/ui/testimonials.tsx` — carrusel 1-card-centrada,
+    auto-rotate 5s desktop con pausa en hover/focus, off en touch, off en
+    reduced-motion, flechas + dots, keyboard navigation (←/→),
+    a11y completa (aria-roledescription, aria-label, aria-live, aria-current,
+    sr-only para rating)
+  - EDIT `src/i18n/translations.ts` — bloque `testimonials.*` en es/ca/en
+    con `eyebrow / title / subtitle / prev / next / goTo / starsAria /
+    carouselLabel / slideLabel / demo / items[5]`. Cada item: `quote /
+    initial / name / city / date`. Los 5 perfiles son consistentes entre
+    idiomas; solo cambia la cita y la fecha (Mayo/Maig/May 2026 etc.).
+  - EDIT `src/app/page.tsx` — import + `<Testimonials />` montado entre
+    `<CTA />` y `<FAQ />`.
+
+Build verde y tsc 0 verificados antes del commit.

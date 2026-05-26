@@ -4,6 +4,7 @@ import Products from "@/components/ui/products";
 import AboutUs from "@/components/ui/about-us";
 import Values from "@/components/ui/values";
 import CTA from "@/components/ui/cta";
+import Testimonials from "@/components/ui/testimonials";
 import FAQ from "@/components/ui/faq";
 import Contact from "@/components/ui/contact";
 import RouteMap from "@/components/ui/route-map";
@@ -35,6 +36,7 @@ export default function Home() {
         <AboutUs />
         <Values />
         <CTA />
+        <Testimonials />
         <FAQ />
         <Contact />
         <RouteMap />
