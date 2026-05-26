@@ -178,6 +178,15 @@ export const translations = {
       sent: "Mensaje enviado",
       sentSubtitle: "Gracias por escribirnos. Te leeremos pronto, con calma.",
       sendAnother: "Enviar otro mensaje",
+      whatsapp: {
+        label: "WhatsApp",
+        value: "+34 666 777 888",
+        aria: "Escríbenos por WhatsApp al +34 666 777 888",
+      },
+      hours: {
+        label: "Horario",
+        value: "Mar-Vie · 9-17h",
+      },
     },
     routeMap: {
       eyebrow: "El recorrido",
@@ -441,6 +450,15 @@ export const translations = {
       sent: "Missatge enviat",
       sentSubtitle: "Gràcies per escriure'ns. Et llegirem aviat, amb calma.",
       sendAnother: "Enviar un altre missatge",
+      whatsapp: {
+        label: "WhatsApp",
+        value: "+34 666 777 888",
+        aria: "Escriu-nos per WhatsApp al +34 666 777 888",
+      },
+      hours: {
+        label: "Horari",
+        value: "Dim-Div · 9-17h",
+      },
     },
     routeMap: {
       eyebrow: "El recorregut",
@@ -704,6 +722,15 @@ export const translations = {
       sent: "Message sent",
       sentSubtitle: "Thank you for writing to us. We'll read your message soon, unhurriedly.",
       sendAnother: "Send another message",
+      whatsapp: {
+        label: "WhatsApp",
+        value: "+34 666 777 888",
+        aria: "Message us on WhatsApp at +34 666 777 888",
+      },
+      hours: {
+        label: "Hours",
+        value: "Tue-Fri · 9am-5pm",
+      },
     },
     routeMap: {
       eyebrow: "The journey",

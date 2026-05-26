@@ -62,6 +62,19 @@ const PHONE_ICON = (
   </svg>
 );
 
+const WHATSAPP_ICON = (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
+const CLOCK_ICON = (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
+
 export default function Contact() {
   const { t } = useLanguage();
   const [form, setForm] = useState<FormState>({
@@ -243,6 +256,63 @@ export default function Contact() {
                 </div>
               </div>
             ))}
+
+            {/* F3-6 — WhatsApp Business chip (additive) */}
+            <div
+              className="flex gap-4 reveal"
+              data-revealed={chipsRevealed ? "true" : undefined}
+              style={{ transitionDelay: "300ms" }}
+            >
+              <div
+                aria-hidden
+                className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0"
+                style={{ border: "1px solid #f5c6c2" }}
+              >
+                {WHATSAPP_ICON}
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase mb-0.5 label-caps">
+                  {t.contact.whatsapp.label}
+                </p>
+                <a
+                  href="https://wa.me/34666777888"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t.contact.whatsapp.aria}
+                  className="relative inline-block text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] focus-visible:text-[#c0392b] transition-colors outline-none group/link"
+                >
+                  {t.contact.whatsapp.value}
+                  <span
+                    aria-hidden
+                    className="absolute left-0 right-0 -bottom-0.5 h-px scale-x-0 group-hover/link:scale-x-100 group-focus-visible/link:scale-x-100 transition-transform duration-300 origin-left"
+                    style={{ backgroundColor: "rgba(192,57,43,0.7)" }}
+                  />
+                </a>
+              </div>
+            </div>
+
+            {/* F3-6 — Horario de atención chip (additive) */}
+            <div
+              className="flex gap-4 reveal"
+              data-revealed={chipsRevealed ? "true" : undefined}
+              style={{ transitionDelay: "400ms" }}
+            >
+              <div
+                aria-hidden
+                className="w-10 h-10 rounded-xl bg-[#fdf0ef] flex items-center justify-center text-[#c0392b] shrink-0"
+                style={{ border: "1px solid #f5c6c2" }}
+              >
+                {CLOCK_ICON}
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase mb-0.5 label-caps">
+                  {t.contact.hours.label}
+                </p>
+                <p className="text-[0.9375rem] text-[#7a3a3a] font-medium">
+                  {t.contact.hours.value}
+                </p>
+              </div>
+            </div>
           </div>
         </motion.div>
 
