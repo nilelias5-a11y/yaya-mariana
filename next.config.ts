@@ -14,6 +14,20 @@ const nextConfig: NextConfig = {
        el optimizador rechaza por defecto cualquier intento futuro de
        cargar imagenes de origen externo no autorizado. */
   },
+  /* Segunda capa de bloqueo SEO: cualquier entorno que no sea production
+     (preview de Vercel, build local) emite X-Robots-Tag noindex,nofollow
+     en TODAS las rutas. Defensa en profundidad junto a robots.ts. */
+  async headers() {
+    if (process.env.VERCEL_ENV === "production") return [];
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
