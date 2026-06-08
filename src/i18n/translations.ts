@@ -79,6 +79,20 @@ export const translations = {
       viewStore: "Ver tienda",
       contact: "Contactar →",
     },
+    videos: {
+      eyebrow: "El fundador",
+      title: "El cuidado que merecen",
+      subtitle:
+        "Pequeños gestos del cuidado diario en el campo, contados por J. Elías, el fundador. Próximamente.",
+      comingSoon: "Próximamente",
+      watch: "Ver",
+      items: [
+        { title: "El riego, gota a gota", duration: "2:14" },
+        { title: "Recoger en su punto", duration: "3:08" },
+        { title: "Sin pesticidas, paso a paso", duration: "4:21" },
+        { title: "De la mata a la caja", duration: "2:47" },
+      ],
+    },
     values: {
       eyebrow: "Por qué elegirnos",
       title: "Frescas desde el campo",
@@ -402,6 +416,20 @@ export const translations = {
       viewStore: "Veure botiga",
       contact: "Contactar →",
     },
+    videos: {
+      eyebrow: "El fundador",
+      title: "La cura que mereixen",
+      subtitle:
+        "Petits gestos de la cura diària al camp, explicats per J. Elías, el fundador. Properament.",
+      comingSoon: "Properament",
+      watch: "Veure",
+      items: [
+        { title: "El reg, gota a gota", duration: "2:14" },
+        { title: "Collir al seu punt", duration: "3:08" },
+        { title: "Sense pesticides, pas a pas", duration: "4:21" },
+        { title: "De la mata a la caixa", duration: "2:47" },
+      ],
+    },
     values: {
       eyebrow: "Per què triar-nos",
       title: "Fresques des del camp",
@@ -724,6 +752,20 @@ export const translations = {
       photoAlt3: "Premium Yaya Mariana strawberries, each chosen by hand",
       viewStore: "See shop",
       contact: "Contact →",
+    },
+    videos: {
+      eyebrow: "The founder",
+      title: "The care they deserve",
+      subtitle:
+        "Small gestures of daily care in the field, told by J. Elías, the founder. Coming soon.",
+      comingSoon: "Coming soon",
+      watch: "Watch",
+      items: [
+        { title: "Watering, drop by drop", duration: "2:14" },
+        { title: "Picking at the right moment", duration: "3:08" },
+        { title: "No pesticides, step by step", duration: "4:21" },
+        { title: "From plant to box", duration: "2:47" },
+      ],
     },
     values: {
       eyebrow: "Why choose us",

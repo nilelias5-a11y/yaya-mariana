@@ -2,6 +2,7 @@ import Hero from "@/components/ui/hero";
 import StatsStrip from "@/components/ui/stats-strip";
 import Products from "@/components/ui/products";
 import AboutUs from "@/components/ui/about-us";
+import Videos from "@/components/ui/videos";
 import Values from "@/components/ui/values";
 import CTA from "@/components/ui/cta";
 import Testimonials from "@/components/ui/testimonials";
@@ -34,6 +35,7 @@ export default function Home() {
         <StatsStrip />
         <Products />
         <AboutUs />
+        <Videos />
         <Values />
         <CTA />
         <Testimonials />
