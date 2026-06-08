@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
-import { useChat } from "@/context/chat-context";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 function FocusField({ children }: { children: React.ReactNode }) {
   const [focused, setFocused] = useState(false);
@@ -84,7 +84,6 @@ const CHAT_ICON = (
 
 export default function Contact() {
   const { t } = useLanguage();
-  const { openChat } = useChat();
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -299,10 +298,10 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Chip "Chat con el asistente" — abre el ChatWidget vía
-                ChatContext.openChat(). Botón clickable (no <a>), patrón
-                visual coherente con email/phone/whatsapp (label uppercase
-                + link-style underline draw-in en hover/focus). */}
+            {/* Chip "Chat directo" — abre WhatsApp con el mensaje pre-escrito
+                (sustituye al antiguo chat IA). Enlace wa.me, patrón visual
+                coherente con email/phone/whatsapp (label uppercase +
+                link-style underline draw-in en hover/focus). */}
             <div
               className="flex gap-4 reveal"
               data-revealed={chipsRevealed ? "true" : undefined}
@@ -319,9 +318,10 @@ export default function Contact() {
                 <p className="text-xs font-semibold text-[#7a3a3a]/50 uppercase mb-0.5 label-caps">
                   {t.contact.chatOption.title}
                 </p>
-                <button
-                  type="button"
-                  onClick={openChat}
+                <a
+                  href={buildWhatsAppUrl(t.whatsapp.message)}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="relative inline-flex items-center gap-1.5 text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] focus-visible:text-[#c0392b] transition-colors outline-none group/link"
                 >
                   {t.contact.chatOption.cta}
@@ -343,7 +343,7 @@ export default function Contact() {
                     className="absolute left-0 right-4 -bottom-0.5 h-px scale-x-0 group-hover/link:scale-x-100 group-focus-visible/link:scale-x-100 transition-transform duration-300 origin-left"
                     style={{ backgroundColor: "rgba(192,57,43,0.7)" }}
                   />
-                </button>
+                </a>
                 <p
                   className="italic mt-0.5"
                   style={{

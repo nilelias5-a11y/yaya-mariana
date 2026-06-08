@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
-import { ChatWidget } from "@/components/chat-widget";
-import { ChatProvider } from "@/context/chat-context";
+import { WhatsAppWidget } from "@/components/whatsapp-widget";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -188,10 +187,12 @@ export default function RootLayout({
         ))}
       </head>
       <body className="min-h-full flex flex-col bg-[#fdf6f5]">
-        <ChatProvider>
-          <Providers>{children}</Providers>
-          <ChatWidget />
-        </ChatProvider>
+        {/* WhatsAppWidget dentro de Providers para acceder al idioma activo
+            (mensaje pre-escrito i18n). Sustituye al antiguo chat IA. */}
+        <Providers>
+          {children}
+          <WhatsAppWidget />
+        </Providers>
       </body>
     </html>
   );

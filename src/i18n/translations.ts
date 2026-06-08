@@ -7,6 +7,12 @@ export const translations = {
       required: "Este campo es obligatorio.",
       email: "Introduce un correo electrónico válido.",
     },
+    whatsapp: {
+      message: "Hola, tengo una duda sobre las fresas de Yaya Mariana...",
+      ariaWidget: "Escríbenos por WhatsApp",
+      tooltip: "¿Dudas? Escríbenos por WhatsApp",
+      cta: "Escríbenos por WhatsApp",
+    },
     hero: {
       navLabel: "Principal",
       eyebrow: "Tarragona · Calidad premium",
@@ -161,9 +167,9 @@ export const translations = {
         aria: "Escríbenos por WhatsApp al +34 666 777 888",
       },
       chatOption: {
-        title: "Chat con el asistente",
-        subtitle: "Respuesta inmediata",
-        cta: "Abrir chat",
+        title: "Chat directo",
+        subtitle: "Respuesta rápida",
+        cta: "Abrir WhatsApp",
       },
       hours: {
         label: "Horario",
@@ -260,6 +266,12 @@ export const translations = {
     formErrors: {
       required: "Aquest camp és obligatori.",
       email: "Introdueix una adreça de correu vàlida.",
+    },
+    whatsapp: {
+      message: "Hola, tinc un dubte sobre les maduixes de Yaya Mariana...",
+      ariaWidget: "Escriu-nos per WhatsApp",
+      tooltip: "Dubtes? Escriu-nos per WhatsApp",
+      cta: "Escriu-nos per WhatsApp",
     },
     hero: {
       navLabel: "Principal",
@@ -415,9 +427,9 @@ export const translations = {
         aria: "Escriu-nos per WhatsApp al +34 666 777 888",
       },
       chatOption: {
-        title: "Xat amb l'assistent",
-        subtitle: "Resposta immediata",
-        cta: "Obrir xat",
+        title: "Xat directe",
+        subtitle: "Resposta ràpida",
+        cta: "Obrir WhatsApp",
       },
       hours: {
         label: "Horari",
@@ -514,6 +526,12 @@ export const translations = {
     formErrors: {
       required: "This field is required.",
       email: "Enter a valid email address.",
+    },
+    whatsapp: {
+      message: "Hi, I have a question about Yaya Mariana strawberries...",
+      ariaWidget: "Message us on WhatsApp",
+      tooltip: "Questions? Message us on WhatsApp",
+      cta: "Message us on WhatsApp",
     },
     hero: {
       navLabel: "Main",
@@ -669,9 +687,9 @@ export const translations = {
         aria: "Message us on WhatsApp at +34 666 777 888",
       },
       chatOption: {
-        title: "Chat with the assistant",
-        subtitle: "Instant reply",
-        cta: "Open chat",
+        title: "Direct chat",
+        subtitle: "Quick reply",
+        cta: "Open WhatsApp",
       },
       hours: {
         label: "Hours",

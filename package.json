@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.98.0",
     "@base-ui/react": "^1.4.1",
     "@paper-design/shaders-react": "^0.0.76",
     "@stripe/react-stripe-js": "^6.3.0",
