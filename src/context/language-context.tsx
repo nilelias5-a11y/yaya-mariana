@@ -13,17 +13,42 @@ interface LanguageContextValue {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
+/* Idiomas soportados — guard único usado tanto al restaurar como al
+   sincronizar el atributo <html lang>. Antes la restauración solo
+   contemplaba "es"/"ca" y descartaba silenciosamente "en": al recargar
+   o navegar con hard-load el idioma inglés volvía a "es". */
+const SUPPORTED: readonly Lang[] = ["es", "ca", "en"];
+function isLang(value: string | null): value is Lang {
+  return value !== null && (SUPPORTED as readonly string[]).includes(value);
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("es");
 
   useEffect(() => {
-    const stored = localStorage.getItem("lang");
-    if (stored === "es" || stored === "ca") setLangState(stored);
+    /* Restaura la preferencia: localStorage primero (rápido en el mismo
+       dispositivo) y, como respaldo, la cookie `lang` (sobrevive a
+       navegaciones con recarga completa y queda disponible para SSR
+       futuro). El primero válido gana. */
+    const fromStorage = localStorage.getItem("lang");
+    if (isLang(fromStorage)) {
+      setLangState(fromStorage);
+      return;
+    }
+    const fromCookie = document.cookie
+      .split("; ")
+      .find((c) => c.startsWith("lang="))
+      ?.split("=")[1];
+    if (isLang(fromCookie ?? null)) setLangState(fromCookie as Lang);
   }, []);
 
   function setLang(l: Lang) {
     setLangState(l);
     localStorage.setItem("lang", l);
+    /* Cookie de 1 año, ruta global. Persiste el idioma entre páginas
+       aunque haya una recarga completa (p. ej. enlaces externos o un
+       deep-link marcado). SameSite=Lax — no es dato sensible. */
+    document.cookie = `lang=${l}; path=/; max-age=31536000; samesite=lax`;
   }
 
   return (
