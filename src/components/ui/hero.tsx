@@ -125,13 +125,28 @@ function MobileNav({
 
       <AnimatePresence>
         {open && (
+          <>
+            {/* Backdrop — cierra al pulsar fuera del panel. Cubre el viewport
+                por debajo de la barra (z-40 < nav z-50), así que clics en el
+                propio nav/hamburguesa/panel no lo atraviesan; cualquier otro
+                clic cierra el menú. Decorativo: aria-hidden. */}
+            <motion.div
+              key="mobile-nav-backdrop"
+              aria-hidden
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.2 } }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+              onClick={close}
+              className="md:hidden fixed inset-0 z-40"
+              style={{ backgroundColor: "rgba(26,8,8,0.18)" }}
+            />
           <motion.div
             ref={panelRef}
             id="mobile-nav-panel"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.19, 1, 0.22, 1] } }}
             exit={{ opacity: 0, y: -8, transition: { duration: 0.18, ease: [0.6, 0.04, 0.24, 1] } }}
-            className="md:hidden absolute left-0 right-0 top-full bg-white px-6 py-4 flex flex-col"
+            className="md:hidden absolute left-0 right-0 top-full bg-white px-6 py-4 flex flex-col z-50"
             style={{ borderBottom: "1px solid #f0e0e0", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
           >
             {navLinks.map(({ label, href }) => (
@@ -154,6 +169,7 @@ function MobileNav({
               {verTienda}
             </Link>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
