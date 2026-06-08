@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
@@ -15,6 +16,7 @@ const CONSENT_KEY = "cookie-consent";
  * desajustes de hidratación. i18n ES/CA/EN desde t.cookieBanner. */
 export default function CookieBanner() {
   const { t } = useLanguage();
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -26,6 +28,9 @@ export default function CookieBanner() {
       setVisible(true);
     }
   }, []);
+
+  /* No mostrar en el panel interno. */
+  if (pathname?.startsWith("/admin")) return null;
 
   function choose(value: "accepted" | "rejected") {
     try {
