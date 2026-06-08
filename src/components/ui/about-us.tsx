@@ -1,8 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useLanguage } from "@/context/language-context";
 import OrnamentBreath from "@/components/easter-eggs/ornament-breath";
+
+/* Ver tienda → /checkout vía Next <Link> (navegación cliente; evita la
+   recarga completa que vaciaba el carrito y reiniciaba el idioma). */
+const MotionLink = motion.create(Link);
 
 export default function AboutUs() {
   const { t } = useLanguage();
@@ -121,7 +126,7 @@ export default function AboutUs() {
           <OrnamentBreath />
 
           <div className="mt-8 flex items-center gap-4">
-            <motion.a
+            <MotionLink
               href="/checkout"
               className="inline-flex items-center gap-2 bg-[#c0392b] text-white text-sm font-semibold px-6 py-3 rounded-full"
               whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(192,57,43,0.35)" }}
@@ -129,7 +134,7 @@ export default function AboutUs() {
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {t.about.viewStore}
-            </motion.a>
+            </MotionLink>
             <motion.a
               href="#contacto"
               className="relative inline-flex items-center gap-2 text-sm font-semibold text-[#c0392b] pb-[3px]"

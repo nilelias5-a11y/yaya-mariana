@@ -3,6 +3,7 @@
 import { MeshGradient } from "@paper-design/shaders-react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/language-context";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -18,6 +19,12 @@ const EMPHASIS_WORDS: Record<Lang, string[]> = {
 };
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+/* CTA "Ver tienda" → /checkout vía Next <Link> (navegación cliente).
+   Antes era un <a> que forzaba recarga completa: perdía el carrito en
+   memoria y reiniciaba el contexto de idioma. MotionLink conserva las
+   animaciones framer-motion sobre el enlace de Next. */
+const MotionLink = motion.create(Link);
 
 const LANG_OPTIONS: { code: Lang; label: string }[] = [
   { code: "es", label: "ES" },
@@ -138,14 +145,14 @@ function MobileNav({
                 {label}
               </a>
             ))}
-            <a
+            <Link
               href="/checkout"
               onClick={() => setOpen(false)}
               className="mt-3 inline-flex items-center justify-center font-sans font-semibold text-white"
               style={{ backgroundColor: "#c0392b", borderRadius: 6, padding: "11px 20px", fontSize: 14, minHeight: 44 }}
             >
               {verTienda}
-            </a>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -238,7 +245,7 @@ export default function Hero() {
         )}
 
         {/* Logo — CD-08: hover opacity-80 */}
-        <a href="/" className="shrink-0 transition-opacity duration-200 hover:opacity-80">
+        <Link href="/" className="shrink-0 transition-opacity duration-200 hover:opacity-80">
           <Image
             src="/logo-nuevo.jpg"
             alt="Yaya Mariana"
@@ -249,7 +256,7 @@ export default function Hero() {
             className="w-auto"
             style={{ height: 56 }}
           />
-        </a>
+        </Link>
 
         {/* Links centrales — VP-09: aria-current + underline activo a opacity-50 */}
         <ul className="hidden md:flex items-center list-none m-0 p-0">
@@ -305,7 +312,7 @@ export default function Hero() {
         {/* Derecha: idioma + botón desktop + hamburguesa movil */}
         <div className="flex items-center gap-5">
           <LanguageSelector />
-          <motion.a
+          <MotionLink
             href="/checkout"
             className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white overflow-hidden"
             style={{ backgroundColor: "#c0392b", borderRadius: 6, padding: "10px 20px", fontSize: 14 }}
@@ -322,7 +329,7 @@ export default function Hero() {
             >
               {t.nav.menu.verTienda}
             </motion.span>
-          </motion.a>
+          </MotionLink>
           <MobileNav
             navLinks={navLinks}
             verTienda={t.nav.menu.verTienda}

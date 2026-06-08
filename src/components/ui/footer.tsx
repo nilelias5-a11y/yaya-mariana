@@ -1,8 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
+
+/* Enlaces internos del footer vía Next <Link> (navegación cliente:
+   preserva el carrito en memoria y el contexto de idioma). Cubre rutas
+   (/checkout, páginas legales) y anclas de misma página (#sección). */
+const MotionLink = motion.create(Link);
 
 /* ENHANCE-5 socials reorder: Instagram primero (orden de relevancia
    visual para una marca de fresa premium). El resto sigue por uso. */
@@ -271,7 +277,7 @@ export default function Footer() {
                   <li key={label}>
                     {/* FA-02: underline draw-in con span aria-hidden scaleX 0→1
                         usando motion variants en el padre whileHover. */}
-                    <motion.a
+                    <MotionLink
                       href={href}
                       className="text-sm inline-block relative"
                       style={{ color: "rgba(255,255,255,0.65)" }}
@@ -295,7 +301,7 @@ export default function Footer() {
                           display: "block",
                         }}
                       />
-                    </motion.a>
+                    </MotionLink>
                   </li>
                 ))}
               </ul>

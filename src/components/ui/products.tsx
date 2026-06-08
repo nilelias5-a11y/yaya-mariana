@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
@@ -299,7 +300,7 @@ function ProductCard({
               <span className="numerals-tabular text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
               <span className="text-xs text-[#7a3a3a]/50 ml-1.5">/ 500g</span>
             </div>
-            <a
+            <Link
               href="/checkout"
               className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[#c0392b]/70 hover:text-[#c0392b] transition-colors duration-200"
             >
@@ -307,7 +308,7 @@ function ProductCard({
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1">
                 <path d="M3 8h10M9 4l4 4-4 4" />
               </svg>
-            </a>
+            </Link>
           </div>
           <button
             onClick={handleAddToCart}
