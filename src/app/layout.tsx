@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import { WhatsAppWidget } from "@/components/whatsapp-widget";
+import CookieBanner from "@/components/cookie-banner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -192,6 +193,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <WhatsAppWidget />
+          <CookieBanner />
         </Providers>
       </body>
     </html>

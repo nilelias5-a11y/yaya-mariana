@@ -76,10 +76,8 @@ const underlineVariants = {
 export default function Footer() {
   const { t } = useLanguage();
 
-  /* E9 (BUG fix): los 6 enlaces que apuntaban a `yayamariana.com`
-     (dominio legacy lechugas, abandonado) son ahora stub `#`. Cuando
-     existan paginas internas reales (privacy/devoluciones/etc.) se
-     sustituye stub por la ruta /legal/...
+  /* Enlaces legales: ahora apuntan a las paginas internas reales
+     (T5: aviso-legal, privacidad, cookies, terminos, devoluciones).
      blog -> #sobre-nosotros (lo mas cercano a "story" sin pagina propia);
      shipping -> #contacto (preguntar por envios via contacto). */
   const navLinks = [
@@ -104,10 +102,11 @@ export default function Footer() {
     {
       heading: t.footer.legal,
       items: [
-        { label: t.footer.privacy, href: "#" },
-        { label: t.footer.returns, href: "#" },
-        { label: t.footer.legalNotice, href: "#" },
-        { label: t.footer.myAccount, href: "#" },
+        { label: t.footer.legalNotice, href: "/aviso-legal" },
+        { label: t.footer.privacy, href: "/politica-privacidad" },
+        { label: t.footer.cookies, href: "/politica-cookies" },
+        { label: t.footer.terms, href: "/terminos-condiciones" },
+        { label: t.footer.returns, href: "/politica-devoluciones" },
       ],
     },
   ];

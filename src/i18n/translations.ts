@@ -197,6 +197,8 @@ export const translations = {
       privacy: "Política de privacidad",
       returns: "Política de devolución",
       legalNotice: "Aviso legal",
+      cookies: "Política de cookies",
+      terms: "Términos y condiciones",
       myAccount: "Mi cuenta",
       rights: "Todos los derechos reservados.",
       designBy: "Diseño por",
@@ -258,6 +260,67 @@ export const translations = {
         shipping: "Envío",
         shippingNote: "A calcular",
         total: "Total",
+      },
+    },
+    cookieBanner: {
+      title: "Tu privacidad nos importa",
+      text: "Usamos almacenamiento técnico necesario y, con tu permiso, cookies para mejorar tu experiencia. Puedes aceptar o rechazar las no esenciales.",
+      accept: "Aceptar",
+      reject: "Rechazar",
+      moreInfo: "Más información",
+      ariaLabel: "Aviso de cookies",
+    },
+    legal: {
+      backHome: "Volver al inicio",
+      lastUpdated: "Última actualización: junio de 2026",
+      placeholderNote:
+        "Documento orientativo en preparación. El texto definitivo será revisado por asesoría legal antes de su publicación.",
+      docs: {
+        avisoLegal: {
+          title: "Aviso legal",
+          sections: [
+            { heading: "Titular del sitio", body: "Este sitio web es titularidad de Yaya Mariana (en adelante, «el Titular»), con domicilio a efectos de notificaciones en C/ Electrónica 19, 08915 Badalona (Barcelona) y correo de contacto info@yaya-mariana.com. Los datos identificativos completos se incorporarán en la versión definitiva de este aviso." },
+            { heading: "Objeto", body: "El presente aviso regula el uso del sitio web y de los contenidos y servicios que el Titular pone a disposición de las personas usuarias. La navegación por el sitio atribuye la condición de usuario e implica la aceptación de las condiciones aquí recogidas." },
+            { heading: "Propiedad intelectual e industrial", body: "Todos los contenidos del sitio (textos, fotografías, logotipos, diseño y código) son titularidad del Titular o de terceros que han autorizado su uso y quedan protegidos por la normativa de propiedad intelectual e industrial. Queda prohibida su reproducción sin autorización." },
+            { heading: "Responsabilidad", body: "El Titular procura que la información sea veraz y esté actualizada, pero no garantiza la ausencia de errores ni la disponibilidad continua del servicio. Este texto es orientativo y será sustituido por la versión legal definitiva." },
+          ],
+        },
+        privacidad: {
+          title: "Política de privacidad",
+          sections: [
+            { heading: "Responsable del tratamiento", body: "Yaya Mariana es responsable del tratamiento de los datos personales que nos facilites a través de los formularios del sitio o del proceso de compra. Puedes contactarnos en info@yaya-mariana.com." },
+            { heading: "Datos y finalidad", body: "Tratamos los datos identificativos y de contacto que nos proporciones para gestionar tus consultas, tramitar pedidos y, en su caso, enviarte comunicaciones que hayas autorizado. No usamos tus datos para finalidades distintas sin tu consentimiento." },
+            { heading: "Legitimación y conservación", body: "La base legal es la ejecución del contrato de compra, el consentimiento que prestes y el interés legítimo en atender tus consultas. Conservamos los datos el tiempo necesario para cada finalidad y los plazos legales aplicables." },
+            { heading: "Tus derechos", body: "Puedes ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a info@yaya-mariana.com. También puedes reclamar ante la Agencia Española de Protección de Datos. Texto orientativo pendiente de revisión." },
+          ],
+        },
+        cookies: {
+          title: "Política de cookies",
+          sections: [
+            { heading: "¿Qué son las cookies?", body: "Las cookies son pequeños archivos que se almacenan en tu dispositivo al visitar el sitio y permiten recordar tus preferencias y mejorar la experiencia de navegación." },
+            { heading: "Cookies que utilizamos", body: "Actualmente el sitio emplea almacenamiento técnico necesario para recordar el idioma seleccionado y tu preferencia de consentimiento. No se utilizan cookies publicitarias ni de seguimiento de terceros." },
+            { heading: "Gestión del consentimiento", body: "Al acceder al sitio puedes aceptar o rechazar el uso de cookies no esenciales mediante el aviso de cookies. Puedes cambiar tu elección en cualquier momento borrando los datos de tu navegador." },
+            { heading: "Más información", body: "Este documento es orientativo y se ampliará con el detalle de cada cookie cuando se integren servicios adicionales (analítica, pago, etc.)." },
+          ],
+        },
+        terminos: {
+          title: "Términos y condiciones",
+          sections: [
+            { heading: "Objeto y aceptación", body: "Estas condiciones regulan la compra de productos a través del sitio de Yaya Mariana. Al realizar un pedido confirmas que has leído y aceptas estas condiciones." },
+            { heading: "Productos y precios", body: "Los productos ofrecidos son fresas frescas de temporada. Los precios se muestran en euros e incluyen los impuestos aplicables. Nos reservamos el derecho a modificar precios y disponibilidad." },
+            { heading: "Pedidos y pago", body: "El pago se realiza de forma segura a través de la pasarela Stripe. El pedido se considera confirmado tras la validación del pago y recibirás un correo de confirmación." },
+            { heading: "Envíos y entrega", body: "Realizamos envíos con cadena de frío. Los plazos son orientativos y pueden variar según el destino. Para más detalle, consulta la política de devoluciones. Texto orientativo pendiente de revisión." },
+          ],
+        },
+        devoluciones: {
+          title: "Política de devoluciones",
+          sections: [
+            { heading: "Naturaleza del producto", body: "Por tratarse de un producto fresco y perecedero, el derecho de desistimiento puede estar limitado conforme a la normativa de consumo. Aquí te explicamos cómo proceder en caso de incidencia." },
+            { heading: "Incidencias con el pedido", body: "Si tu pedido llega en mal estado o no se corresponde con lo solicitado, contáctanos en un plazo de 24 horas desde la recepción en info@yaya-mariana.com adjuntando fotografías." },
+            { heading: "Reembolsos y reposición", body: "Tras valorar la incidencia, te ofreceremos la reposición del producto o el reembolso del importe abonado por el mismo medio de pago utilizado." },
+            { heading: "Gastos", body: "Cuando la incidencia sea atribuible a Yaya Mariana, no asumirás coste alguno. Este texto es orientativo y será sustituido por la versión definitiva." },
+          ],
+        },
       },
     },
   },
@@ -457,6 +520,8 @@ export const translations = {
       privacy: "Política de privacitat",
       returns: "Política de devolució",
       legalNotice: "Avís legal",
+      cookies: "Política de galetes",
+      terms: "Termes i condicions",
       myAccount: "El meu compte",
       rights: "Tots els drets reservats.",
       designBy: "Disseny per",
@@ -518,6 +583,67 @@ export const translations = {
         shipping: "Enviament",
         shippingNote: "A calcular",
         total: "Total",
+      },
+    },
+    cookieBanner: {
+      title: "La teva privacitat ens importa",
+      text: "Fem servir emmagatzematge tècnic necessari i, amb el teu permís, galetes per millorar la teva experiència. Pots acceptar o rebutjar les no essencials.",
+      accept: "Acceptar",
+      reject: "Rebutjar",
+      moreInfo: "Més informació",
+      ariaLabel: "Avís de galetes",
+    },
+    legal: {
+      backHome: "Tornar a l'inici",
+      lastUpdated: "Última actualització: juny de 2026",
+      placeholderNote:
+        "Document orientatiu en preparació. El text definitiu serà revisat per assessoria legal abans de la seva publicació.",
+      docs: {
+        avisoLegal: {
+          title: "Avís legal",
+          sections: [
+            { heading: "Titular del lloc", body: "Aquest lloc web és titularitat de Yaya Mariana (d'ara endavant, «el Titular»), amb domicili a efectes de notificacions a C/ Electrònica 19, 08915 Badalona (Barcelona) i correu de contacte info@yaya-mariana.com. Les dades identificatives completes s'incorporaran a la versió definitiva d'aquest avís." },
+            { heading: "Objecte", body: "Aquest avís regula l'ús del lloc web i dels continguts i serveis que el Titular posa a disposició de les persones usuàries. La navegació pel lloc atribueix la condició d'usuari i implica l'acceptació de les condicions aquí recollides." },
+            { heading: "Propietat intel·lectual i industrial", body: "Tots els continguts del lloc (textos, fotografies, logotips, disseny i codi) són titularitat del Titular o de tercers que n'han autoritzat l'ús i queden protegits per la normativa de propietat intel·lectual i industrial. Queda prohibida la seva reproducció sense autorització." },
+            { heading: "Responsabilitat", body: "El Titular procura que la informació sigui veraç i estigui actualitzada, però no garanteix l'absència d'errors ni la disponibilitat contínua del servei. Aquest text és orientatiu i serà substituït per la versió legal definitiva." },
+          ],
+        },
+        privacidad: {
+          title: "Política de privacitat",
+          sections: [
+            { heading: "Responsable del tractament", body: "Yaya Mariana és responsable del tractament de les dades personals que ens facilitis a través dels formularis del lloc o del procés de compra. Pots contactar-nos a info@yaya-mariana.com." },
+            { heading: "Dades i finalitat", body: "Tractem les dades identificatives i de contacte que ens proporcionis per gestionar les teves consultes, tramitar comandes i, si escau, enviar-te comunicacions que hagis autoritzat. No fem servir les teves dades per a finalitats diferents sense el teu consentiment." },
+            { heading: "Legitimació i conservació", body: "La base legal és l'execució del contracte de compra, el consentiment que prestis i l'interès legítim a atendre les teves consultes. Conservem les dades el temps necessari per a cada finalitat i els terminis legals aplicables." },
+            { heading: "Els teus drets", body: "Pots exercir els drets d'accés, rectificació, supressió, oposició, limitació i portabilitat escrivint a info@yaya-mariana.com. També pots reclamar davant l'Agència Espanyola de Protecció de Dades. Text orientatiu pendent de revisió." },
+          ],
+        },
+        cookies: {
+          title: "Política de galetes",
+          sections: [
+            { heading: "Què són les galetes?", body: "Les galetes són petits arxius que s'emmagatzemen al teu dispositiu en visitar el lloc i permeten recordar les teves preferències i millorar l'experiència de navegació." },
+            { heading: "Galetes que utilitzem", body: "Actualment el lloc fa servir emmagatzematge tècnic necessari per recordar l'idioma seleccionat i la teva preferència de consentiment. No s'utilitzen galetes publicitàries ni de seguiment de tercers." },
+            { heading: "Gestió del consentiment", body: "En accedir al lloc pots acceptar o rebutjar l'ús de galetes no essencials mitjançant l'avís de galetes. Pots canviar la teva elecció en qualsevol moment esborrant les dades del teu navegador." },
+            { heading: "Més informació", body: "Aquest document és orientatiu i s'ampliarà amb el detall de cada galeta quan s'integrin serveis addicionals (analítica, pagament, etc.)." },
+          ],
+        },
+        terminos: {
+          title: "Termes i condicions",
+          sections: [
+            { heading: "Objecte i acceptació", body: "Aquestes condicions regulen la compra de productes a través del lloc de Yaya Mariana. En fer una comanda confirmes que has llegit i acceptes aquestes condicions." },
+            { heading: "Productes i preus", body: "Els productes oferts són maduixes fresques de temporada. Els preus es mostren en euros i inclouen els impostos aplicables. Ens reservem el dret a modificar preus i disponibilitat." },
+            { heading: "Comandes i pagament", body: "El pagament es fa de manera segura a través de la passarel·la Stripe. La comanda es considera confirmada després de la validació del pagament i rebràs un correu de confirmació." },
+            { heading: "Enviaments i lliurament", body: "Fem enviaments amb cadena de fred. Els terminis són orientatius i poden variar segons la destinació. Per a més detall, consulta la política de devolucions. Text orientatiu pendent de revisió." },
+          ],
+        },
+        devoluciones: {
+          title: "Política de devolucions",
+          sections: [
+            { heading: "Naturalesa del producte", body: "En tractar-se d'un producte fresc i perible, el dret de desistiment pot estar limitat d'acord amb la normativa de consum. Aquí t'expliquem com procedir en cas d'incidència." },
+            { heading: "Incidències amb la comanda", body: "Si la teva comanda arriba en mal estat o no es correspon amb el que has sol·licitat, contacta'ns en un termini de 24 hores des de la recepció a info@yaya-mariana.com adjuntant fotografies." },
+            { heading: "Reemborsaments i reposició", body: "Després de valorar la incidència, t'oferirem la reposició del producte o el reemborsament de l'import abonat pel mateix mitjà de pagament utilitzat." },
+            { heading: "Despeses", body: "Quan la incidència sigui atribuïble a Yaya Mariana, no assumiràs cap cost. Aquest text és orientatiu i serà substituït per la versió definitiva." },
+          ],
+        },
       },
     },
   },
@@ -717,6 +843,8 @@ export const translations = {
       privacy: "Privacy policy",
       returns: "Return policy",
       legalNotice: "Legal notice",
+      cookies: "Cookie policy",
+      terms: "Terms and conditions",
       myAccount: "My account",
       rights: "All rights reserved.",
       designBy: "Design by",
@@ -778,6 +906,67 @@ export const translations = {
         shipping: "Shipping",
         shippingNote: "To be calculated",
         total: "Total",
+      },
+    },
+    cookieBanner: {
+      title: "Your privacy matters to us",
+      text: "We use necessary technical storage and, with your permission, cookies to improve your experience. You can accept or reject the non-essential ones.",
+      accept: "Accept",
+      reject: "Reject",
+      moreInfo: "More information",
+      ariaLabel: "Cookie notice",
+    },
+    legal: {
+      backHome: "Back to home",
+      lastUpdated: "Last updated: June 2026",
+      placeholderNote:
+        "Draft document in preparation. The final text will be reviewed by legal counsel before publication.",
+      docs: {
+        avisoLegal: {
+          title: "Legal notice",
+          sections: [
+            { heading: "Site owner", body: "This website is owned by Yaya Mariana (the «Owner»), with an address for notifications at C/ Electrónica 19, 08915 Badalona (Barcelona) and contact email info@yaya-mariana.com. Full identifying details will be added in the final version of this notice." },
+            { heading: "Purpose", body: "This notice governs the use of the website and of the content and services the Owner makes available to users. Browsing the site grants user status and implies acceptance of the conditions set out here." },
+            { heading: "Intellectual and industrial property", body: "All site content (text, photographs, logos, design and code) is owned by the Owner or by third parties who have authorised its use, and is protected by intellectual and industrial property law. Reproduction without authorisation is prohibited." },
+            { heading: "Liability", body: "The Owner strives to keep information accurate and up to date but does not guarantee the absence of errors or the continuous availability of the service. This text is a draft and will be replaced by the final legal version." },
+          ],
+        },
+        privacidad: {
+          title: "Privacy policy",
+          sections: [
+            { heading: "Data controller", body: "Yaya Mariana is the controller of the personal data you provide through the site forms or the purchase process. You can contact us at info@yaya-mariana.com." },
+            { heading: "Data and purpose", body: "We process the identifying and contact data you provide to handle your enquiries, process orders and, where applicable, send you communications you have authorised. We do not use your data for other purposes without your consent." },
+            { heading: "Legal basis and retention", body: "The legal basis is the performance of the purchase contract, the consent you give and our legitimate interest in responding to your enquiries. We keep data for as long as necessary for each purpose and the applicable legal periods." },
+            { heading: "Your rights", body: "You can exercise your rights of access, rectification, erasure, objection, restriction and portability by writing to info@yaya-mariana.com. You may also lodge a complaint with the Spanish Data Protection Agency. Draft text pending review." },
+          ],
+        },
+        cookies: {
+          title: "Cookie policy",
+          sections: [
+            { heading: "What are cookies?", body: "Cookies are small files stored on your device when you visit the site that allow us to remember your preferences and improve the browsing experience." },
+            { heading: "Cookies we use", body: "The site currently uses necessary technical storage to remember the selected language and your consent preference. No advertising or third-party tracking cookies are used." },
+            { heading: "Consent management", body: "When you access the site you can accept or reject the use of non-essential cookies through the cookie notice. You can change your choice at any time by clearing your browser data." },
+            { heading: "More information", body: "This document is a draft and will be expanded with the detail of each cookie once additional services (analytics, payment, etc.) are integrated." },
+          ],
+        },
+        terminos: {
+          title: "Terms and conditions",
+          sections: [
+            { heading: "Purpose and acceptance", body: "These conditions govern the purchase of products through the Yaya Mariana site. By placing an order you confirm that you have read and accept these conditions." },
+            { heading: "Products and prices", body: "The products offered are fresh seasonal strawberries. Prices are shown in euros and include applicable taxes. We reserve the right to modify prices and availability." },
+            { heading: "Orders and payment", body: "Payment is made securely through the Stripe gateway. The order is considered confirmed after payment validation and you will receive a confirmation email." },
+            { heading: "Shipping and delivery", body: "We ship with a cold chain. Delivery times are indicative and may vary by destination. For more detail, see our return policy. Draft text pending review." },
+          ],
+        },
+        devoluciones: {
+          title: "Return policy",
+          sections: [
+            { heading: "Nature of the product", body: "As this is a fresh, perishable product, the right of withdrawal may be limited in accordance with consumer regulations. Here we explain how to proceed in the event of an issue." },
+            { heading: "Order issues", body: "If your order arrives in poor condition or does not match what you ordered, contact us within 24 hours of receipt at info@yaya-mariana.com, attaching photographs." },
+            { heading: "Refunds and replacement", body: "After assessing the issue, we will offer you a replacement of the product or a refund of the amount paid via the same payment method used." },
+            { heading: "Costs", body: "When the issue is attributable to Yaya Mariana, you will bear no cost. This text is a draft and will be replaced by the final version." },
+          ],
+        },
       },
     },
   },
