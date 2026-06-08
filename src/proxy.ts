@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 /* Protección básica del panel /admin (T6) — sin OAuth.
  *
+ * (Next 16 renombró la convención `middleware` → `proxy`.)
+ *
  * Comprueba la cookie de sesión `admin_session` (la emite /api/admin/login
  * tras validar ADMIN_USER / ADMIN_PASS). Sin sesión → redirige al login.
  * Si ya hay sesión y se visita el login, redirige al panel.
@@ -10,7 +12,7 @@ import { NextRequest, NextResponse } from "next/server";
  * NextAuth) cuando se conecte Stripe real. */
 const SESSION_COOKIE = "admin_session";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const session = req.cookies.get(SESSION_COOKIE)?.value;
   const isLogin = pathname === "/admin/login";
