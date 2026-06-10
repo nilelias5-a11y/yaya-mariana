@@ -1,38 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import {
+  SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
+  createSessionToken,
+  sessionCookieOptions,
+} from "@/lib/auth";
 
-/* Login del panel /admin (T6). Valida las credenciales contra
-   ADMIN_USER / ADMIN_PASS (env, placeholder) y, si son correctas, emite
-   una cookie de sesión httpOnly. Recibe un POST de formulario nativo
-   (funciona sin JS) y responde con redirección 303 → GET. */
-const SESSION_COOKIE = "admin_session";
-const EIGHT_HOURS = 60 * 60 * 8;
+/* FASE A.5 · T2 — Login del panel /admin endurecido.
+ *
+ * - Verifica usuario contra ADMIN_USER y contraseña contra ADMIN_PASS_HASH
+ *   (hash bcrypt; nunca texto plano).
+ * - Si es válido, emite un JWT firmado (8h) en cookie httpOnly.
+ * - Responde JSON (el formulario es un client component con fetch +
+ *   estado de carga). No filtra qué credencial falló.
+ *
+ * Runtime Node (por defecto en route handlers) — necesario para bcrypt. */
+
+// Hash dummy con el mismo coste: se compara siempre aunque el usuario no
+// exista, para que el tiempo de respuesta no revele usuarios válidos.
+const DUMMY_HASH = "$2b$12$.....................................dummyDummyDummyD";
 
 export async function POST(req: NextRequest) {
-  const form = await req.formData();
-  const user = String(form.get("user") ?? "");
-  const pass = String(form.get("pass") ?? "");
+  let user = "";
+  let pass = "";
 
-  const okUser = process.env.ADMIN_USER ?? "";
-  const okPass = process.env.ADMIN_PASS ?? "";
-  const url = req.nextUrl.clone();
-
-  const valid = okUser !== "" && okPass !== "" && user === okUser && pass === okPass;
-
-  if (!valid) {
-    url.pathname = "/admin/login";
-    url.search = "?error=1";
-    return NextResponse.redirect(url, 303);
+  const contentType = req.headers.get("content-type") ?? "";
+  try {
+    if (contentType.includes("application/json")) {
+      const body = await req.json();
+      user = String(body?.user ?? "");
+      pass = String(body?.pass ?? "");
+    } else {
+      const form = await req.formData();
+      user = String(form.get("user") ?? "");
+      pass = String(form.get("pass") ?? "");
+    }
+  } catch {
+    return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
   }
 
-  url.pathname = "/admin";
-  url.search = "";
-  const res = NextResponse.redirect(url, 303);
-  res.cookies.set(SESSION_COOKIE, "1", {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: EIGHT_HOURS,
-    secure: process.env.NODE_ENV === "production",
-  });
+  const okUser = process.env.ADMIN_USER ?? "";
+  const okHash = process.env.ADMIN_PASS_HASH ?? "";
+
+  if (okUser === "" || okHash === "") {
+    // Configuración incompleta del servidor: no revelar detalles.
+    return NextResponse.json({ ok: false, error: "server" }, { status: 500 });
+  }
+
+  // Comparar siempre un hash (real o dummy) para tiempo constante.
+  const userMatches = user === okUser;
+  const passOk = await bcrypt.compare(pass, userMatches ? okHash : DUMMY_HASH);
+  const valid = userMatches && passOk;
+
+  if (!valid) {
+    return NextResponse.json({ ok: false, error: "invalid" }, { status: 401 });
+  }
+
+  const token = await createSessionToken(okUser);
+  const res = NextResponse.json({ ok: true });
+  res.cookies.set(SESSION_COOKIE, token, sessionCookieOptions(SESSION_TTL_SECONDS));
   return res;
 }

@@ -1,20 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
+  createSessionToken,
+  verifySessionToken,
+  sessionCookieOptions,
+} from "@/lib/auth";
 
-/* Protección básica del panel /admin (T6) — sin OAuth.
+/* FASE A.5 · T2 — Protección del panel /admin con JWT firmado.
  *
  * (Next 16 renombró la convención `middleware` → `proxy`.)
  *
- * Comprueba la cookie de sesión `admin_session` (la emite /api/admin/login
- * tras validar ADMIN_USER / ADMIN_PASS). Sin sesión → redirige al login.
- * Si ya hay sesión y se visita el login, redirige al panel.
- *
- * Es deliberadamente sencillo: preparado para endurecerse (token firmado /
- * NextAuth) cuando se conecte Stripe real. */
-const SESSION_COOKIE = "admin_session";
+ * - Verifica el JWT de la cookie `admin_session` (firma + expiración) con
+ *   `jose`, compatible con el runtime Edge.
+ * - Sesión inválida/expirada → redirige al login.
+ * - Sesión válida visitando el login → redirige al panel.
+ * - Renovación deslizante: en cada visita autenticada al panel se re-emite
+ *   un token nuevo (8h), de modo que la sesión sólo expira tras 8h de
+ *   inactividad. */
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const session = req.cookies.get(SESSION_COOKIE)?.value;
+  const token = req.cookies.get(SESSION_COOKIE)?.value;
+  const session = await verifySessionToken(token);
   const isLogin = pathname === "/admin/login";
 
   if (isLogin) {
@@ -31,10 +39,17 @@ export function proxy(req: NextRequest) {
     const url = req.nextUrl.clone();
     url.pathname = "/admin/login";
     url.search = "";
-    return NextResponse.redirect(url);
+    const res = NextResponse.redirect(url);
+    // Limpia cualquier cookie caducada/manipulada que siga presente.
+    if (token) res.cookies.set(SESSION_COOKIE, "", sessionCookieOptions(0));
+    return res;
   }
 
-  return NextResponse.next();
+  // Sesión válida → renovación deslizante (sliding expiration).
+  const res = NextResponse.next();
+  const refreshed = await createSessionToken(session.sub);
+  res.cookies.set(SESSION_COOKIE, refreshed, sessionCookieOptions(SESSION_TTL_SECONDS));
+  return res;
 }
 
 export const config = {
