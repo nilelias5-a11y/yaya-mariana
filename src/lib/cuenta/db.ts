@@ -1,109 +1,204 @@
 import "server-only";
-import { promises as fs } from "node:fs";
-import path from "node:path";
-import type { User, Order } from "./types";
-import { SEED_USERS, SEED_ORDERS } from "./seed";
+import { getSql } from "./sql";
+import type { User, Order, Address, OrderItem, OrderStatus } from "./types";
 
-/* FASE B — Mock DB de la zona cliente (JSON en disco).
+/* FASE B (migración a Neon) — capa de datos de la zona cliente sobre
+ * PostgreSQL (Neon). Sustituye al mock en JSON manteniendo EXACTAMENTE la
+ * misma interfaz pública, de modo que el resto del código (rutas API,
+ * server components) no cambia.
  *
- * Patrón idéntico en espíritu al panel admin: datos mock con estructura
- * lista para migrar a PostgreSQL/Neon al conectar Stripe. NO usar en
- * runtime Edge (usa `node:fs`); sólo route handlers / server components.
+ * Tablas: cuenta_users · cuenta_orders · cuenta_invoices (ver
+ * scripts/migrate-neon.ts). Direcciones, items, dirección de envío y
+ * facturación se guardan como JSONB (replican los tipos de types.ts).
  *
- * Los ficheros viven en `data/cuenta/` (gitignored). Si no existen, se
- * siembran desde seed.ts en el primer acceso. Las escrituras (registro,
- * edición de perfil, borrado) mutan esos ficheros locales. */
+ * Predecesor: implementación en JSON (data/cuenta/*.json). Para volver a
+ * ella temporalmente, revertir el commit de migración (ver README-CUENTA.md
+ * §Rollback). */
 
-const DATA_DIR = path.join(process.cwd(), "data", "cuenta");
-const USERS_FILE = path.join(DATA_DIR, "users.json");
-const ORDERS_FILE = path.join(DATA_DIR, "orders.json");
+// ---- helpers de mapeo (snake_case fila → camelCase tipo) -------------------
 
-async function readJSON<T>(file: string, seed: T): Promise<T> {
-  try {
-    const raw = await fs.readFile(file, "utf8");
-    return JSON.parse(raw) as T;
-  } catch {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    await fs.writeFile(file, JSON.stringify(seed, null, 2), "utf8");
-    return seed;
-  }
+/** JSONB llega ya parseado por el driver; si llega como texto, lo parseamos. */
+function asJson<T>(v: unknown): T {
+  return (typeof v === "string" ? JSON.parse(v) : v) as T;
 }
 
-async function writeJSON<T>(file: string, data: T): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(file, JSON.stringify(data, null, 2), "utf8");
+/** timestamptz puede llegar como Date o string → ISO normalizado. */
+function asIso(v: unknown): string {
+  return new Date(v as string).toISOString();
 }
 
-const readUsers = () => readJSON<User[]>(USERS_FILE, SEED_USERS);
-const readOrders = () => readJSON<Order[]>(ORDERS_FILE, SEED_ORDERS);
+type UserRow = {
+  id: string;
+  email: string;
+  email_verified: boolean;
+  password_hash: string | null;
+  nombre: string;
+  telefono: string | null;
+  dni: string | null;
+  addresses: unknown;
+  marketing_opt_in: boolean;
+  created_at: unknown;
+};
+
+function rowToUser(r: UserRow): User {
+  return {
+    id: r.id,
+    email: r.email,
+    emailVerified: r.email_verified,
+    passwordHash: r.password_hash,
+    nombre: r.nombre,
+    telefono: r.telefono ?? undefined,
+    dni: r.dni ?? undefined,
+    addresses: asJson<Address[]>(r.addresses) ?? [],
+    marketingOptIn: r.marketing_opt_in,
+    createdAt: asIso(r.created_at),
+  };
+}
+
+type OrderRow = {
+  id: string;
+  number: string;
+  user_id: string;
+  items: unknown;
+  status: string;
+  created_at: unknown;
+  shipping_address: unknown;
+  billing: unknown;
+  invoice_number: string;
+  tracking_url: string | null;
+};
+
+function rowToOrder(r: OrderRow): Order {
+  return {
+    id: r.id,
+    number: r.number,
+    userId: r.user_id,
+    items: asJson<OrderItem[]>(r.items),
+    status: r.status as OrderStatus,
+    createdAt: asIso(r.created_at),
+    shippingAddress: asJson<Address>(r.shipping_address),
+    billing: asJson<Order["billing"]>(r.billing),
+    invoiceNumber: r.invoice_number,
+    trackingUrl: r.tracking_url ?? undefined,
+  };
+}
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+// ---- usuarios --------------------------------------------------------------
+
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const users = await readUsers();
-  const target = normalizeEmail(email);
-  return users.find((u) => u.email.toLowerCase() === target) ?? null;
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT * FROM cuenta_users WHERE email = ${normalizeEmail(email)} LIMIT 1
+  `) as UserRow[];
+  return rows[0] ? rowToUser(rows[0]) : null;
 }
 
 export async function getUserById(id: string): Promise<User | null> {
-  const users = await readUsers();
-  return users.find((u) => u.id === id) ?? null;
+  const sql = getSql();
+  const rows = (await sql`SELECT * FROM cuenta_users WHERE id = ${id} LIMIT 1`) as UserRow[];
+  return rows[0] ? rowToUser(rows[0]) : null;
 }
 
 export async function createUser(
   data: Pick<User, "email" | "nombre"> & Partial<User>,
 ): Promise<User> {
-  const users = await readUsers();
+  const sql = getSql();
   const email = normalizeEmail(data.email);
-  if (users.some((u) => u.email.toLowerCase() === email)) {
-    throw new Error("EMAIL_TAKEN");
-  }
-  const user: User = {
-    id: `usr_${Date.now().toString(36)}_${users.length + 1}`,
-    email,
-    emailVerified: data.emailVerified ?? false,
-    passwordHash: data.passwordHash ?? null,
-    nombre: data.nombre,
-    telefono: data.telefono,
-    dni: data.dni,
-    addresses: data.addresses ?? [],
-    marketingOptIn: data.marketingOptIn ?? false,
-    createdAt: new Date().toISOString(),
-  };
-  users.push(user);
-  await writeJSON(USERS_FILE, users);
-  return user;
+
+  const existing = (await sql`SELECT 1 FROM cuenta_users WHERE email = ${email} LIMIT 1`) as unknown[];
+  if (existing.length > 0) throw new Error("EMAIL_TAKEN");
+
+  const id = `usr_${Date.now().toString(36)}_${Math.floor(Math.random() * 1e6).toString(36)}`;
+  const addresses = JSON.stringify(data.addresses ?? []);
+
+  const rows = (await sql`
+    INSERT INTO cuenta_users
+      (id, email, email_verified, password_hash, nombre, telefono, dni, addresses, marketing_opt_in)
+    VALUES
+      (${id}, ${email}, ${data.emailVerified ?? false}, ${data.passwordHash ?? null},
+       ${data.nombre}, ${data.telefono ?? null}, ${data.dni ?? null}, ${addresses}::jsonb,
+       ${data.marketingOptIn ?? false})
+    RETURNING *
+  `) as UserRow[];
+
+  console.log(`[db:neon] createUser id=${id} email=${email}`);
+  return rowToUser(rows[0]);
 }
 
 export async function updateUser(
   id: string,
   patch: Partial<Omit<User, "id" | "email" | "createdAt">>,
 ): Promise<User | null> {
-  const users = await readUsers();
-  const idx = users.findIndex((u) => u.id === id);
-  if (idx === -1) return null;
-  users[idx] = { ...users[idx], ...patch };
-  await writeJSON(USERS_FILE, users);
-  return users[idx];
+  const sql = getSql();
+  const current = await getUserById(id);
+  if (!current) return null;
+
+  // Read-modify-write: fusionamos en JS y reescribimos las columnas mutables.
+  const next: User = { ...current, ...patch };
+  const rows = (await sql`
+    UPDATE cuenta_users SET
+      email_verified = ${next.emailVerified},
+      password_hash = ${next.passwordHash},
+      nombre = ${next.nombre},
+      telefono = ${next.telefono ?? null},
+      dni = ${next.dni ?? null},
+      addresses = ${JSON.stringify(next.addresses ?? [])}::jsonb,
+      marketing_opt_in = ${next.marketingOptIn}
+    WHERE id = ${id}
+    RETURNING *
+  `) as UserRow[];
+
+  console.log(`[db:neon] updateUser id=${id}`);
+  return rows[0] ? rowToUser(rows[0]) : null;
 }
 
 export async function deleteUser(id: string): Promise<void> {
-  const users = await readUsers();
-  await writeJSON(USERS_FILE, users.filter((u) => u.id !== id));
-  const orders = await readOrders();
-  await writeJSON(ORDERS_FILE, orders.filter((o) => o.userId !== id));
+  const sql = getSql();
+  // ON DELETE CASCADE elimina también pedidos y facturas del usuario.
+  await sql`DELETE FROM cuenta_users WHERE id = ${id}`;
+  console.log(`[db:neon] deleteUser id=${id}`);
 }
 
+// ---- pedidos ---------------------------------------------------------------
+
 export async function getOrdersByUser(userId: string): Promise<Order[]> {
-  const orders = await readOrders();
-  return orders
-    .filter((o) => o.userId === userId)
-    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT * FROM cuenta_orders WHERE user_id = ${userId} ORDER BY created_at DESC
+  `) as OrderRow[];
+  return rows.map(rowToOrder);
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {
-  const orders = await readOrders();
-  return orders.find((o) => o.id === orderId) ?? null;
+  const sql = getSql();
+  const rows = (await sql`SELECT * FROM cuenta_orders WHERE id = ${orderId} LIMIT 1`) as OrderRow[];
+  return rows[0] ? rowToOrder(rows[0]) : null;
+}
+
+// ---- facturas (caché del PDF en BD) ---------------------------------------
+
+/** Devuelve el PDF cacheado (si existe) para una factura. */
+export async function getInvoicePdf(invoiceNumber: string): Promise<Uint8Array | null> {
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT pdf FROM cuenta_invoices WHERE invoice_number = ${invoiceNumber} LIMIT 1
+  `) as { pdf: string | null }[];
+  const b64 = rows[0]?.pdf;
+  return b64 ? new Uint8Array(Buffer.from(b64, "base64")) : null;
+}
+
+/** Guarda (cachea) el PDF generado de una factura. */
+export async function saveInvoicePdf(invoiceNumber: string, pdf: Uint8Array): Promise<void> {
+  const sql = getSql();
+  const b64 = Buffer.from(pdf).toString("base64");
+  await sql`
+    UPDATE cuenta_invoices
+    SET pdf = ${b64}, pdf_generated_at = now()
+    WHERE invoice_number = ${invoiceNumber}
+  `;
+  console.log(`[db:neon] saveInvoicePdf ${invoiceNumber} (${pdf.length} bytes)`);
 }
