@@ -44,3 +44,6 @@ next-env.d.ts
 
 # Dev server log (local)
 .next-dev.log
+
+# Mock DB de la zona cliente (FASE B) — datos locales, se siembran solos.
+/data/cuenta/
