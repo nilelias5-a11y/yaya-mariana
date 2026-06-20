@@ -145,6 +145,10 @@ function CheckoutForm() {
         body: JSON.stringify({
           amount: Math.round(total * 100),
           items: items.map((i) => ({ name: i.name, quantity: i.quantity })),
+          // TAREA 4 — datos para que el webhook pueda reconstruir el pedido.
+          email,
+          nombre: name,
+          shipping: { address, city, zip },
         }),
       });
 
@@ -167,6 +171,26 @@ function CheckoutForm() {
 
       if (stripeError) throw new Error(stripeError.message);
       if (paymentIntent?.status === "succeeded") {
+        /* TAREA 3 — persistir el pedido en Neon. No bloquea el éxito: el
+           cobro ya ocurrió, y el webhook de Stripe es la red de seguridad
+           (idempotente) si esta llamada fallara. */
+        try {
+          await fetch("/api/checkout/complete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              paymentIntentId: paymentIntent.id,
+              name,
+              email,
+              address,
+              city,
+              zip,
+              items: items.map((i) => ({ name: i.name, quantity: i.quantity })),
+            }),
+          });
+        } catch (persistErr) {
+          console.error("No se pudo registrar el pedido (lo reintentará el webhook):", persistErr);
+        }
         clearCart();
         setSuccess(true);
       }
