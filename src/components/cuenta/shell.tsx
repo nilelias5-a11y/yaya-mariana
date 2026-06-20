@@ -103,7 +103,15 @@ export function CuentaShell({ children }: { children: React.ReactNode }) {
         style={{ borderRight: `1px solid ${CUENTA_BORDER}` }}
       >
         <div className="h-16 flex items-center px-5" style={{ borderBottom: `1px solid ${CUENTA_BORDER}` }}>
-          <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={140} height={32} priority className="w-auto" style={{ height: 32 }} />
+          {/* Logo clickable → home pública. cursor-pointer lo da el <a>;
+              hover:opacity-80 replica el patrón del logo del nav público. */}
+          <Link
+            href="/"
+            aria-label={t.cuenta.common.homeAria}
+            className="inline-flex items-center transition-opacity hover:opacity-80"
+          >
+            <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={140} height={32} priority className="w-auto" style={{ height: 32 }} />
+          </Link>
         </div>
         {nav}
         {logout}

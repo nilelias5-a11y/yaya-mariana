@@ -367,6 +367,7 @@ export const translations = {
         back: "Volver",
         error: "No ha sido posible completar la acción. Inténtalo de nuevo.",
         backHome: "Volver a la tienda",
+        homeAria: "Volver al inicio",
       },
       login: {
         title: "Acceder a mi cuenta",
@@ -869,6 +870,7 @@ export const translations = {
         back: "Tornar",
         error: "No s'ha pogut completar l'acció. Torna-ho a provar.",
         backHome: "Tornar a la botiga",
+        homeAria: "Tornar a l'inici",
       },
       login: {
         title: "Accedir al meu compte",
@@ -1371,6 +1373,7 @@ export const translations = {
         back: "Back",
         error: "We couldn't complete the action. Please try again.",
         backHome: "Back to the shop",
+        homeAria: "Back to home",
       },
       login: {
         title: "Sign in to your account",

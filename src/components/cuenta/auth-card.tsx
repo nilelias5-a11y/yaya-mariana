@@ -39,7 +39,15 @@ export function AuthCard({
           style={{ border: `1px solid ${CUENTA_BORDER}`, boxShadow: "0 1px 2px rgba(26,8,8,0.04)" }}
         >
           <div className="mb-7">
-            <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={150} height={34} priority className="w-auto mb-6" style={{ height: 34 }} />
+            {/* Logo clickable → home pública (mismo destino que "Volver al
+                inicio"). hover:opacity-80 como afford sutil; resto idéntico. */}
+            <Link
+              href="/"
+              aria-label={t.cuenta.common.homeAria}
+              className="inline-block mb-6 transition-opacity hover:opacity-80"
+            >
+              <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={150} height={34} priority className="w-auto" style={{ height: 34 }} />
+            </Link>
             <h1 className="font-serif text-[1.5rem] font-medium text-[#1a0808] tracking-tight">{title}</h1>
             {subtitle && <p className="mt-1.5 text-sm text-[#7a635f] leading-relaxed">{subtitle}</p>}
           </div>
