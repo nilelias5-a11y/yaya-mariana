@@ -50,18 +50,21 @@ export default function Cart() {
       /* CD-13 — FAB rebote ambiental: más pronunciado en primer ítem. */
       if (fabScope.current) {
         if (prev === 0) {
-          /* primer ítem: rebote más amplio */
+          /* primer ítem: rebote más amplio.
+             tween (no spring): Framer sólo admite 2 keyframes con spring; el
+             overshoot 1.18→0.96→1.04 ya está en los keyframes y el easing
+             warm-lux conserva la sensación de rebote sin crashear. */
           fabAnimate(
             fabScope.current,
             { scale: [1, 1.18, 0.96, 1.04, 1] },
-            { type: "spring", stiffness: 270, damping: 22 },
+            { type: "tween", duration: 0.5, ease: [0.19, 1, 0.22, 1] },
           );
         } else {
-          /* ítems adicionales: rebote sutil */
+          /* ítems adicionales: rebote sutil (mismo motivo: tween multi-keyframe). */
           fabAnimate(
             fabScope.current,
             { scale: [1, 1.08, 1] },
-            { type: "spring", stiffness: 280, damping: 20 },
+            { type: "tween", duration: 0.32, ease: [0.19, 1, 0.22, 1] },
           );
         }
       }
