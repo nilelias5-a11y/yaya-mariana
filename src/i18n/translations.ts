@@ -39,6 +39,11 @@ export const translations = {
         ],
         verTienda: "Ver tienda →",
       },
+      account: {
+        link: "Mi cuenta",
+        ariaLoggedIn: "Mi cuenta",
+        ariaLoggedOut: "Iniciar sesión",
+      },
     },
     stats: {
       labels: ["Del campo a la mesa", "Pesticidas", "Del campo a tu mesa", "Calidad premium"],
@@ -274,6 +279,18 @@ export const translations = {
         shipping: "Envío",
         shippingNote: "A calcular",
         total: "Total",
+      },
+      haveAccount: {
+        text: "¿Ya tienes cuenta?",
+        action: "Iniciar sesión",
+        suffix: "para autorrellenar tus datos",
+      },
+      autofill: {
+        emailNote: "Tu email registrado",
+        savedAddress: "Dirección guardada",
+        chooseAddress: "Elige una dirección guardada",
+        newAddress: "Nueva dirección",
+        saveAddress: "Guardar esta dirección en mi cuenta",
       },
     },
     cookieBanner: {
@@ -524,6 +541,11 @@ export const translations = {
         ],
         verTienda: "Veure botiga →",
       },
+      account: {
+        link: "El meu compte",
+        ariaLoggedIn: "El meu compte",
+        ariaLoggedOut: "Iniciar sessió",
+      },
     },
     stats: {
       labels: ["Del camp a taula", "Pesticides", "Del camp a taula", "Qualitat premium"],
@@ -759,6 +781,18 @@ export const translations = {
         shipping: "Enviament",
         shippingNote: "A calcular",
         total: "Total",
+      },
+      haveAccount: {
+        text: "Ja tens compte?",
+        action: "Iniciar sessió",
+        suffix: "per autocompletar les teves dades",
+      },
+      autofill: {
+        emailNote: "El teu email registrat",
+        savedAddress: "Adreça desada",
+        chooseAddress: "Tria una adreça desada",
+        newAddress: "Nova adreça",
+        saveAddress: "Desar aquesta adreça al meu compte",
       },
     },
     cookieBanner: {
@@ -1009,6 +1043,11 @@ export const translations = {
         ],
         verTienda: "See shop →",
       },
+      account: {
+        link: "My account",
+        ariaLoggedIn: "My account",
+        ariaLoggedOut: "Sign in",
+      },
     },
     stats: {
       labels: ["From field to table", "Pesticides", "From field to table", "Premium quality"],
@@ -1244,6 +1283,18 @@ export const translations = {
         shipping: "Shipping",
         shippingNote: "To be calculated",
         total: "Total",
+      },
+      haveAccount: {
+        text: "Already have an account?",
+        action: "Sign in",
+        suffix: "to autofill your details",
+      },
+      autofill: {
+        emailNote: "Your registered email",
+        savedAddress: "Saved address",
+        chooseAddress: "Choose a saved address",
+        newAddress: "New address",
+        saveAddress: "Save this address to my account",
       },
     },
     cookieBanner: {

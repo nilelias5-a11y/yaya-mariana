@@ -7,7 +7,13 @@ import { useLanguage } from "@/context/language-context";
 import { AuthCard } from "@/components/cuenta/auth-card";
 import { Field, Input, SolidButton, CUENTA_BORDER } from "@/components/cuenta/primitives";
 
-export default function LoginForm({ magicError }: { magicError: boolean }) {
+export default function LoginForm({
+  magicError,
+  redirectTo = "/cuenta",
+}: {
+  magicError: boolean;
+  redirectTo?: string;
+}) {
   const { t } = useLanguage();
   const c = t.cuenta;
   const router = useRouter();
@@ -35,7 +41,7 @@ export default function LoginForm({ magicError }: { magicError: boolean }) {
         setLoading(false);
         return;
       }
-      router.replace("/cuenta");
+      router.replace(redirectTo);
       router.refresh();
     } catch {
       setError(c.common.error);

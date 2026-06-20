@@ -9,6 +9,7 @@ import { useLanguage } from "@/context/language-context";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useActiveSection } from "@/hooks/use-active-section";
 import QuoteAuthorHalo from "@/components/easter-eggs/quote-author-halo";
+import AccountIcon from "@/components/ui/account-icon";
 import type { Lang } from "@/i18n/translations";
 
 /* HS-04 — keyword sets per lang for emphasis delay boost */
@@ -99,10 +100,12 @@ function MobileNav({
   navLinks,
   verTienda,
   menuLabel,
+  accountLabel,
 }: {
   navLinks: { label: string; href: string }[];
   verTienda: string;
   menuLabel: string;
+  accountLabel: string;
 }) {
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), []);
@@ -160,6 +163,17 @@ function MobileNav({
                 {label}
               </a>
             ))}
+            {/* T2 — acceso "Mi cuenta": entre los enlaces de sección y el CTA
+                tienda. Mismo estilo tipográfico que los demás links; hairline
+                superior sutil para separarlo de la navegación de sección. */}
+            <Link
+              href="/cuenta"
+              onClick={() => setOpen(false)}
+              className="font-sans font-medium flex items-center min-h-[44px] mt-1 pt-2"
+              style={{ fontSize: 15, color: "#1a0808", borderTop: "1px solid #f0e0e0" }}
+            >
+              {accountLabel}
+            </Link>
             <Link
               href="/checkout"
               onClick={() => setOpen(false)}
@@ -327,6 +341,8 @@ export default function Hero() {
 
         {/* Derecha: idioma + botón desktop + hamburguesa movil */}
         <div className="flex items-center gap-5">
+          {/* T1 — icono Mi cuenta (desktop), antes del selector de idioma. */}
+          <AccountIcon />
           <LanguageSelector />
           <MotionLink
             href="/checkout"
@@ -350,6 +366,7 @@ export default function Hero() {
             navLinks={navLinks}
             verTienda={t.nav.menu.verTienda}
             menuLabel={t.nav.menu.label}
+            accountLabel={t.nav.account.link}
           />
         </div>
       </nav>

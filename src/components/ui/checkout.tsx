@@ -2,11 +2,13 @@
 
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
 import { CardElement, Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
+import { useCuentaAuth } from "@/hooks/use-cuenta-auth";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -81,6 +83,18 @@ function CheckoutForm() {
      (aria-invalid + aria-describedby). */
   const [fieldErrors, setFieldErrors] = useState<CheckoutErrors>({});
 
+  /* T4/T5 — estado de sesión: banner para anónimos + autorrelleno para
+     clientes logueados. No bloquea el render (mientras carga, anon). */
+  const auth = useCuentaAuth();
+  const authUser = auth.status === "authed" ? auth.user : null;
+  const isAuthed = auth.status === "authed";
+  /* Dirección elegida del perfil ("new" = escribir una nueva). */
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("new");
+  const [saveAddress, setSaveAddress] = useState(false);
+  /* Autorrelleno único: en cuanto la sesión resuelve, prefijamos una vez y
+     dejamos que el cliente edite libremente (no machacamos sus cambios). */
+  const prefilledRef = useRef(false);
+
   /* CD-10 — document.title "Un momento" durante Stripe processing.
      Guardamos el titulo original antes del cambio y lo restauramos. */
   const originalTitleRef = useRef<string>("");
@@ -103,6 +117,42 @@ function CheckoutForm() {
       }
     };
   }, [loading]);
+
+  /* T5 — autorrelleno al resolver la sesión (una sola vez). Email, nombre y,
+     si hay direcciones guardadas, la primera. El email queda no editable. */
+  useEffect(() => {
+    if (!authUser || prefilledRef.current) return;
+    prefilledRef.current = true;
+    setName(authUser.nombre ?? "");
+    setEmail(authUser.email ?? "");
+    const first = authUser.addresses[0];
+    if (first) {
+      setSelectedAddressId(first.id);
+      setAddress(first.street ?? "");
+      setCity(first.city ?? "");
+      setZip(first.postalCode ?? "");
+    } else {
+      setSelectedAddressId("new");
+    }
+  }, [authUser]);
+
+  /* Cambio de dirección guardada en el desplegable. "new" limpia los campos
+     para escribir una nueva (y habilita el checkbox de guardar). */
+  function onSelectAddress(id: string) {
+    setSelectedAddressId(id);
+    if (id === "new") {
+      setAddress("");
+      setCity("");
+      setZip("");
+      return;
+    }
+    const a = authUser?.addresses.find((x) => x.id === id);
+    if (a) {
+      setAddress(a.street ?? "");
+      setCity(a.city ?? "");
+      setZip(a.postalCode ?? "");
+    }
+  }
 
   function messageFor(field: HTMLInputElement): string | null {
     if (field.validity.valid) return null;
@@ -190,6 +240,20 @@ function CheckoutForm() {
           });
         } catch (persistErr) {
           console.error("No se pudo registrar el pedido (lo reintentará el webhook):", persistErr);
+        }
+        /* T5 — guardar la dirección en el perfil si el cliente lo pidió.
+           Additive y NO bloqueante: independiente del pago y del pedido
+           (su fallo nunca afecta al éxito del checkout). */
+        if (isAuthed && saveAddress && selectedAddressId === "new") {
+          try {
+            await fetch("/api/cuenta/address", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ street: address, city, postalCode: zip, recipient: name }),
+            });
+          } catch (addrErr) {
+            console.error("No se pudo guardar la dirección en el perfil:", addrErr);
+          }
         }
         clearCart();
         setSuccess(true);
@@ -283,6 +347,23 @@ function CheckoutForm() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
           {/* Form — accessible validation con Constraint Validation API. */}
           <form onSubmit={handleSubmit} noValidate className="space-y-8">
+            {/* T4 — banner "¿Ya tienes cuenta?": sólo para anónimos. Si ya
+                hay sesión, no se muestra (los datos se autorrellenan). */}
+            {auth.status === "anon" && (
+              <div
+                className="rounded-xl px-4 py-3 text-sm flex flex-wrap items-center gap-x-1.5 gap-y-1"
+                style={{ backgroundColor: "#fdf0ef", border: "1px solid rgba(245,198,194,0.6)", color: "#7a3a3a" }}
+              >
+                <span>{t.checkout.haveAccount.text}</span>
+                <Link
+                  href={`/cuenta/login?redirect=${encodeURIComponent("/checkout")}`}
+                  className="font-semibold text-[#c0392b] hover:underline underline-offset-2"
+                >
+                  {t.checkout.haveAccount.action}
+                </Link>
+                <span>{t.checkout.haveAccount.suffix}</span>
+              </div>
+            )}
             <div>
               <h1 className="font-serif text-3xl md:text-4xl text-[#1a0808] mb-1">{t.checkout.title}</h1>
               <p className="text-sm text-[#7a3a3a]/60">{t.checkout.subtitle}</p>
@@ -327,10 +408,18 @@ function CheckoutForm() {
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); clearFieldError("email", e.target); }}
                     placeholder={t.checkout.fields.emailPlaceholder}
+                    /* T5 — si está logueado, el email es el de su cuenta y no
+                       es editable (evita pedidos a un email ajeno a la sesión). */
+                    readOnly={isAuthed}
                     aria-invalid={fieldErrors.email ? true : undefined}
-                    aria-describedby={fieldErrors.email ? "co-email-error" : undefined}
-                    className={inputClass}
+                    aria-describedby={isAuthed ? "co-email-note" : fieldErrors.email ? "co-email-error" : undefined}
+                    className={isAuthed ? `${inputClass} bg-[#faf3f2] text-[#7a3a3a]/80 cursor-default` : inputClass}
                   />
+                  {isAuthed && (
+                    <p id="co-email-note" className="text-xs text-[#7a3a3a]/55 mt-1">
+                      {t.checkout.autofill.emailNote}
+                    </p>
+                  )}
                 </Field>
               </div>
             </fieldset>
@@ -345,6 +434,32 @@ function CheckoutForm() {
                 {t.checkout.sections.shipping}
               </legend>
               <LegendRule />
+              {/* T5 — direcciones guardadas del perfil. Elegir una autorrellena
+                  los campos; "Nueva dirección" los limpia para escribir otra. */}
+              {isAuthed && authUser && authUser.addresses.length > 0 && (
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="co-saved-address"
+                    className="block text-xs font-semibold text-[#7a3a3a]/80 uppercase tracking-wide"
+                  >
+                    {t.checkout.autofill.savedAddress}
+                  </label>
+                  <select
+                    id="co-saved-address"
+                    value={selectedAddressId}
+                    onChange={(e) => onSelectAddress(e.target.value)}
+                    aria-label={t.checkout.autofill.chooseAddress}
+                    className={inputClass}
+                  >
+                    {authUser.addresses.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {[a.street, a.city, a.postalCode].filter(Boolean).join(", ")}
+                      </option>
+                    ))}
+                    <option value="new">{t.checkout.autofill.newAddress}</option>
+                  </select>
+                </div>
+              )}
               <Field label={t.checkout.fields.address} required htmlFor="co-address" error={fieldErrors.address}>
                 <input
                   id="co-address"
@@ -396,6 +511,19 @@ function CheckoutForm() {
                   />
                 </Field>
               </div>
+              {/* T5 — guardar la dirección nueva en el perfil (sólo logueado y
+                  escribiendo una dirección nueva). */}
+              {isAuthed && selectedAddressId === "new" && (
+                <label className="flex items-center gap-2 text-sm text-[#7a3a3a]/75 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={saveAddress}
+                    onChange={(e) => setSaveAddress(e.target.checked)}
+                    className="w-4 h-4 accent-[#c0392b]"
+                  />
+                  {t.checkout.autofill.saveAddress}
+                </label>
+              )}
             </fieldset>
 
             {/* Payment */}
