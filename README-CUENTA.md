@@ -49,6 +49,15 @@ La capa de datos (`src/lib/cuenta/db.ts`) habla con **Neon** vía el driver
 (nº correlativo + caché del PDF en base64). El esquema replica los tipos de
 `src/lib/cuenta/types.ts`.
 
+2ª tanda (TAREA 2, additive):
+
+- `cuenta_orders.payment_ref` — referencia del pago (PaymentIntent de Stripe).
+  Índice único parcial → la creación de pedido es **idempotente**.
+- `cuenta_sessions` — store de sesiones de cliente (`jti`) para **revocación
+  real** en logout (ver más abajo).
+- `admin_users` — credenciales del panel `/admin` (ver README-ADMIN.md).
+- `product_stock` — existencias por variedad + umbrales (panel `/admin`).
+
 ### Conectar a Neon
 
 1. Crea un proyecto en [neon.tech](https://neon.tech) y copia la
@@ -95,15 +104,46 @@ existen, o el seed de código en su defecto.
 - Tipografía del PDF: el wordmark usa una serif itálica (aprox. Playfair)
   y los datos una sans (aprox. Inter), con el logo raster embebido arriba.
 
+## Pedidos reales (checkout → Neon)
+
+Un pago con tarjeta ahora **crea el pedido** en `cuenta_orders` (antes el
+checkout sólo mostraba una pantalla de éxito sin guardar nada). Dos caminos
+que convergen en el mismo pedido (idempotente por `payment_ref`):
+
+1. **Endpoint de checkout** — `POST /api/checkout/complete`. Lo llama el
+   formulario al quedar el PaymentIntent en `succeeded`. Verifica el pago
+   contra Stripe (si la clave es real) y crea el pedido.
+2. **Webhook de Stripe** — `POST /api/stripe/webhook` (red de seguridad).
+   Verifica la firma (`STRIPE_WEBHOOK_SECRET`) y, ante `payment_intent.
+   succeeded`, reconstruye el pedido desde la `metadata` del pago. Gateado:
+   sin el secreto configurado responde 200 y no hace nada.
+
+Ambos usan el creador compartido `src/lib/cuenta/orders.ts`
+(`createOrderFromPayment`): **auto-registro** del usuario si el email no tiene
+cuenta, asignación de nº correlativo `YM-AAAA-NNNN` + factura `FCV-AAAA-NNNN`,
+y email de bienvenida (mock) en cuentas nuevas. El catálogo de producto vive
+en `src/lib/catalog.ts`.
+
+## Revocación de sesión (logout real)
+
+Cada sesión de cliente lleva un `jti` y se registra en `cuenta_sessions`. El
+**logout marca el `jti` como revocado**: un token ya emitido (incluso copiado)
+deja de dar acceso, sin esperar a que expire. La comprobación vive en
+`getCuentaUser` (runtime Node); el proxy Edge sólo verifica firma y **preserva
+el `jti`** al renovar. *Fail-open*: si la tabla no existe (migración
+pendiente) las sesiones siguen funcionando. Las sesiones legacy sin `jti` no
+son revocables (expiran solas).
+
 ## Variables de entorno (`.env.local`, gitignored)
 
 | Variable                | Descripción                                                        |
 | ----------------------- | ------------------------------------------------------------------ |
 | `DATABASE_URL`          | Connection string de Neon (PostgreSQL). **Requerida** para la zona cliente. |
 | `CUENTA_SESSION_SECRET` | Firma del JWT de sesión de cliente (HS256). Mín. 32 caracteres.   |
+| `STRIPE_SECRET_KEY`     | Clave secreta de Stripe. Si es **real** (`sk_test`/`sk_live`), el endpoint de checkout **verifica** el pago antes de crear el pedido. |
+| `STRIPE_WEBHOOK_SECRET` | Secreto `whsec_` del webhook. **Sin él, el webhook no procesa** (gateado). Se obtiene al crear el endpoint en el panel de Stripe / `stripe listen`. |
 | `EMAIL_FROM`            | Remitente de los emails (mock por ahora).                          |
 | `RESEND_API_KEY`        | *(placeholder, comentado)* clave de Resend cuando se conecte.      |
-| `STRIPE_WEBHOOK_SECRET` | *(placeholder, comentado)* para auto-registro tras checkout real.  |
 
 > La sesión de cliente dura **30 días** (cookie `cuenta_session`, httpOnly,
 > con renovación deslizante). El panel `/admin` usa su propia cookie y
@@ -135,9 +175,11 @@ al mock en JSON sin perder nada:
 ## Próximos pasos (cuando llegue Stripe real)
 
 1. ✅ ~~Sustituir `data/cuenta/*.json` por Postgres/Neon~~ — **hecho** en
-   FASE B (migración a Neon). Pendiente en una 2ª tanda: tablas
-   `admin_users`, `cuenta_sessions` (revocación) y `product_stock`.
-2. Webhook de Stripe (`STRIPE_WEBHOOK_SECRET`) → auto-registro con el email
-   del pedido + creación de la orden + envío de magic link de bienvenida.
-3. Conectar Resend en `src/lib/cuenta/email.ts` (la interfaz ya está).
-4. Seguimiento real con Sendcloud (rellenar `tracking_url`).
+   FASE B (migración a Neon).
+2. ✅ ~~Tablas `admin_users`, `cuenta_sessions` (revocación) y
+   `product_stock`~~ — **hecho** (2ª tanda, TAREA 2).
+3. ✅ ~~Webhook de Stripe → auto-registro + creación de la orden + magic
+   link de bienvenida~~ — **escrito** (TAREA 4); falta **probarlo** con las
+   claves test reales y configurar `STRIPE_WEBHOOK_SECRET`.
+4. Conectar Resend en `src/lib/cuenta/email.ts` (la interfaz ya está).
+5. Seguimiento real con Sendcloud (rellenar `tracking_url`).
