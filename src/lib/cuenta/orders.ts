@@ -100,19 +100,35 @@ export async function createOrderFromPayment(input: CreateOrderInput): Promise<C
     if (existing) return { order: existing, created: false, userCreated: false };
   }
 
-  // 2) Usuario: buscar o auto-registrar.
+  // 2) Usuario: buscar o auto-registrar (race-safe).
+  //    /api/checkout/complete y el webhook pueden correr en paralelo para un
+  //    email NUEVO: ambos ven "sin usuario" y ambos intentan crearlo. El
+  //    perdedor choca con el índice único `cuenta_users_email_key` (o con el
+  //    pre-check `EMAIL_TAKEN` de createUser). Igual que con `payment_ref` más
+  //    abajo, capturamos la colisión y re-leemos el usuario que creó el otro
+  //    camino, de modo que ambos convergen sin devolver un 500.
   let user = await getUserByEmail(input.email);
   let userCreated = false;
   if (!user) {
-    user = await createUser({
-      email: input.email,
-      nombre: input.nombre,
-      dni: input.dni,
-      passwordHash: null,
-      emailVerified: false,
-      addresses: [input.shippingAddress],
-    });
-    userCreated = true;
+    try {
+      user = await createUser({
+        email: input.email,
+        nombre: input.nombre,
+        dni: input.dni,
+        passwordHash: null,
+        emailVerified: false,
+        addresses: [input.shippingAddress],
+      });
+      userCreated = true;
+    } catch (e) {
+      const msg = (e as Error).message ?? "";
+      // Carrera: el otro camino creó el usuario entremedias → re-leer y seguir.
+      if (/EMAIL_TAKEN|cuenta_users_email_key|duplicate key/i.test(msg)) {
+        user = await getUserByEmail(input.email);
+      }
+      // Si el error no es de colisión (o la re-lectura falla), propagamos.
+      if (!user) throw e;
+    }
   }
 
   const billing: Order["billing"] = {
