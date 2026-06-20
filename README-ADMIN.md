@@ -1,7 +1,30 @@
 # Panel `/admin` — Yaya Mariana
 
-Acceso interno protegido por sesión JWT firmada. Datos del panel todavía
-son **mock** (se conectarán a Stripe/pedidos reales más adelante).
+Acceso interno protegido por sesión JWT firmada. Desde la 2ª tanda de BD
+(TAREA 1/2) el panel muestra **datos reales de Neon**: los pedidos provienen
+de `cuenta_orders` y el stock de `product_stock` (ya no hay mock).
+
+## Fuente de credenciales (Neon + fallback env)
+
+Las credenciales del admin viven en la tabla **`admin_users`** (usuario +
+hash bcrypt), sembrada por `npm run db:migrate` a partir de `ADMIN_USER` /
+`ADMIN_PASS_HASH`. El login (`/api/admin/login`) busca primero en la tabla y,
+si no hay registro o la BD falla, hace **fallback a las env vars** — así
+`/admin` no se rompe nunca. Para cambiar la contraseña puedes:
+
+- Editar el hash en `admin_users` directamente (SQL editor de Neon), **o**
+- Actualizar `ADMIN_PASS_HASH` en el entorno (ver más abajo) — sólo aplica si
+  no hay fila en `admin_users` para ese usuario.
+
+## Datos del dashboard
+
+- **Pedidos**: `cuenta_orders` (mismos que ve el cliente en `/cuenta`).
+  Estados de dominio: `pagado`, `preparacion`, `enviado`, `entregado`,
+  `cancelado`. La métrica «Ventas del mes» suma los pedidos no cancelados del
+  mes en curso; «Pedidos pendientes» = `pagado` + `preparacion`.
+- **Stock**: `product_stock` (variedad, unidades y umbrales `low`/`out` por
+  fila). Editable desde el SQL editor de Neon; el stock real lo aporta
+  J. Elías.
 
 ## Cómo entrar
 

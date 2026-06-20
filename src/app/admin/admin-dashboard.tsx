@@ -2,56 +2,42 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import type { OrderStatus } from "@/lib/cuenta/types";
+import type { AdminOrder, AdminStock } from "@/lib/admin/db";
 
 /* FASE A.5 · T2 — Dashboard del panel /admin (cliente).
  *
- * DATOS MOCK preparados para sustituirse por pedidos/stock reales al
- * integrar Stripe. Layout responsive con:
+ * TAREA 1 — los datos ahora son REALES (Neon): los pedidos (cuenta_orders) y
+ * el stock (product_stock) llegan como props desde el server component
+ * (admin/page.tsx); aquí sólo se presentan. Layout responsive con:
  * - Sidebar (Pedidos · Stock · Configuración · Cerrar sesión); en móvil
  *   se colapsa en un drawer con botón hamburguesa.
  * - Header con saludo del admin + reloj en vivo.
- * - Métricas clave (ventas mes, pendientes, stock crítico).
+ * - Métricas clave (ventas del mes, pendientes, stock crítico).
  * - Tabla de pedidos con filtros (estado, fecha).
- * - Stock con alertas visuales por umbral (verde >20, amarillo 5-20, rojo <5).
+ * - Stock con alertas visuales por umbral (de la propia fila product_stock).
  *
  * Paleta canónica respetada. Logout = formulario nativo a /api/admin/logout. */
 
-type OrderStatus = "pendiente" | "enviado" | "entregado";
-
-type Order = {
-  id: string;
-  customer: string;
-  city: string;
-  items: string;
-  total: number;
-  status: OrderStatus;
-  date: string;
-};
-
-const ORDERS: Order[] = [
-  { id: "YM-1045", customer: "Jordi Vila", city: "Girona", items: "1525 ×3", total: 22.5, status: "pendiente", date: "08/06/2026" },
-  { id: "YM-1044", customer: "Lucía Romero", city: "Sitges", items: "Mágnum ×1", total: 7.5, status: "pendiente", date: "07/06/2026" },
-  { id: "YM-1043", customer: "Marc Pujol", city: "Tarragona", items: "Dream ×1, 1525 ×1", total: 15.0, status: "enviado", date: "06/06/2026" },
-  { id: "YM-1042", customer: "Ana García", city: "Barcelona", items: "Mágnum ×2", total: 15.0, status: "entregado", date: "05/06/2026" },
-];
-
-const STOCK: { variety: string; units: number }[] = [
-  { variety: "Fresa Mágnum", units: 48 },
-  { variety: "Fresa Dream", units: 12 },
-  { variety: "Fresa Variedad 1525", units: 3 },
-];
-
+/* Estados de dominio (cuenta_orders) → estilo del badge, en el registro
+ * cromático cálido del panel. */
 const STATUS_STYLE: Record<OrderStatus, { bg: string; color: string; label: string }> = {
-  pendiente: { bg: "#fdf0ef", color: "#c0392b", label: "Pendiente" },
-  enviado: { bg: "#eef2fb", color: "#2c5282", label: "Enviado" },
+  pagado: { bg: "#eef2fb", color: "#2c5282", label: "Pagado" },
+  preparacion: { bg: "#fdf5e6", color: "#b8860b", label: "En preparación" },
+  enviado: { bg: "#eef7fb", color: "#2c7a93", label: "Enviado" },
   entregado: { bg: "#eaf7ee", color: "#1f7a43", label: "Entregado" },
+  cancelado: { bg: "#f3f0f0", color: "#7a3a3a", label: "Cancelado" },
 };
+const STATUS_ORDER: OrderStatus[] = ["pagado", "preparacion", "enviado", "entregado", "cancelado"];
+/* Estados que cuentan como "pendientes de gestión" en la métrica. */
+const PENDING_STATUSES: OrderStatus[] = ["pagado", "preparacion"];
 
-/* Umbrales de stock (T2): verde >20, amarillo 5-20, rojo <5. */
+/* Umbrales de stock por fila (product_stock): verde > low, amarillo
+ * out..low, rojo < out. */
 type StockLevel = "ok" | "low" | "out";
-function stockLevel(units: number): StockLevel {
-  if (units < 5) return "out";
-  if (units <= 20) return "low";
+function stockLevel(units: number, low: number, out: number): StockLevel {
+  if (units < out) return "out";
+  if (units <= low) return "low";
   return "ok";
 }
 const STOCK_STYLE: Record<StockLevel, { color: string; label: string }> = {
@@ -140,26 +126,48 @@ function StatCard({ label, value, accent }: { label: string; value: string; acce
   );
 }
 
-export default function AdminDashboard({ adminUser }: { adminUser: string }) {
+export default function AdminDashboard({
+  adminUser,
+  orders,
+  stock,
+}: {
+  adminUser: string;
+  orders: AdminOrder[];
+  stock: AdminStock[];
+}) {
   const [section, setSection] = useState<SectionKey>("pedidos");
   const [navOpen, setNavOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<"todos" | OrderStatus>("todos");
   const [dateFilter, setDateFilter] = useState<string>("todas");
 
-  const dates = useMemo(() => Array.from(new Set(ORDERS.map((o) => o.date))), []);
+  const dates = useMemo(() => Array.from(new Set(orders.map((o) => o.date))), [orders]);
   const filteredOrders = useMemo(
     () =>
-      ORDERS.filter(
+      orders.filter(
         (o) =>
           (statusFilter === "todos" || o.status === statusFilter) &&
           (dateFilter === "todas" || o.date === dateFilter),
       ),
-    [statusFilter, dateFilter],
+    [orders, statusFilter, dateFilter],
   );
 
-  const pendientes = ORDERS.filter((o) => o.status === "pendiente").length;
-  const ingresos = ORDERS.reduce((s, o) => s + o.total, 0);
-  const criticos = STOCK.filter((s) => stockLevel(s.units) !== "ok").length;
+  // Ventas del mes en curso (excluye cancelados).
+  const ingresos = useMemo(() => {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth();
+    return orders
+      .filter((o) => o.status !== "cancelado")
+      .filter((o) => {
+        const d = new Date(o.createdAt);
+        return d.getFullYear() === y && d.getMonth() === m;
+      })
+      .reduce((s, o) => s + o.total, 0);
+  }, [orders]);
+  const pendientes = orders.filter((o) => PENDING_STATUSES.includes(o.status)).length;
+  const criticos = stock.filter(
+    (s) => stockLevel(s.units, s.lowThreshold, s.outThreshold) !== "ok",
+  ).length;
 
   function selectSection(key: SectionKey) {
     setSection(key);
@@ -257,7 +265,7 @@ export default function AdminDashboard({ adminUser }: { adminUser: string }) {
             <StatCard label="Ventas del mes" value={`${ingresos.toFixed(2)}€`} />
             <StatCard label="Pedidos pendientes" value={String(pendientes)} accent={pendientes > 0 ? "#c0392b" : undefined} />
             <StatCard label="Stock crítico" value={String(criticos)} accent={criticos > 0 ? "#c0392b" : undefined} />
-            <StatCard label="Pedidos totales" value={String(ORDERS.length)} />
+            <StatCard label="Pedidos totales" value={String(orders.length)} />
           </div>
 
           {section === "pedidos" && (
@@ -274,9 +282,9 @@ export default function AdminDashboard({ adminUser }: { adminUser: string }) {
                       className="rounded-xl border border-[#f5c6c2] bg-white px-3 py-2 text-sm text-[#1a0808] focus:outline-none focus:border-[#c0392b] min-h-[44px]"
                     >
                       <option value="todos">Todos</option>
-                      <option value="pendiente">Pendiente</option>
-                      <option value="enviado">Enviado</option>
-                      <option value="entregado">Entregado</option>
+                      {STATUS_ORDER.map((s) => (
+                        <option key={s} value={s}>{STATUS_STYLE[s].label}</option>
+                      ))}
                     </select>
                   </label>
                   <label className="text-sm">
@@ -346,8 +354,8 @@ export default function AdminDashboard({ adminUser }: { adminUser: string }) {
             <section aria-labelledby="sec-stock">
               <h2 id="sec-stock" className="font-serif text-xl text-[#1a0808] mb-4">Stock por variedad</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {STOCK.map((s) => {
-                  const level = stockLevel(s.units);
+                {stock.map((s) => {
+                  const level = stockLevel(s.units, s.lowThreshold, s.outThreshold);
                   const st = STOCK_STYLE[level];
                   return (
                     <div
