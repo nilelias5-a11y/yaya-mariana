@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmail, getOrdersByUser } from "@/lib/cuenta/db";
 import { verifyPassword } from "@/lib/cuenta/password";
-import { createCuentaSession, CUENTA_COOKIE, CUENTA_TTL_SECONDS, cuentaCookieOptions } from "@/lib/cuenta/auth";
+import { createCuentaSession, newSessionId, CUENTA_COOKIE, CUENTA_TTL_SECONDS, cuentaCookieOptions } from "@/lib/cuenta/auth";
+import { recordSession } from "@/lib/cuenta/sessions";
 
 /* FASE B — Login de cliente. Dos modos:
  *  - { email, password }            → contraseña permanente.
@@ -40,7 +41,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "invalid" }, { status: 401 });
   }
 
-  const token = await createCuentaSession(user.id, user.email);
+  const jti = newSessionId();
+  await recordSession(jti, user.id, CUENTA_TTL_SECONDS);
+  const token = await createCuentaSession(user.id, user.email, jti);
   const res = NextResponse.json({ ok: true });
   res.cookies.set(CUENTA_COOKIE, token, cuentaCookieOptions(CUENTA_TTL_SECONDS));
   return res;

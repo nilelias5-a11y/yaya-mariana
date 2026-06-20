@@ -6,14 +6,18 @@ import {
   createSessionToken,
   sessionCookieOptions,
 } from "@/lib/auth";
+import { getAdminUserByUsername } from "@/lib/admin/db";
 
 /* FASE A.5 · T2 — Login del panel /admin endurecido.
  *
- * - Verifica usuario contra ADMIN_USER y contraseña contra ADMIN_PASS_HASH
- *   (hash bcrypt; nunca texto plano).
+ * - Verifica usuario + contraseña (hash bcrypt; nunca texto plano).
  * - Si es válido, emite un JWT firmado (8h) en cookie httpOnly.
  * - Responde JSON (el formulario es un client component con fetch +
  *   estado de carga). No filtra qué credencial falló.
+ *
+ * TAREA 2 — fuente de credenciales: primero la tabla admin_users (Neon);
+ * si no hay registro (o la BD falla) hace FALLBACK a las env vars
+ * ADMIN_USER/ADMIN_PASS_HASH, de modo que /admin no se rompe nunca.
  *
  * Runtime Node (por defecto en route handlers) — necesario para bcrypt. */
 
@@ -40,8 +44,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
   }
 
-  const okUser = process.env.ADMIN_USER ?? "";
-  const okHash = process.env.ADMIN_PASS_HASH ?? "";
+  // Fuente preferente: admin_users (Neon). Fallback: env vars.
+  const dbUser = await getAdminUserByUsername(user);
+  let okUser = "";
+  let okHash = "";
+  if (dbUser) {
+    okUser = dbUser.username;
+    okHash = dbUser.passwordHash;
+  } else {
+    okUser = process.env.ADMIN_USER ?? "";
+    okHash = process.env.ADMIN_PASS_HASH ?? "";
+  }
 
   if (okUser === "" || okHash === "") {
     // Configuración incompleta del servidor: no revelar detalles.

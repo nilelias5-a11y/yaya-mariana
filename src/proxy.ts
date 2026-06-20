@@ -65,9 +65,12 @@ async function handleCuenta(req: NextRequest) {
     return res;
   }
   const res = NextResponse.next();
+  // Renovación deslizante: re-emite el token PRESERVANDO el `jti` para que la
+  // revocación (cuenta_sessions) persista entre visitas. La comprobación de
+  // revocación vive en runtime Node (getCuentaUser), no aquí en Edge.
   res.cookies.set(
     CUENTA_COOKIE,
-    await createCuentaSession(session.sub, session.email),
+    await createCuentaSession(session.sub, session.email, session.jti),
     cuentaCookieOptions(CUENTA_TTL_SECONDS),
   );
   return res;

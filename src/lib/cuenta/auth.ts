@@ -28,14 +28,30 @@ function getSecretKey(): Uint8Array {
 
 export type CuentaSession = JWTPayload & { sub: string; email: string };
 
-/** Firma un token de sesión de cliente (30 días). */
-export async function createCuentaSession(userId: string, email: string): Promise<string> {
-  return new SignJWT({ email })
+/** Firma un token de sesión de cliente (30 días).
+ *
+ * `jti` (TAREA 2): identificador de sesión para revocación. Al emitir una
+ * sesión NUEVA (login / magic-link) se genera uno y se registra en
+ * cuenta_sessions; el proxy lo PRESERVA al renovar (renovación deslizante)
+ * para que la revocación persista entre visitas. Las sesiones legacy sin
+ * `jti` siguen siendo válidas (no revocables). */
+export async function createCuentaSession(
+  userId: string,
+  email: string,
+  jti?: string,
+): Promise<string> {
+  const builder = new SignJWT({ email })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(userId)
     .setIssuedAt()
-    .setExpirationTime(`${CUENTA_TTL_SECONDS}s`)
-    .sign(getSecretKey());
+    .setExpirationTime(`${CUENTA_TTL_SECONDS}s`);
+  if (jti) builder.setJti(jti);
+  return builder.sign(getSecretKey());
+}
+
+/** Genera un identificador de sesión (jti) aleatorio. */
+export function newSessionId(): string {
+  return `cs_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 12)}`;
 }
 
 export async function verifyCuentaSession(

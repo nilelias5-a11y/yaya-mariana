@@ -3,10 +3,12 @@ import { getUserByEmail, updateUser } from "@/lib/cuenta/db";
 import {
   verifyMagicToken,
   createCuentaSession,
+  newSessionId,
   CUENTA_COOKIE,
   CUENTA_TTL_SECONDS,
   cuentaCookieOptions,
 } from "@/lib/cuenta/auth";
+import { recordSession } from "@/lib/cuenta/sessions";
 
 /* FASE B — Verificación de magic link. GET ?token=...
  * Si el token es válido (15 min), marca el email como verificado, emite la
@@ -34,7 +36,9 @@ export async function GET(req: NextRequest) {
 
   if (!user.emailVerified) await updateUser(user.id, { emailVerified: true });
 
-  const sessionToken = await createCuentaSession(user.id, user.email);
+  const jti = newSessionId();
+  await recordSession(jti, user.id, CUENTA_TTL_SECONDS);
+  const sessionToken = await createCuentaSession(user.id, user.email, jti);
   const dest = req.nextUrl.clone();
   dest.pathname = "/cuenta";
   dest.search = "";
