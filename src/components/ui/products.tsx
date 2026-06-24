@@ -300,8 +300,13 @@ function ProductCard({
               <span className="numerals-tabular text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
               <span className="text-xs text-[#7a3a3a]/50 ml-1.5">/ 500g</span>
             </div>
+            {/* "Ver más" lleva a la seccion de productos (#productos), NO al
+                pago: coherente con "Ver tienda" y el footer. Un boton de
+                "ver/explorar" nunca debe saltar al checkout; el pago real
+                solo desde el carrito / "Comprar ahora". (No existe pagina de
+                detalle de producto todavia; #productos es el destino seguro.) */}
             <Link
-              href="/checkout"
+              href="#productos"
               className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[#c0392b]/70 hover:text-[#c0392b] transition-colors duration-200"
             >
               {viewMoreLabel}
