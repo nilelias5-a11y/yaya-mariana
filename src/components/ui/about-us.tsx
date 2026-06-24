@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useLanguage } from "@/context/language-context";
 import OrnamentBreath from "@/components/easter-eggs/ornament-breath";
 
-/* Ver tienda → /checkout vía Next <Link> (navegación cliente; evita la
-   recarga completa que vaciaba el carrito y reiniciaba el idioma). */
+/* Ver tienda → #productos (sección de fresas de la home) vía Next <Link>
+   (navegación cliente, scroll a ancla; evita la recarga completa que
+   vaciaba el carrito y reiniciaba el idioma). Antes apuntaba a /checkout. */
 const MotionLink = motion.create(Link);
 
 export default function AboutUs() {
@@ -127,7 +128,7 @@ export default function AboutUs() {
 
           <div className="mt-8 flex items-center gap-4">
             <MotionLink
-              href="/checkout"
+              href="#productos"
               className="inline-flex items-center gap-2 bg-[#c0392b] text-white text-sm font-semibold px-6 py-3 rounded-full"
               whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(192,57,43,0.35)" }}
               whileTap={{ scale: 0.97 }}

@@ -21,9 +21,10 @@ const EMPHASIS_WORDS: Record<Lang, string[]> = {
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-/* CTA "Ver tienda" → /checkout vía Next <Link> (navegación cliente).
-   Antes era un <a> que forzaba recarga completa: perdía el carrito en
-   memoria y reiniciaba el contexto de idioma. MotionLink conserva las
+/* CTA "Ver tienda" → #productos (sección de fresas de la home) vía Next
+   <Link> (navegación cliente, scroll a ancla). Antes apuntaba a /checkout
+   (pago directo). MotionLink/Link evita la recarga completa que perdía el
+   carrito en memoria y reiniciaba el contexto de idioma; conserva las
    animaciones framer-motion sobre el enlace de Next. */
 const MotionLink = motion.create(Link);
 
@@ -175,7 +176,7 @@ function MobileNav({
               {accountLabel}
             </Link>
             <Link
-              href="/checkout"
+              href="#productos"
               onClick={() => setOpen(false)}
               className="mt-3 inline-flex items-center justify-center font-sans font-semibold text-white"
               style={{ backgroundColor: "#c0392b", borderRadius: 6, padding: "11px 20px", fontSize: 14, minHeight: 44 }}
@@ -345,7 +346,7 @@ export default function Hero() {
           <AccountIcon />
           <LanguageSelector />
           <MotionLink
-            href="/checkout"
+            href="#productos"
             className="hidden md:inline-flex items-center justify-center font-sans font-semibold text-white overflow-hidden"
             style={{ backgroundColor: "#c0392b", borderRadius: 6, padding: "10px 20px", fontSize: 14 }}
             variants={{ rest: { scale: 1, boxShadow: "0 0 0 0px rgba(192,57,43,0)" }, hover: { scale: 1.04, boxShadow: "0 6px 20px rgba(192,57,43,0.35)", backgroundColor: "#a93226" } }}
