@@ -135,27 +135,6 @@
   mix-blend-mode: multiply;
 }
 
-/* a11y — skip-link. Primer elemento focusable del <body>. Invisible
-   por defecto (top: -3rem fuera de viewport), se desliza a la vista
-   solo al recibir foco (Tab desde el inicio de la pagina). */
-.skip-link {
-  position: absolute;
-  left: 8px;
-  top: -3rem;
-  z-index: 100;
-  padding: 8px 16px;
-  background-color: #c0392b;
-  color: #ffffff;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
-  transition: top 0.2s ease;
-}
-.skip-link:focus {
-  top: 8px;
-}
-
 /* ============================================================
    ENHANCE-1 — Fundación del sistema (E1, 2026-05-25)
    Tokens, utilities y bases aditivas para los enhancements estilo

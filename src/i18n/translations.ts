@@ -2,7 +2,6 @@ export type Lang = "es" | "ca" | "en";
 
 export const translations = {
   es: {
-    skipLink: "Saltar al contenido",
     formErrors: {
       required: "Este campo es obligatorio.",
       email: "Introduce un correo electrónico válido.",
@@ -505,7 +504,6 @@ export const translations = {
     },
   },
   ca: {
-    skipLink: "Salta al contingut",
     formErrors: {
       required: "Aquest camp és obligatori.",
       email: "Introdueix una adreça de correu vàlida.",
@@ -1008,7 +1006,6 @@ export const translations = {
     },
   },
   en: {
-    skipLink: "Skip to content",
     formErrors: {
       required: "This field is required.",
       email: "Enter a valid email address.",
