@@ -17,7 +17,7 @@ export default function AboutUs() {
     /* ENHANCE-3 — `relative` para anclar la capa de textura de papel
        absoluta sobre la seccion sin tocar fondo bg-white.
        CP-07 — `section-warm-veil` añade velo terracota 2% via ::before. */
-    <section id="sobre-nosotros" className="relative section-warm-veil bg-white py-20 px-6">
+    <section id="sobre-nosotros" className="relative section-warm-veil bg-white py-20 px-6 overflow-x-clip">
       {/* ENHANCE-3 — Overlay textura de papel envejecido. SVG turbulence
           tintando hacia ink-warm (#7a3a3a) via mix-blend-multiply al 3%.
           Da sensacion de carta de receta, no de marketing. Cero impacto

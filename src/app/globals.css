@@ -124,13 +124,16 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Evita scroll horizontal en movil: las animaciones de entrada
-       (Framer Motion `initial={{ x: ±80 }}` con whileInView) dejan
-       elementos trasladados fuera del lienzo mientras estan fuera de
-       vista, ensanchando el scroll y mostrando una franja lateral al
-       hacer zoom. `clip` los recorta sin crear contexto de scroll, asi
-       que la nav sticky sigue funcionando (a diferencia de overflow:hidden). */
-    overflow-x: clip;
+    /* El scroll horizontal en movil se arreglo DE RAIZ donde nacia: las
+       animaciones de entrada (Framer Motion `initial={{ x: ±80 }}` /
+       `x: -60` con whileInView) dejaban el card de Contacto y el bloque
+       de Sobre-nosotros trasladados fuera del lienzo mientras la seccion
+       estaba fuera de vista, ensanchando el scroll y mostrando la franja
+       al hacer zoom. Ahora cada seccion afectada lleva `overflow-x: clip`
+       en su propio contenedor (contact.tsx, about-us.tsx), conteniendo el
+       desbordamiento en su origen. Verificado: overflow real = 0px en
+       320/375/414/768 sin necesidad del clip global, que se elimina por
+       innecesario (era una tirita sobre el sintoma). */
   }
   html {
     @apply font-sans;
