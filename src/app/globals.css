@@ -124,6 +124,13 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Evita scroll horizontal en movil: las animaciones de entrada
+       (Framer Motion `initial={{ x: ±80 }}` con whileInView) dejan
+       elementos trasladados fuera del lienzo mientras estan fuera de
+       vista, ensanchando el scroll y mostrando una franja lateral al
+       hacer zoom. `clip` los recorta sin crear contexto de scroll, asi
+       que la nav sticky sigue funcionando (a diferencia de overflow:hidden). */
+    overflow-x: clip;
   }
   html {
     @apply font-sans;
