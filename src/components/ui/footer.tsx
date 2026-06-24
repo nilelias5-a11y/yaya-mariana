@@ -7,7 +7,7 @@ import { useLanguage } from "@/context/language-context";
 
 /* Enlaces internos del footer vía Next <Link> (navegación cliente:
    preserva el carrito en memoria y el contexto de idioma). Cubre rutas
-   (/checkout, páginas legales) y anclas de misma página (#sección). */
+   (páginas legales) y anclas de misma página (#sección). */
 const MotionLink = motion.create(Link);
 
 /* ENHANCE-5 socials reorder: Instagram primero (orden de relevancia
@@ -79,15 +79,18 @@ export default function Footer() {
   /* Enlaces legales: ahora apuntan a las paginas internas reales
      (T5: aviso-legal, privacidad, cookies, terminos, devoluciones).
      blog -> #sobre-nosotros (lo mas cercano a "story" sin pagina propia);
-     shipping -> #contacto (preguntar por envios via contacto). */
+     shipping -> #contacto (preguntar por envios via contacto).
+     shop -> #productos (seccion de fresas de la home): "ver/explorar
+     producto" nunca lleva directo al pago; el checkout real solo desde el
+     carrito y el boton "Comprar". */
   const navLinks = [
     {
       heading: t.footer.shop,
       items: [
-        { label: "Fresa Mágnum", href: "/checkout" },
-        { label: "Fresa Dream", href: "/checkout" },
-        { label: "Fresa Variedad 1525", href: "/checkout" },
-        { label: t.footer.viewAllProducts, href: "/checkout" },
+        { label: "Fresa Mágnum", href: "#productos" },
+        { label: "Fresa Dream", href: "#productos" },
+        { label: "Fresa Variedad 1525", href: "#productos" },
+        { label: t.footer.viewAllProducts, href: "#productos" },
       ],
     },
     {
