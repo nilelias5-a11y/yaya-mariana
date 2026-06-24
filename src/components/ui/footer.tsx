@@ -177,18 +177,28 @@ export default function Footer() {
                     "radial-gradient(ellipse 80px 28px at center, rgba(232,196,191,0.12) 0%, transparent 70%)",
                 }}
               />
-              {/* E9 (BUG fix): src antes apuntaba al PNG vectorial alojado
-                  en `yayamariana.com` (dominio legacy lechugas) — riesgo
-                  de servir el logo de la marca abandonada o un 404. Ahora
-                  usa el asset local del Hero. `brightness-0 invert` lo
-                  blanquea sobre el footer maroon. */}
-              <Image
-                src="/logo-nuevo.jpg"
-                alt="Yaya Mariana"
-                width={38}
-                height={38}
-                className="h-[38px] w-auto brightness-0 invert mb-3 relative"
-              />
+              {/* E9 (BUG fix): src local (no el dominio legacy lechugas).
+                  Antes `brightness-0 invert` lo aplanaba a un cuadrado blanco
+                  solido (el JPEG es opaco) y se perdia el emblema. logo-nuevo
+                  es un retrato circular de la Yaya con el cesto (lienzo 500x500
+                  cuadrado): ahora se muestra A COLOR como medallon circular
+                  (`rounded-full` recorta el lienzo al circulo del emblema, sin
+                  esquinas claras sobre el maroon) con un anillo cream-rosa
+                  sutil que lo separa del fondo oscuro. Clickable a home como
+                  el resto de logos. */}
+              <Link
+                href="/"
+                aria-label="Yaya Mariana — inicio"
+                className="inline-block mb-3 relative"
+              >
+                <Image
+                  src="/logo-nuevo.jpg"
+                  alt="Yaya Mariana"
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 rounded-full object-cover ring-1 ring-[rgba(232,196,191,0.25)] transition-transform duration-200 group-hover/logo:scale-[1.03]"
+                />
+              </Link>
               {/* ENHANCE-5: wordmark caligrafico secundario (Playfair italic).
                   ONE script element of the footer viewport — refuerza tono
                   tributo bajo el lockup principal. Tooltip discreto Capa B. */}
