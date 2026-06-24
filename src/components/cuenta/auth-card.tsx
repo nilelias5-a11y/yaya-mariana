@@ -46,7 +46,7 @@ export function AuthCard({
               aria-label={t.cuenta.common.homeAria}
               className="inline-block mb-6 transition-opacity hover:opacity-80"
             >
-              <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={150} height={34} priority className="w-auto" style={{ height: 34 }} />
+              <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={34} height={34} priority className="w-auto" style={{ height: 34 }} />
             </Link>
             <h1 className="font-serif text-[1.5rem] font-medium text-[#1a0808] tracking-tight">{title}</h1>
             {subtitle && <p className="mt-1.5 text-sm text-[#7a635f] leading-relaxed">{subtitle}</p>}

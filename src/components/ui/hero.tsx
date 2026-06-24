@@ -280,7 +280,7 @@ export default function Hero() {
           <Image
             src="/logo-nuevo.jpg"
             alt="Yaya Mariana"
-            width={254}
+            width={56}
             height={56}
             priority
             loading="eager"

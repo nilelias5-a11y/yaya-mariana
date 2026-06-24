@@ -110,7 +110,7 @@ export function CuentaShell({ children }: { children: React.ReactNode }) {
             aria-label={t.cuenta.common.homeAria}
             className="inline-flex items-center transition-opacity hover:opacity-80"
           >
-            <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={140} height={32} priority className="w-auto" style={{ height: 32 }} />
+            <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={32} height={32} priority className="w-auto" style={{ height: 32 }} />
           </Link>
         </div>
         {nav}

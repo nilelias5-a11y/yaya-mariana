@@ -30,7 +30,7 @@ export default function LegalPage({ doc }: { doc: LegalDoc }) {
           <Image
             src="/logo-nuevo.jpg"
             alt="Yaya Mariana"
-            width={200}
+            width={44}
             height={44}
             priority
             className="w-auto"

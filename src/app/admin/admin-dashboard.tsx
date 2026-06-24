@@ -194,7 +194,7 @@ export default function AdminDashboard({
         style={{ borderRight: "1px solid rgba(245,198,194,0.7)" }}
       >
         <div className="h-[72px] flex items-center px-5" style={{ borderBottom: "1px solid rgba(245,198,194,0.7)" }}>
-          <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={150} height={34} priority className="w-auto" style={{ height: 34 }} />
+          <Image src="/logo-nuevo.jpg" alt="Yaya Mariana" width={34} height={34} priority className="w-auto" style={{ height: 34 }} />
         </div>
 
         <nav className="flex-1 px-3 py-5 space-y-1" aria-label="Secciones del panel">

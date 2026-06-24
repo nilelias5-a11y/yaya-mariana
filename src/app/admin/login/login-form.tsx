@@ -94,7 +94,7 @@ export default function LoginForm() {
           <Image
             src="/logo-nuevo.jpg"
             alt="Yaya Mariana"
-            width={180}
+            width={40}
             height={40}
             priority
             className="w-auto mb-4"

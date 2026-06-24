@@ -185,8 +185,8 @@ export default function Footer() {
               <Image
                 src="/logo-nuevo.jpg"
                 alt="Yaya Mariana"
-                width={140}
-                height={40}
+                width={38}
+                height={38}
                 className="h-[38px] w-auto brightness-0 invert mb-3 relative"
               />
               {/* ENHANCE-5: wordmark caligrafico secundario (Playfair italic).
