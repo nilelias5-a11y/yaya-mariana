@@ -393,6 +393,9 @@ const EMPTY_ADDR: AddrForm = {
   country: "",
   phone: "",
 };
+/* Mejora 4 — formulario de seguimiento de envío. */
+type TrackForm = { carrier: string; number: string; url: string; note: string };
+const EMPTY_TRACK: TrackForm = { carrier: "", number: "", url: "", note: "" };
 function AddrInput({
   label,
   value,
@@ -432,9 +435,16 @@ function OrderDetailDrawer({
   const [addr, setAddr] = useState<AddrForm>(EMPTY_ADDR);
   const [saving, setSaving] = useState(false);
   const [addrMsg, setAddrMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  // MEJORA 4 — edición de seguimiento
+  const [trackEditing, setTrackEditing] = useState(false);
+  const [track, setTrack] = useState<TrackForm>(EMPTY_TRACK);
+  const [trackSaving, setTrackSaving] = useState(false);
+  const [trackMsg, setTrackMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
-  // Solo editable antes de enviar.
+  // Dirección: solo editable antes de enviar. Tracking: al preparar/enviar/entregar.
   const addressEditable = detail?.status === "pagado" || detail?.status === "preparacion";
+  const trackingEditable =
+    detail?.status === "preparacion" || detail?.status === "enviado" || detail?.status === "entregado";
 
   function startEditAddress() {
     if (!detail) return;
@@ -485,6 +495,44 @@ function OrderDetailDrawer({
       setAddrMsg({ ok: false, text: "Error de red." });
     } finally {
       setSaving(false);
+    }
+  }
+
+  function startEditTracking() {
+    if (!detail) return;
+    setTrack({ ...detail.tracking });
+    setTrackMsg(null);
+    setTrackEditing(true);
+  }
+
+  async function saveTracking() {
+    setTrackSaving(true);
+    setTrackMsg(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${encodeURIComponent(orderNumber)}/tracking`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(track),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; tracking?: AdminOrderDetail["tracking"] };
+      if (!res.ok || !data.ok || !data.tracking) {
+        setTrackMsg({
+          ok: false,
+          text:
+            res.status === 422
+              ? "No editable en este estado del pedido."
+              : "No se pudo guardar. Revisa la URL (debe empezar por http).",
+        });
+        return;
+      }
+      const saved = data.tracking;
+      setDetail((prev) => (prev ? { ...prev, tracking: saved } : prev));
+      setTrackEditing(false);
+      setTrackMsg({ ok: true, text: "Seguimiento actualizado." });
+    } catch {
+      setTrackMsg({ ok: false, text: "Error de red." });
+    } finally {
+      setTrackSaving(false);
     }
   }
 
@@ -652,6 +700,81 @@ function OrderDetailDrawer({
                   </div>
                 </div>
               </DetailSection>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[#7a3a3a]/55">Envío / seguimiento</p>
+                  {trackingEditable && !trackEditing && (
+                    <button
+                      type="button"
+                      onClick={startEditTracking}
+                      className="text-xs font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors"
+                    >
+                      {detail.tracking.carrier || detail.tracking.number || detail.tracking.url || detail.tracking.note ? "Editar" : "Añadir"}
+                    </button>
+                  )}
+                </div>
+                {!trackEditing ? (
+                  <div className="space-y-1">
+                    {detail.tracking.carrier || detail.tracking.number || detail.tracking.url || detail.tracking.note ? (
+                      <>
+                        {detail.tracking.carrier && <DetailRow label="Mensajería" value={detail.tracking.carrier} />}
+                        {detail.tracking.number && <DetailRow label="Nº seguimiento" value={detail.tracking.number} />}
+                        {detail.tracking.url && (
+                          <a
+                            href={detail.tracking.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block text-[#c0392b] hover:underline break-all"
+                          >
+                            Abrir seguimiento →
+                          </a>
+                        )}
+                        {detail.tracking.note && <p className="text-[#7a3a3a]/75">{detail.tracking.note}</p>}
+                      </>
+                    ) : (
+                      <p className="text-[#7a3a3a]/50 italic">Sin seguimiento todavía.</p>
+                    )}
+                    {!trackingEditable && (
+                      <p className="text-[11px] text-[#7a3a3a]/45 mt-1 italic">
+                        El seguimiento se añade al preparar/enviar el pedido.
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <AddrInput label="Mensajería (o 'Reparto propio')" value={track.carrier} onChange={(v) => setTrack({ ...track, carrier: v })} />
+                    <AddrInput label="Nº de seguimiento" value={track.number} onChange={(v) => setTrack({ ...track, number: v })} />
+                    <AddrInput label="URL de seguimiento" value={track.url} onChange={(v) => setTrack({ ...track, url: v })} />
+                    <AddrInput label="Nota" value={track.note} onChange={(v) => setTrack({ ...track, note: v })} />
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={saveTracking}
+                        disabled={trackSaving}
+                        className="flex-1 py-2 rounded-xl text-sm font-bold text-white transition-opacity disabled:opacity-50"
+                        style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
+                      >
+                        {trackSaving ? "Guardando…" : "Guardar seguimiento"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setTrackEditing(false); setTrackMsg(null); }}
+                        disabled={trackSaving}
+                        className="px-4 py-2 rounded-xl text-sm font-semibold text-[#7a3a3a] transition-colors hover:bg-[rgba(245,198,194,0.25)]"
+                        style={{ border: "1px solid rgba(245,198,194,0.7)" }}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {trackMsg && (
+                  <p className={`text-xs mt-2 font-semibold ${trackMsg.ok ? "text-[#1f7a43]" : "text-[#c0392b]"}`}>
+                    {trackMsg.text}
+                  </p>
+                )}
+              </div>
 
               <DetailSection title="Pedido">
                 <DetailRow label="Fecha" value={detail.date} />

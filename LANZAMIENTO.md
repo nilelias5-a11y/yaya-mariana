@@ -170,6 +170,8 @@ Todas en **Vercel → Settings → Environment Variables (Production)** (y en `.
 | `STRIPE_WEBHOOK_SECRET` | Webhook Stripe | `whsec_` live nuevo (§B.3) |
 | `RESEND_API_KEY` | Email | Añadir cuando haya dominio (§C) |
 | `EMAIL_FROM` | Email | Remitente del dominio verificado (§C) |
+| `SHIPPING_PROVIDER_PUBLIC_KEY` | Tracking auto (opcional) | Solo si se automatiza el envío (§I). Sin esto → tracking manual |
+| `SHIPPING_PROVIDER_SECRET_KEY` | Tracking auto (opcional) | Idem |
 
 > **Nota:** no hay clave de Anthropic en el proyecto (el antiguo "chat IA" se sustituyó por WhatsApp). El pendiente histórico de "rotar API key de Anthropic" **ya no aplica**.
 
@@ -202,6 +204,35 @@ Todas en **Vercel → Settings → Environment Variables (Production)** (y en `.
    - [ ] `robots.txt` y `sitemap.xml` apuntan al dominio real; la web indexa (no `noindex`).
 4. **Reembolsar** la compra de prueba en Stripe.
 5. Dar de alta en **Google Search Console** + enviar sitemap.
+
+---
+
+## §I — Envíos y seguimiento (tracking)
+
+**Funciona YA, sin nada que activar** (tracking MANUAL universal): desde
+**/admin → detalle de pedido → "Envío / seguimiento"** se puede meter a mano la
+mensajería, el nº de seguimiento, la URL y/o una nota, en cualquier pedido en
+`preparacion`/`enviado`/`entregado`. El cliente lo ve en `/cuenta/pedidos/[id]`
+(botón "Seguir el envío" si hay URL, o el texto si no). **Vale para cualquier
+mensajería (Correos, SEUR, etc.) o reparto propio.** No requiere ninguna cuenta
+ni key.
+
+**Automatizar el tracking (opcional, futuro) — esqueleto listo en
+`src/lib/shipping/provider.ts`, INACTIVO:**
+
+- [ ] Decidir la **mensajería** (Sendcloud, Correos, SEUR, propio…) — **[J. Elías]**.
+  > ⚠️ La automatización completa depende de decisiones de negocio que aún no
+  > tenemos: **mensajería, tarifas, packaging/dimensiones, contrato**. Sin eso no
+  > se puede cerrar. Mientras tanto, el **tracking manual cubre todo**.
+- [ ] Crear cuenta en el proveedor elegido y obtener sus credenciales — **[J. Elías]**.
+- [ ] Poner `SHIPPING_PROVIDER_PUBLIC_KEY` + `SHIPPING_PROVIDER_SECRET_KEY` en
+  Vercel (nombres **genéricos** a propósito, no atados a un proveedor) — **[Nil]**.
+- [ ] Implementar la llamada real en `createParcelTracking()` (hoy es un stub que
+  devuelve `not_implemented`): crear el envío en el API del proveedor, obtener nº
+  + URL y guardarlos con `updateOrderTracking()` — **[Nil]**.
+- [ ] Conectar a una acción de UI (p. ej. botón "Generar etiqueta" en el panel) — **[Nil]**.
+
+> Sin esas keys, `isShippingConfigured()` es `false` y manda el tracking manual.
 
 ---
 

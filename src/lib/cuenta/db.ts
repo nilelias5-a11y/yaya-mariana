@@ -73,6 +73,9 @@ type OrderRow = {
   billing: unknown;
   invoice_number: string;
   tracking_url: string | null;
+  tracking_carrier: string | null;
+  tracking_number: string | null;
+  tracking_note: string | null;
 };
 
 function rowToOrder(r: OrderRow): Order {
@@ -87,6 +90,9 @@ function rowToOrder(r: OrderRow): Order {
     billing: asJson<Order["billing"]>(r.billing),
     invoiceNumber: r.invoice_number,
     trackingUrl: r.tracking_url ?? undefined,
+    trackingCarrier: r.tracking_carrier ?? undefined,
+    trackingNumber: r.tracking_number ?? undefined,
+    trackingNote: r.tracking_note ?? undefined,
   };
 }
 

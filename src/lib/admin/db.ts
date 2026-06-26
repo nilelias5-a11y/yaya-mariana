@@ -86,7 +86,7 @@ export type AdminOrderDetail = {
   shippingAddress: Address;
   billing: { nombre: string; dni: string; address: Address };
   invoiceNumber: string;
-  trackingUrl: string | null;
+  tracking: { carrier: string; number: string; url: string; note: string };
   customer: { email: string; nombre: string; telefono: string | null };
 };
 
@@ -100,6 +100,9 @@ type AdminOrderDetailRow = {
   billing: unknown;
   invoice_number: string;
   tracking_url: string | null;
+  tracking_carrier: string | null;
+  tracking_number: string | null;
+  tracking_note: string | null;
   customer_email: string | null;
   customer_nombre: string | null;
   customer_telefono: string | null;
@@ -109,7 +112,8 @@ export async function getAdminOrderDetail(orderNumber: string): Promise<AdminOrd
   const sql = getSql();
   const rows = (await sql`
     SELECT o.number, o.status, o.created_at, o.updated_at, o.items, o.shipping_address,
-           o.billing, o.invoice_number, o.tracking_url,
+           o.billing, o.invoice_number, o.tracking_url, o.tracking_carrier,
+           o.tracking_number, o.tracking_note,
            u.email AS customer_email, u.nombre AS customer_nombre, u.telefono AS customer_telefono
     FROM cuenta_orders o
     LEFT JOIN cuenta_users u ON u.id = o.user_id
@@ -132,7 +136,12 @@ export async function getAdminOrderDetail(orderNumber: string): Promise<AdminOrd
     shippingAddress: asJson<Address>(r.shipping_address),
     billing: asJson<{ nombre: string; dni: string; address: Address }>(r.billing),
     invoiceNumber: r.invoice_number,
-    trackingUrl: r.tracking_url ?? null,
+    tracking: {
+      carrier: r.tracking_carrier ?? "",
+      number: r.tracking_number ?? "",
+      url: r.tracking_url ?? "",
+      note: r.tracking_note ?? "",
+    },
     customer: {
       email: r.customer_email ?? "—",
       nombre: r.customer_nombre ?? "—",
@@ -320,6 +329,74 @@ export async function updateOrderShippingAddress(
     WHERE number = ${orderNumber}
   `;
   return { ok: true, shippingAddress: next };
+}
+
+/* MEJORA 4 — seguimiento de envío manual (universal). Editable solo cuando el
+ * pedido ya se prepara/envía (preparacion/enviado/entregado); no en pagado ni
+ * cancelado. Todos los campos son opcionales y vaciables (vacío = NULL). */
+export const TRACKING_EDITABLE_STATUSES: OrderStatus[] = ["preparacion", "enviado", "entregado"];
+
+export type TrackingInput = { carrier?: string; number?: string; url?: string; note?: string };
+export type TrackingData = { carrier: string; number: string; url: string; note: string };
+
+export type UpdateTrackingResult =
+  | { ok: true; tracking: TrackingData }
+  | { ok: false; code: "not_found" }
+  | { ok: false; code: "not_editable"; status: OrderStatus }
+  | { ok: false; code: "invalid" };
+
+const TRACKING_LIMITS = { carrier: 80, number: 120, url: 500, note: 300 };
+
+function isValidHttpUrl(s: string): boolean {
+  try {
+    const u = new URL(s);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+export async function updateOrderTracking(
+  orderNumber: string,
+  input: TrackingInput,
+): Promise<UpdateTrackingResult> {
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT status FROM cuenta_orders WHERE number = ${orderNumber} LIMIT 1
+  `) as { status: OrderStatus }[];
+  if (!rows[0]) return { ok: false, code: "not_found" };
+
+  const status = rows[0].status;
+  if (!TRACKING_EDITABLE_STATUSES.includes(status)) {
+    return { ok: false, code: "not_editable", status };
+  }
+
+  const carrier = (input.carrier ?? "").trim();
+  const number = (input.number ?? "").trim();
+  const url = (input.url ?? "").trim();
+  const note = (input.note ?? "").trim();
+
+  // URL bien formada si se rellena (vacío = permitido → limpia el campo).
+  if (url && !isValidHttpUrl(url)) return { ok: false, code: "invalid" };
+  if (
+    carrier.length > TRACKING_LIMITS.carrier ||
+    number.length > TRACKING_LIMITS.number ||
+    url.length > TRACKING_LIMITS.url ||
+    note.length > TRACKING_LIMITS.note
+  ) {
+    return { ok: false, code: "invalid" };
+  }
+
+  await sql`
+    UPDATE cuenta_orders
+    SET tracking_carrier = ${carrier || null},
+        tracking_number = ${number || null},
+        tracking_url = ${url || null},
+        tracking_note = ${note || null},
+        updated_at = now()
+    WHERE number = ${orderNumber}
+  `;
+  return { ok: true, tracking: { carrier, number, url, note } };
 }
 
 /* TAREA 2 — ajuste de existencias (product_stock.units). */

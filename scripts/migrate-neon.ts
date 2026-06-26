@@ -83,6 +83,14 @@ async function createSchema() {
    * el panel). product_stock ya trae su propio updated_at. */
   await sql`ALTER TABLE cuenta_orders ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ`;
 
+  /* Mejora 4 (tracking manual universal) — additive. Seguimiento de envío
+   * editable a mano desde el panel, válido para CUALQUIER mensajería o reparto
+   * propio. tracking_url ya existía; se añaden carrier (mensajería o "Reparto
+   * propio"), number (nº de seguimiento) y note (texto de estado libre). */
+  await sql`ALTER TABLE cuenta_orders ADD COLUMN IF NOT EXISTS tracking_carrier TEXT`;
+  await sql`ALTER TABLE cuenta_orders ADD COLUMN IF NOT EXISTS tracking_number TEXT`;
+  await sql`ALTER TABLE cuenta_orders ADD COLUMN IF NOT EXISTS tracking_note TEXT`;
+
   // admin_users: migra el admin de env var (ADMIN_PASS_HASH) a tabla (bcrypt).
   await sql`
     CREATE TABLE IF NOT EXISTS admin_users (

@@ -168,12 +168,28 @@ export default function PedidoDetalle({ order }: { order: Order }) {
         </a>
 
         {order.trackingUrl ? (
-          <a href={order.trackingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm font-semibold text-[#7a3a3a] hover:bg-[#f3ebe9] transition-colors" style={{ borderColor: CUENTA_BORDER }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden>
-              <rect x="1" y="3" width="15" height="13" /><path d="M16 8h4l3 3v5h-7z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
-            {c.detalle.tracking}
-          </a>
+          <div className="flex flex-col gap-1">
+            <a href={order.trackingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm font-semibold text-[#7a3a3a] hover:bg-[#f3ebe9] transition-colors" style={{ borderColor: CUENTA_BORDER }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden>
+                <rect x="1" y="3" width="15" height="13" /><path d="M16 8h4l3 3v5h-7z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+              {c.detalle.tracking}
+            </a>
+            {(order.trackingCarrier || order.trackingNumber) && (
+              <span className="text-xs text-[#9a8884] text-center">
+                {[order.trackingCarrier, order.trackingNumber].filter(Boolean).join(" · ")}
+              </span>
+            )}
+          </div>
+        ) : order.trackingCarrier || order.trackingNumber || order.trackingNote ? (
+          <span className="inline-flex flex-col items-start justify-center gap-0.5 rounded-lg border bg-white px-4 py-2.5 text-sm text-[#7a3a3a]" style={{ borderColor: CUENTA_BORDER }}>
+            {(order.trackingCarrier || order.trackingNumber) && (
+              <span className="font-semibold">
+                {[order.trackingCarrier, order.trackingNumber].filter(Boolean).join(" · ")}
+              </span>
+            )}
+            {order.trackingNote && <span className="text-xs text-[#9a8884]">{order.trackingNote}</span>}
+          </span>
         ) : (
           <span className="inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium text-[#b8a9a5] cursor-not-allowed" style={{ borderColor: CUENTA_BORDER }} aria-disabled>
             {c.detalle.trackingSoon}

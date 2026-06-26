@@ -58,7 +58,11 @@ export type Order = {
     address: Address;
   };
   invoiceNumber: string; // "FCV-2026-0001"
-  trackingUrl?: string; // Sendcloud (futuro)
+  // Seguimiento de envío (manual universal). Cualquier mensajería o reparto propio.
+  trackingUrl?: string; // enlace de seguimiento (si la mensajería tiene web)
+  trackingCarrier?: string; // mensajería o "Reparto propio"
+  trackingNumber?: string; // nº de seguimiento
+  trackingNote?: string; // texto de estado libre
 };
 
 /** Forma serializable que se entrega al export RGPD. */
