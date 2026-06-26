@@ -142,12 +142,48 @@ son revocables (expiran solas).
 | `CUENTA_SESSION_SECRET` | Firma del JWT de sesión de cliente (HS256). Mín. 32 caracteres.   |
 | `STRIPE_SECRET_KEY`     | Clave secreta de Stripe. Si es **real** (`sk_test`/`sk_live`), el endpoint de checkout **verifica** el pago antes de crear el pedido. |
 | `STRIPE_WEBHOOK_SECRET` | Secreto `whsec_` del webhook. **Sin él, el webhook no procesa** (gateado). Se obtiene al crear el endpoint en el panel de Stripe / `stripe listen`. |
-| `EMAIL_FROM`            | Remitente de los emails (mock por ahora).                          |
-| `RESEND_API_KEY`        | *(placeholder, comentado)* clave de Resend cuando se conecte.      |
+| `EMAIL_FROM`            | Remitente de los emails. Debe ser una dirección de un dominio **verificado en Resend**. Si falta, se usa `Yaya Mariana <no-reply@yaya-mariana.com>`. |
+| `RESEND_API_KEY`        | Clave de Resend. **Mientras NO exista, los emails son mock** (se loguean en consola). Al definirla, el envío pasa a ser **real**. |
 
 > La sesión de cliente dura **30 días** (cookie `cuenta_session`, httpOnly,
 > con renovación deslizante). El panel `/admin` usa su propia cookie y
 > secreto — no hay colisión.
+
+## Emails (Resend)
+
+El envío vive en `src/lib/cuenta/email.ts` y está **gateado** tras
+`RESEND_API_KEY`:
+
+- **Sin la key** → MOCK: cada email se loguea en consola con prefijo
+  `[email:mock]` (el comportamiento actual). No se envía nada real.
+- **Con la key** → envío real vía Resend, manteniendo la misma interfaz
+  (`sendEmail({ to, template, data })`). Los fallos se loguean pero **no**
+  rompen el registro/checkout (best-effort).
+
+Plantillas incluidas (HTML sobrio, en español, marca Yaya Mariana):
+`welcome`, `magic-link`, `order-confirmation`, `invoice-ready`.
+
+### Activar el envío real (cuando haya dominio)
+
+1. Crear cuenta en [resend.com](https://resend.com).
+2. **Verificar el dominio** del cliente (añadir los registros DNS SPF/DKIM
+   que indica Resend). Hasta que el dominio esté verificado, Resend solo deja
+   enviar a tu propia dirección de prueba.
+3. Crear una **API key** en Resend y añadirla a `.env.local` (y a las env vars
+   de Vercel en producción):
+   ```
+   RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxx
+   ```
+4. Definir `EMAIL_FROM` con un remitente **del dominio verificado**:
+   ```
+   # EMAIL_FROM="Yaya Mariana <hola@TU-DOMINIO-VERIFICADO.es>"   ← placeholder
+   ```
+5. Reiniciar `npm run dev` (o redeplegar en Vercel). A partir de ahí, los
+   correos se envían de verdad; sin tocar ninguna línea de código.
+
+> Revertir el parche DEMO del magic link (`magic/route.ts`) antes de
+> producción real: con email real ya no hace falta exponer el enlace en
+> pantalla.
 
 ## RGPD
 
@@ -181,5 +217,7 @@ al mock en JSON sin perder nada:
 3. ✅ ~~Webhook de Stripe → auto-registro + creación de la orden + magic
    link de bienvenida~~ — **escrito** (TAREA 4); falta **probarlo** con las
    claves test reales y configurar `STRIPE_WEBHOOK_SECRET`.
-4. Conectar Resend en `src/lib/cuenta/email.ts` (la interfaz ya está).
+4. ✅ ~~Conectar Resend en `src/lib/cuenta/email.ts`~~ — **hecho**: código
+   listo y gateado tras `RESEND_API_KEY` (mock por defecto). Ver «Emails
+   (Resend)» arriba para activarlo cuando haya dominio.
 5. Seguimiento real con Sendcloud (rellenar `tracking_url`).
