@@ -6,44 +6,19 @@ import Link from "next/link";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/context/language-context";
+import { business } from "@/config/business";
 
 type Category = "all" | "Premium";
 
-const PRODUCTS_BASE = [
-  {
-    name: "Fresa Mágnum",
-    category: "Premium" as const,
-    price: 7.5,
-    images: [
-      "/fresas/magnum/magnum-10.jpeg",
-      "/fresas/magnum/magnum-07.jpeg",
-      "/fresas/magnum/magnum-08.jpeg",
-      "/fresas/magnum/magnum-06.jpeg",
-    ],
-  },
-  {
-    name: "Fresa Dream",
-    category: "Premium" as const,
-    price: 7.5,
-    images: [
-      "/fresas/dream/dream-07.jpeg",
-      "/fresas/dream/dream-12.jpeg",
-      "/fresas/dream/dream-14.jpeg",
-      "/fresas/dream/dream-08.jpeg",
-    ],
-  },
-  {
-    name: "Fresa Variedad 1525",
-    category: "Premium" as const,
-    price: 7.5,
-    images: [
-      "/fresas/variedad1525/variedad1525-10.jpeg",
-      "/fresas/variedad1525/variedad1525-11.jpeg",
-      "/fresas/variedad1525/variedad1525-12.jpeg",
-      "/fresas/variedad1525/variedad1525-09.jpeg",
-    ],
-  },
-];
+/* Hechos del producto (nombre, precio, peso, imágenes) desde la config central
+ * `business.products`. Las descripciones son prosa traducible (i18n). */
+const PRODUCTS_BASE = business.products.map((p) => ({
+  name: p.cartName,
+  category: p.category,
+  price: p.price,
+  weight: p.weight,
+  images: p.images,
+}));
 
 function useTypewriter(text: string, speed = 55, startDelay = 250) {
   const [displayed, setDisplayed] = useState("");
@@ -298,7 +273,7 @@ function ProductCard({
           <div className="flex items-center justify-between">
             <div>
               <span className="numerals-tabular text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
-              <span className="text-xs text-[#7a3a3a]/50 ml-1.5">/ 500g</span>
+              <span className="text-xs text-[#7a3a3a]/50 ml-1.5">/ {product.weight}</span>
             </div>
             {/* "Ver más" lleva a la seccion de productos (#productos), NO al
                 pago: coherente con "Ver tienda" y el footer. Un boton de

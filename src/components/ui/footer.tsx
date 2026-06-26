@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
+import { business } from "@/config/business";
 
 /* Enlaces internos del footer vía Next <Link> (navegación cliente:
    preserva el carrito en memoria y el contexto de idioma). Cubre rutas
@@ -15,7 +16,7 @@ const MotionLink = motion.create(Link);
 const SOCIALS = [
   {
     label: "Instagram",
-    href: "https://instagram.com",
+    href: business.social.instagram,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4" aria-hidden>
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -26,7 +27,7 @@ const SOCIALS = [
   },
   {
     label: "Facebook",
-    href: "https://facebook.com",
+    href: business.social.facebook,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden>
         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -35,7 +36,7 @@ const SOCIALS = [
   },
   {
     label: "X / Twitter",
-    href: "https://x.com",
+    href: business.social.x,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden>
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -44,7 +45,7 @@ const SOCIALS = [
   },
   {
     label: "Pinterest",
-    href: "https://pinterest.com",
+    href: business.social.pinterest,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden>
         <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
@@ -53,7 +54,7 @@ const SOCIALS = [
   },
   {
     label: "LinkedIn",
-    href: "https://linkedin.com",
+    href: business.social.linkedin,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden>
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
@@ -87,9 +88,7 @@ export default function Footer() {
     {
       heading: t.footer.shop,
       items: [
-        { label: "Fresa Mágnum", href: "#productos" },
-        { label: "Fresa Dream", href: "#productos" },
-        { label: "Fresa Variedad 1525", href: "#productos" },
+        ...business.products.map((p) => ({ label: p.cartName, href: "#productos" })),
         { label: t.footer.viewAllProducts, href: "#productos" },
       ],
     },

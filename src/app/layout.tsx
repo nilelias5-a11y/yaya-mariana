@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import { WhatsAppWidget } from "@/components/whatsapp-widget";
 import CookieBanner from "@/components/cookie-banner";
+import { business, socialUrls } from "@/config/business";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,12 +18,13 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
-/* Dominio canonico `yayamariana.es` — placeholder, dominio aun no comprado.
-   El deploy `yaya-mariana.vercel.app` es solo para revision visual familiar.
-   Cuando se compre el dominio real este string se mantiene; basta apuntar el DNS. */
-const SITE = "https://yayamariana.es";
-const SITE_NAME = "Yaya Mariana";
-const SITE_TAGLINE = "Fresas de Tarragona";
+/* Identidad de marca: fuente única en `src/config/business.ts`.
+   El dominio `yayamariana.es` es placeholder (aún no comprado); el deploy vive
+   en vercel.app. Cuando se compre el dominio, se cambia en config y basta
+   apuntar el DNS. La descripción SEO (ES) se mantiene aquí (prosa). */
+const SITE = business.brand.siteUrl;
+const SITE_NAME = business.brand.name;
+const SITE_TAGLINE = business.brand.tagline;
 const SITE_DESCRIPTION =
   "Fresas frescas de Tarragona, cultivadas sin pesticidas con el cuidado de siempre. Tres variedades — Mágnum, Dream y 1525 — directas del campo a tu mesa.";
 
@@ -90,50 +92,41 @@ const jsonLdOrganization = {
   name: SITE_NAME,
   alternateName: "Yaya Mariana SL",
   url: SITE,
-  logo: `${SITE}/logo-nuevo.jpg`,
+  logo: `${SITE}${business.brand.logo}`,
   description: SITE_DESCRIPTION,
-  email: "info@yaya-mariana.com",
-  telephone: "+34 666 777 888",
+  email: business.contact.email,
+  telephone: business.contact.phoneDisplay,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "C/ Electrónica 19, Planta 10, oficina D",
-    addressLocality: "Badalona",
-    postalCode: "08915",
-    addressRegion: "Barcelona",
-    addressCountry: "ES",
+    streetAddress: business.address.street,
+    addressLocality: business.address.city,
+    postalCode: business.address.postalCode,
+    addressRegion: business.address.region,
+    addressCountry: business.address.country,
   },
-  sameAs: [
-    "https://facebook.com",
-    "https://instagram.com",
-    "https://x.com",
-    "https://pinterest.com",
-    "https://linkedin.com",
-  ],
+  sameAs: socialUrls,
 };
 
-const PRODUCTS = [
-  {
-    name: "Fresa Mágnum",
-    variety: "Mágnum",
-    description:
-      "Fresa de gran tamaño y sabor intenso, cultivada en Tarragona. Recogida en su punto óptimo de madurez, sin pesticidas.",
-    image: "/fresas/magnum/magnum-10.jpeg",
-  },
-  {
-    name: "Fresa Dream",
-    variety: "Dream",
-    description:
-      "Variedad Dream de sabor dulce y textura firme. Cultivo propio de Tarragona, directa del campo a tu mesa.",
-    image: "/fresas/dream/dream-07.jpeg",
-  },
-  {
-    name: "Fresa Variedad 1525",
-    variety: "1525",
-    description:
-      "Variedad exclusiva 1525, seleccionada por su calidad y dulzura excepcional. Sin químicos ni pesticidas.",
-    image: "/fresas/variedad1525/variedad1525-10.jpeg",
-  },
-];
+/* Descripciones SEO (ES) del JSON-LD de producto. Son prosa (no se centralizan
+   en config); el resto de hechos —nombre, precio, imagen, peso— salen de
+   `business.products`. Indexadas por variedad. */
+const PRODUCT_SEO_DESCRIPTIONS: Record<string, string> = {
+  "Mágnum":
+    "Fresa de gran tamaño y sabor intenso, cultivada en Tarragona. Recogida en su punto óptimo de madurez, sin pesticidas.",
+  Dream:
+    "Variedad Dream de sabor dulce y textura firme. Cultivo propio de Tarragona, directa del campo a tu mesa.",
+  "1525":
+    "Variedad exclusiva 1525, seleccionada por su calidad y dulzura excepcional. Sin químicos ni pesticidas.",
+};
+
+const PRODUCTS = business.products.map((p) => ({
+  name: p.cartName,
+  variety: p.variety,
+  price: p.price,
+  weight: p.weight,
+  description: PRODUCT_SEO_DESCRIPTIONS[p.variety] ?? "",
+  image: p.images[0],
+}));
 
 const jsonLdProducts = PRODUCTS.map((p) => ({
   "@context": "https://schema.org",
@@ -145,7 +138,7 @@ const jsonLdProducts = PRODUCTS.map((p) => ({
   category: "Strawberries",
   offers: {
     "@type": "Offer",
-    price: "7.50",
+    price: p.price.toFixed(2),
     priceCurrency: "EUR",
     availability: "https://schema.org/InStock",
     url: `${SITE}/#productos`,
@@ -153,7 +146,7 @@ const jsonLdProducts = PRODUCTS.map((p) => ({
   },
   additionalProperty: [
     { "@type": "PropertyValue", name: "Variedad", value: p.variety },
-    { "@type": "PropertyValue", name: "Peso", value: "500 g" },
+    { "@type": "PropertyValue", name: "Peso", value: p.weight },
     { "@type": "PropertyValue", name: "Origen", value: "Tarragona, España" },
   ],
 }));

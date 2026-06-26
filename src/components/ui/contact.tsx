@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { business, multilineAddress, withBusinessVars } from "@/config/business";
 
 function FocusField({ children }: { children: React.ReactNode }) {
   const [focused, setFocused] = useState(false);
@@ -112,19 +113,19 @@ export default function Contact() {
     {
       icon: ADDRESS_ICON,
       label: t.contact.addressLabel,
-      value: "C/ Electrónica, 19, Planta 10, oficina D\n08915, Badalona, España",
+      value: multilineAddress,
     },
     {
       icon: EMAIL_ICON,
       label: t.contact.emailLabel,
-      value: "info@yaya-mariana.com",
-      href: "mailto:info@yaya-mariana.com",
+      value: business.contact.email,
+      href: `mailto:${business.contact.email}`,
     },
     {
       icon: PHONE_ICON,
       label: t.contact.phoneLabel,
-      value: "+34 666 777 888",
-      href: "tel:+34666777888",
+      value: business.contact.phoneDisplay,
+      href: `tel:${business.contact.phoneE164}`,
     },
   ];
 
@@ -282,13 +283,13 @@ export default function Contact() {
                   {t.contact.whatsapp.label}
                 </p>
                 <a
-                  href="https://wa.me/34666777888"
+                  href={buildWhatsAppUrl(t.whatsapp.message)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={t.contact.whatsapp.aria}
+                  aria-label={withBusinessVars(t.contact.whatsapp.aria)}
                   className="relative inline-block text-[0.9375rem] text-[#7a3a3a] font-medium hover:text-[#c0392b] focus-visible:text-[#c0392b] transition-colors outline-none group/link"
                 >
-                  {t.contact.whatsapp.value}
+                  {withBusinessVars(t.contact.whatsapp.value)}
                   <span
                     aria-hidden
                     className="absolute left-0 right-0 -bottom-0.5 h-px scale-x-0 group-hover/link:scale-x-100 group-focus-visible/link:scale-x-100 transition-transform duration-300 origin-left"

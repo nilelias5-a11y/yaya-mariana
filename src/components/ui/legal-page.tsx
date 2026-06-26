@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "@/context/language-context";
 import type { Translations } from "@/i18n/translations";
 import Footer from "@/components/ui/footer";
+import { withBusinessVars } from "@/config/business";
 
 type LegalDoc = keyof Translations["legal"]["docs"];
 
@@ -93,7 +94,7 @@ export default function LegalPage({ doc }: { doc: LegalDoc }) {
                   {section.heading}
                 </h2>
                 <p className="body-pretty body-hyphens text-[0.9375rem] text-[#7a3a3a]/80 leading-relaxed">
-                  {section.body}
+                  {withBusinessVars(section.body)}
                 </p>
               </section>
             ))}

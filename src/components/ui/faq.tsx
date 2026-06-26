@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/context/language-context";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { withBusinessVars } from "@/config/business";
 
 const ChevronDown = () => (
   <svg
@@ -105,7 +106,7 @@ export default function FAQ() {
                 >
                   <div className="overflow-hidden">
                     <p className="px-5 pb-5 text-[0.9375rem] text-[#5c1a1a] leading-relaxed">
-                      {item.a}
+                      {withBusinessVars(item.a)}
                     </p>
                   </div>
                 </div>

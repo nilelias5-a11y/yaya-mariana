@@ -1,15 +1,14 @@
 import type { OrderItem } from "@/lib/cuenta/types";
+import { business } from "@/config/business";
 
-/* TAREA 3 — Catálogo de producto (fuente única para construir pedidos).
+/* TAREA 3 — Catálogo de producto (para construir pedidos).
  *
- * Mapea el nombre que usa la web/carrito (`cartName`) a los datos fiscales
- * y de pedido (variedad, nombre de línea, PVP IVA incl., imagen). Lo usan el
- * endpoint de checkout y el webhook de Stripe para reconstruir las líneas de
- * un pedido a partir de lo que llega del pago.
+ * Mapea el nombre que usa la web/carrito (`cartName`) a los datos de pedido
+ * (variedad, nombre de línea, PVP IVA incl., imagen). Lo usan el endpoint de
+ * checkout y el webhook de Stripe para reconstruir las líneas de un pedido.
  *
- * NOTA: replica los productos de components/ui/products.tsx (parte de
- * marketing, intocable aquí). Si cambian precios/variedades, actualizar
- * ambos — o, en una iteración futura, mover el catálogo a product_stock. */
+ * Los datos salen de la config central `business.products` (única fuente de
+ * verdad de precios/variedades, compartida con la web de marketing). */
 
 export type CatalogProduct = {
   cartName: string; // "Fresa Mágnum" (lo que ve el cliente)
@@ -19,29 +18,13 @@ export type CatalogProduct = {
   image: string; // ruta en /public
 };
 
-export const CATALOG: CatalogProduct[] = [
-  {
-    cartName: "Fresa Mágnum",
-    variety: "Mágnum",
-    orderName: "Caja fresas Yaya Mariana — Mágnum",
-    unitPrice: 7.5,
-    image: "/fresas/magnum/magnum-10.jpeg",
-  },
-  {
-    cartName: "Fresa Dream",
-    variety: "Dream",
-    orderName: "Caja fresas Yaya Mariana — Dream",
-    unitPrice: 7.5,
-    image: "/fresas/dream/dream-07.jpeg",
-  },
-  {
-    cartName: "Fresa Variedad 1525",
-    variety: "1525",
-    orderName: "Caja fresas Yaya Mariana — Variedad 1525",
-    unitPrice: 7.5,
-    image: "/fresas/variedad1525/variedad1525-10.jpeg",
-  },
-];
+export const CATALOG: CatalogProduct[] = business.products.map((p) => ({
+  cartName: p.cartName,
+  variety: p.variety,
+  orderName: p.orderName,
+  unitPrice: p.price,
+  image: p.images[0],
+}));
 
 export function findByCartName(name: string): CatalogProduct | undefined {
   return CATALOG.find((p) => p.cartName === name);

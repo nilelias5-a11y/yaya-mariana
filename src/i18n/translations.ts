@@ -156,7 +156,7 @@ export const translations = {
         { q: "¿Las puedo congelar?", a: "Sí. Lávalas con cuidado, retira el pedúnculo, sécalas y congélalas individualmente sobre papel antes de pasarlas a una bolsa. Duran entre 3 y 4 meses." },
         { q: "¿Son ecológicas certificadas?", a: "Se cultivan sin pesticidas en sistema hidropónico controlado. La certificación oficial está en proceso." },
         { q: "¿Qué variedad elegir?", a: "Mágnum si te gusta firme y aromática. Dream si prefieres dulce y delicada. 1525 si quieres probar algo único, edición limitada." },
-        { q: "¿Hacéis envíos a islas o Portugal?", a: "Para destinos fuera de la península, mejor que te lo confirme el equipo. Escribe a info@yaya-mariana.com y te leerán pronto, con calma." },
+        { q: "¿Hacéis envíos a islas o Portugal?", a: "Para destinos fuera de la península, mejor que te lo confirme el equipo. Escribe a {email} y te leerán pronto, con calma." },
         { q: "¿Cuánto duran abiertas?", a: "Una vez abierta la caja, consume las fresas en 2-3 días para disfrutarlas en su mejor momento." },
         { q: "¿Hay temporada para comprarlas?", a: "La temporada principal va de finales de invierno a primavera. Fuera de temporada, puedes apuntarte a la lista de aviso." },
       ],
@@ -181,8 +181,8 @@ export const translations = {
       sendAnother: "Enviar otro mensaje",
       whatsapp: {
         label: "WhatsApp",
-        value: "+34 666 777 888",
-        aria: "Escríbenos por WhatsApp al +34 666 777 888",
+        value: "{phone}",
+        aria: "Escríbenos por WhatsApp al {phone}",
       },
       chatOption: {
         title: "Chat directo",
@@ -309,7 +309,7 @@ export const translations = {
         avisoLegal: {
           title: "Aviso legal",
           sections: [
-            { heading: "Titular del sitio", body: "Este sitio web es titularidad de Yaya Mariana (en adelante, «el Titular»), con domicilio a efectos de notificaciones en C/ Electrónica 19, 08915 Badalona (Barcelona) y correo de contacto info@yaya-mariana.com. Los datos identificativos completos se incorporarán en la versión definitiva de este aviso." },
+            { heading: "Titular del sitio", body: "Este sitio web es titularidad de Yaya Mariana (en adelante, «el Titular»), con domicilio a efectos de notificaciones en {address} y correo de contacto {email}. Los datos identificativos completos se incorporarán en la versión definitiva de este aviso." },
             { heading: "Objeto", body: "El presente aviso regula el uso del sitio web y de los contenidos y servicios que el Titular pone a disposición de las personas usuarias. La navegación por el sitio atribuye la condición de usuario e implica la aceptación de las condiciones aquí recogidas." },
             { heading: "Propiedad intelectual e industrial", body: "Todos los contenidos del sitio (textos, fotografías, logotipos, diseño y código) son titularidad del Titular o de terceros que han autorizado su uso y quedan protegidos por la normativa de propiedad intelectual e industrial. Queda prohibida su reproducción sin autorización." },
             { heading: "Responsabilidad", body: "El Titular procura que la información sea veraz y esté actualizada, pero no garantiza la ausencia de errores ni la disponibilidad continua del servicio. Este texto es orientativo y será sustituido por la versión legal definitiva." },
@@ -318,10 +318,10 @@ export const translations = {
         privacidad: {
           title: "Política de privacidad",
           sections: [
-            { heading: "Responsable del tratamiento", body: "Yaya Mariana es responsable del tratamiento de los datos personales que nos facilites a través de los formularios del sitio o del proceso de compra. Puedes contactarnos en info@yaya-mariana.com." },
+            { heading: "Responsable del tratamiento", body: "Yaya Mariana es responsable del tratamiento de los datos personales que nos facilites a través de los formularios del sitio o del proceso de compra. Puedes contactarnos en {email}." },
             { heading: "Datos y finalidad", body: "Tratamos los datos identificativos y de contacto que nos proporciones para gestionar tus consultas, tramitar pedidos y, en su caso, enviarte comunicaciones que hayas autorizado. No usamos tus datos para finalidades distintas sin tu consentimiento." },
             { heading: "Legitimación y conservación", body: "La base legal es la ejecución del contrato de compra, el consentimiento que prestes y el interés legítimo en atender tus consultas. Conservamos los datos el tiempo necesario para cada finalidad y los plazos legales aplicables." },
-            { heading: "Tus derechos", body: "Puedes ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a info@yaya-mariana.com. También puedes reclamar ante la Agencia Española de Protección de Datos. Texto orientativo pendiente de revisión." },
+            { heading: "Tus derechos", body: "Puedes ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a {email}. También puedes reclamar ante la Agencia Española de Protección de Datos. Texto orientativo pendiente de revisión." },
           ],
         },
         cookies: {
@@ -346,7 +346,7 @@ export const translations = {
           title: "Política de devoluciones",
           sections: [
             { heading: "Naturaleza del producto", body: "Por tratarse de un producto fresco y perecedero, el derecho de desistimiento puede estar limitado conforme a la normativa de consumo. Aquí te explicamos cómo proceder en caso de incidencia." },
-            { heading: "Incidencias con el pedido", body: "Si tu pedido llega en mal estado o no se corresponde con lo solicitado, contáctanos en un plazo de 24 horas desde la recepción en info@yaya-mariana.com adjuntando fotografías." },
+            { heading: "Incidencias con el pedido", body: "Si tu pedido llega en mal estado o no se corresponde con lo solicitado, contáctanos en un plazo de 24 horas desde la recepción en {email} adjuntando fotografías." },
             { heading: "Reembolsos y reposición", body: "Tras valorar la incidencia, te ofreceremos la reposición del producto o el reembolso del importe abonado por el mismo medio de pago utilizado." },
             { heading: "Gastos", body: "Cuando la incidencia sea atribuible a Yaya Mariana, no asumirás coste alguno. Este texto es orientativo y será sustituido por la versión definitiva." },
           ],
@@ -658,7 +658,7 @@ export const translations = {
         { q: "Les puc congelar?", a: "Sí. Renta-les amb cura, retira el peduncle, eixuga-les i congela-les individualment sobre paper abans de posar-les en una bossa. Duren entre 3 i 4 mesos." },
         { q: "Són ecològiques certificades?", a: "Es cultiven sense pesticides en sistema hidropònic controlat. La certificació oficial està en procés." },
         { q: "Quina varietat triar?", a: "Mágnum si t'agrada ferma i aromàtica. Dream si prefereixes dolça i delicada. 1525 si vols provar alguna cosa única, edició limitada." },
-        { q: "Feu enviaments a illes o Portugal?", a: "Per a destinacions fora de la península, millor que t'ho confirmi l'equip. Escriu a info@yaya-mariana.com i et llegiran aviat, amb calma." },
+        { q: "Feu enviaments a illes o Portugal?", a: "Per a destinacions fora de la península, millor que t'ho confirmi l'equip. Escriu a {email} i et llegiran aviat, amb calma." },
         { q: "Quant duren un cop obertes?", a: "Un cop oberta la caixa, consumeix les maduixes en 2-3 dies per gaudir-les en el millor moment." },
         { q: "Hi ha temporada per comprar-les?", a: "La temporada principal va de finals d'hivern a primavera. Fora de temporada, pots apuntar-te a la llista d'avís." },
       ],
@@ -683,8 +683,8 @@ export const translations = {
       sendAnother: "Enviar un altre missatge",
       whatsapp: {
         label: "WhatsApp",
-        value: "+34 666 777 888",
-        aria: "Escriu-nos per WhatsApp al +34 666 777 888",
+        value: "{phone}",
+        aria: "Escriu-nos per WhatsApp al {phone}",
       },
       chatOption: {
         title: "Xat directe",
@@ -811,7 +811,7 @@ export const translations = {
         avisoLegal: {
           title: "Avís legal",
           sections: [
-            { heading: "Titular del lloc", body: "Aquest lloc web és titularitat de Yaya Mariana (d'ara endavant, «el Titular»), amb domicili a efectes de notificacions a C/ Electrònica 19, 08915 Badalona (Barcelona) i correu de contacte info@yaya-mariana.com. Les dades identificatives completes s'incorporaran a la versió definitiva d'aquest avís." },
+            { heading: "Titular del lloc", body: "Aquest lloc web és titularitat de Yaya Mariana (d'ara endavant, «el Titular»), amb domicili a efectes de notificacions a {address} i correu de contacte {email}. Les dades identificatives completes s'incorporaran a la versió definitiva d'aquest avís." },
             { heading: "Objecte", body: "Aquest avís regula l'ús del lloc web i dels continguts i serveis que el Titular posa a disposició de les persones usuàries. La navegació pel lloc atribueix la condició d'usuari i implica l'acceptació de les condicions aquí recollides." },
             { heading: "Propietat intel·lectual i industrial", body: "Tots els continguts del lloc (textos, fotografies, logotips, disseny i codi) són titularitat del Titular o de tercers que n'han autoritzat l'ús i queden protegits per la normativa de propietat intel·lectual i industrial. Queda prohibida la seva reproducció sense autorització." },
             { heading: "Responsabilitat", body: "El Titular procura que la informació sigui veraç i estigui actualitzada, però no garanteix l'absència d'errors ni la disponibilitat contínua del servei. Aquest text és orientatiu i serà substituït per la versió legal definitiva." },
@@ -820,10 +820,10 @@ export const translations = {
         privacidad: {
           title: "Política de privacitat",
           sections: [
-            { heading: "Responsable del tractament", body: "Yaya Mariana és responsable del tractament de les dades personals que ens facilitis a través dels formularis del lloc o del procés de compra. Pots contactar-nos a info@yaya-mariana.com." },
+            { heading: "Responsable del tractament", body: "Yaya Mariana és responsable del tractament de les dades personals que ens facilitis a través dels formularis del lloc o del procés de compra. Pots contactar-nos a {email}." },
             { heading: "Dades i finalitat", body: "Tractem les dades identificatives i de contacte que ens proporcionis per gestionar les teves consultes, tramitar comandes i, si escau, enviar-te comunicacions que hagis autoritzat. No fem servir les teves dades per a finalitats diferents sense el teu consentiment." },
             { heading: "Legitimació i conservació", body: "La base legal és l'execució del contracte de compra, el consentiment que prestis i l'interès legítim a atendre les teves consultes. Conservem les dades el temps necessari per a cada finalitat i els terminis legals aplicables." },
-            { heading: "Els teus drets", body: "Pots exercir els drets d'accés, rectificació, supressió, oposició, limitació i portabilitat escrivint a info@yaya-mariana.com. També pots reclamar davant l'Agència Espanyola de Protecció de Dades. Text orientatiu pendent de revisió." },
+            { heading: "Els teus drets", body: "Pots exercir els drets d'accés, rectificació, supressió, oposició, limitació i portabilitat escrivint a {email}. També pots reclamar davant l'Agència Espanyola de Protecció de Dades. Text orientatiu pendent de revisió." },
           ],
         },
         cookies: {
@@ -848,7 +848,7 @@ export const translations = {
           title: "Política de devolucions",
           sections: [
             { heading: "Naturalesa del producte", body: "En tractar-se d'un producte fresc i perible, el dret de desistiment pot estar limitat d'acord amb la normativa de consum. Aquí t'expliquem com procedir en cas d'incidència." },
-            { heading: "Incidències amb la comanda", body: "Si la teva comanda arriba en mal estat o no es correspon amb el que has sol·licitat, contacta'ns en un termini de 24 hores des de la recepció a info@yaya-mariana.com adjuntant fotografies." },
+            { heading: "Incidències amb la comanda", body: "Si la teva comanda arriba en mal estat o no es correspon amb el que has sol·licitat, contacta'ns en un termini de 24 hores des de la recepció a {email} adjuntant fotografies." },
             { heading: "Reemborsaments i reposició", body: "Després de valorar la incidència, t'oferirem la reposició del producte o el reemborsament de l'import abonat pel mateix mitjà de pagament utilitzat." },
             { heading: "Despeses", body: "Quan la incidència sigui atribuïble a Yaya Mariana, no assumiràs cap cost. Aquest text és orientatiu i serà substituït per la versió definitiva." },
           ],
@@ -1160,7 +1160,7 @@ export const translations = {
         { q: "Can I freeze them?", a: "Yes. Wash them gently, remove the hull, dry them and freeze individually on paper before transferring to a bag. They last 3 to 4 months." },
         { q: "Are they certified organic?", a: "They are grown without pesticides in a controlled hydroponic system. Official certification is in progress." },
         { q: "Which variety should I choose?", a: "Mágnum if you like firm and aromatic. Dream if you prefer sweet and delicate. 1525 if you want something unique — limited edition." },
-        { q: "Do you ship to islands or Portugal?", a: "For destinations outside mainland Spain, the team can confirm availability. Write to info@yaya-mariana.com and they'll get back to you soon, unhurriedly." },
+        { q: "Do you ship to islands or Portugal?", a: "For destinations outside mainland Spain, the team can confirm availability. Write to {email} and they'll get back to you soon, unhurriedly." },
         { q: "How long do they last once opened?", a: "Once the box is opened, enjoy the strawberries within 2-3 days to get the best of them." },
         { q: "Is there a season for buying them?", a: "The main season runs from late winter to spring. Out of season, you can join the notification list." },
       ],
@@ -1185,8 +1185,8 @@ export const translations = {
       sendAnother: "Send another message",
       whatsapp: {
         label: "WhatsApp",
-        value: "+34 666 777 888",
-        aria: "Message us on WhatsApp at +34 666 777 888",
+        value: "{phone}",
+        aria: "Message us on WhatsApp at {phone}",
       },
       chatOption: {
         title: "Direct chat",
@@ -1313,7 +1313,7 @@ export const translations = {
         avisoLegal: {
           title: "Legal notice",
           sections: [
-            { heading: "Site owner", body: "This website is owned by Yaya Mariana (the «Owner»), with an address for notifications at C/ Electrónica 19, 08915 Badalona (Barcelona) and contact email info@yaya-mariana.com. Full identifying details will be added in the final version of this notice." },
+            { heading: "Site owner", body: "This website is owned by Yaya Mariana (the «Owner»), with an address for notifications at {address} and contact email {email}. Full identifying details will be added in the final version of this notice." },
             { heading: "Purpose", body: "This notice governs the use of the website and of the content and services the Owner makes available to users. Browsing the site grants user status and implies acceptance of the conditions set out here." },
             { heading: "Intellectual and industrial property", body: "All site content (text, photographs, logos, design and code) is owned by the Owner or by third parties who have authorised its use, and is protected by intellectual and industrial property law. Reproduction without authorisation is prohibited." },
             { heading: "Liability", body: "The Owner strives to keep information accurate and up to date but does not guarantee the absence of errors or the continuous availability of the service. This text is a draft and will be replaced by the final legal version." },
@@ -1322,10 +1322,10 @@ export const translations = {
         privacidad: {
           title: "Privacy policy",
           sections: [
-            { heading: "Data controller", body: "Yaya Mariana is the controller of the personal data you provide through the site forms or the purchase process. You can contact us at info@yaya-mariana.com." },
+            { heading: "Data controller", body: "Yaya Mariana is the controller of the personal data you provide through the site forms or the purchase process. You can contact us at {email}." },
             { heading: "Data and purpose", body: "We process the identifying and contact data you provide to handle your enquiries, process orders and, where applicable, send you communications you have authorised. We do not use your data for other purposes without your consent." },
             { heading: "Legal basis and retention", body: "The legal basis is the performance of the purchase contract, the consent you give and our legitimate interest in responding to your enquiries. We keep data for as long as necessary for each purpose and the applicable legal periods." },
-            { heading: "Your rights", body: "You can exercise your rights of access, rectification, erasure, objection, restriction and portability by writing to info@yaya-mariana.com. You may also lodge a complaint with the Spanish Data Protection Agency. Draft text pending review." },
+            { heading: "Your rights", body: "You can exercise your rights of access, rectification, erasure, objection, restriction and portability by writing to {email}. You may also lodge a complaint with the Spanish Data Protection Agency. Draft text pending review." },
           ],
         },
         cookies: {
@@ -1350,7 +1350,7 @@ export const translations = {
           title: "Return policy",
           sections: [
             { heading: "Nature of the product", body: "As this is a fresh, perishable product, the right of withdrawal may be limited in accordance with consumer regulations. Here we explain how to proceed in the event of an issue." },
-            { heading: "Order issues", body: "If your order arrives in poor condition or does not match what you ordered, contact us within 24 hours of receipt at info@yaya-mariana.com, attaching photographs." },
+            { heading: "Order issues", body: "If your order arrives in poor condition or does not match what you ordered, contact us within 24 hours of receipt at {email}, attaching photographs." },
             { heading: "Refunds and replacement", body: "After assessing the issue, we will offer you a replacement of the product or a refund of the amount paid via the same payment method used." },
             { heading: "Costs", body: "When the issue is attributable to Yaya Mariana, you will bear no cost. This text is a draft and will be replaced by the final version." },
           ],

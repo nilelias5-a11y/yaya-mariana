@@ -1,5 +1,6 @@
 import "server-only";
 import { Resend } from "resend";
+import { business } from "@/config/business";
 
 /* FASE B — Envío de emails.
  *
@@ -15,13 +16,13 @@ import { Resend } from "resend";
  *
  * Plantillas: welcome, magic-link, order-confirmation, invoice-ready. */
 
-const SITE_NAME = "Yaya Mariana";
-const SITE_TAGLINE = "Fresas de Tarragona";
-const SITE_URL = "https://yayamariana.es";
+const SITE_NAME = business.brand.name;
+const SITE_TAGLINE = business.brand.tagline;
+const SITE_URL = business.brand.siteUrl;
 
 /* Remitente por defecto si no se define EMAIL_FROM. Debe ser una dirección de
  * un dominio VERIFICADO en Resend para que el envío real funcione. */
-const DEFAULT_FROM = "Yaya Mariana <no-reply@yaya-mariana.com>";
+const DEFAULT_FROM = business.email.fromFallback;
 
 type EmailTemplate = "welcome" | "magic-link" | "order-confirmation" | "invoice-ready";
 

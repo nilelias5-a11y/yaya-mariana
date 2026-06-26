@@ -1,4 +1,5 @@
 import type { Order } from "./types";
+import { business, fullAddress } from "@/config/business";
 
 /* FASE B — Cálculos de factura. IVA reducido 10% (productos alimentarios).
  * Los precios de línea son PVP con IVA incluido; aquí se desglosa la base
@@ -43,10 +44,10 @@ export function formatDateES(iso: string): string {
   return `${dd}/${mm}/${d.getFullYear()}`;
 }
 
-/** Datos fiscales del emisor (constantes legales de la empresa). */
+/** Datos fiscales del emisor (leen de la config central `business`). */
 export const ISSUER = {
-  brand: "Yaya Mariana",
-  legalName: "Holistic Green Energy S.L.",
-  cif: "B67391128",
-  address: "Audax — Badalona, Barcelona, España",
+  brand: business.brand.name,
+  legalName: business.fiscal.legalName,
+  cif: business.fiscal.cif,
+  address: fullAddress,
 } as const;
