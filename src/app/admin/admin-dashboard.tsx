@@ -81,6 +81,16 @@ const NAV: { key: SectionKey; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
+/* Búsqueda insensible a mayúsculas y acentos. */
+function normalize(s: string): string {
+  return s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+}
+
+const PAGE_SIZE = 20;
+
 function greeting(hour: number): string {
   if (hour < 6) return "Buenas noches";
   if (hour < 14) return "Buenos días";
@@ -679,6 +689,8 @@ export default function AdminDashboard({
   const [statusFilter, setStatusFilter] = useState<"todos" | OrderStatus>("todos");
   const [dateFilter, setDateFilter] = useState<string>("todas");
   const [detailNumber, setDetailNumber] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
   // Props → estado local: las mutaciones del panel actualizan estas listas en
   // sitio (feedback inmediato), sin recargar. El servidor revalida /admin en
@@ -697,15 +709,26 @@ export default function AdminDashboard({
   }
 
   const dates = useMemo(() => Array.from(new Set(orderList.map((o) => o.date))), [orderList]);
-  const filteredOrders = useMemo(
-    () =>
-      orderList.filter(
-        (o) =>
-          (statusFilter === "todos" || o.status === statusFilter) &&
-          (dateFilter === "todas" || o.date === dateFilter),
-      ),
-    [orderList, statusFilter, dateFilter],
-  );
+  const filteredOrders = useMemo(() => {
+    const q = normalize(search.trim());
+    return orderList.filter((o) => {
+      if (statusFilter !== "todos" && o.status !== statusFilter) return false;
+      if (dateFilter !== "todas" && o.date !== dateFilter) return false;
+      if (q && !normalize(`${o.id} ${o.customer} ${o.city} ${o.email}`).includes(q)) return false;
+      return true;
+    });
+  }, [orderList, statusFilter, dateFilter, search]);
+
+  // Paginación sobre los resultados ya filtrados (búsqueda + estado + fecha).
+  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pagedOrders = filteredOrders.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  // Cualquier cambio de búsqueda/filtro vuelve a la página 1 (sin efectos).
+  function resetTo(setter: () => void) {
+    setter();
+    setPage(1);
+  }
 
   // Ventas del mes en curso (excluye cancelados).
   const ingresos = useMemo(() => {
@@ -831,10 +854,21 @@ export default function AdminDashboard({
                 {/* Filtros */}
                 <div className="flex flex-wrap gap-3">
                   <label className="text-sm">
+                    <span className="block text-xs font-semibold text-[#7a3a3a]/55 uppercase tracking-wide mb-1">Buscar</span>
+                    <input
+                      type="search"
+                      value={search}
+                      onChange={(e) => resetTo(() => setSearch(e.target.value))}
+                      placeholder="Nº, cliente, ciudad, email"
+                      aria-label="Buscar pedidos"
+                      className="rounded-xl border border-[#f5c6c2] bg-white px-3 py-2 text-sm text-[#1a0808] focus:outline-none focus:border-[#c0392b] min-h-[44px] w-full sm:w-60"
+                    />
+                  </label>
+                  <label className="text-sm">
                     <span className="block text-xs font-semibold text-[#7a3a3a]/55 uppercase tracking-wide mb-1">Estado</span>
                     <select
                       value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+                      onChange={(e) => resetTo(() => setStatusFilter(e.target.value as typeof statusFilter))}
                       className="rounded-xl border border-[#f5c6c2] bg-white px-3 py-2 text-sm text-[#1a0808] focus:outline-none focus:border-[#c0392b] min-h-[44px]"
                     >
                       <option value="todos">Todos</option>
@@ -847,7 +881,7 @@ export default function AdminDashboard({
                     <span className="block text-xs font-semibold text-[#7a3a3a]/55 uppercase tracking-wide mb-1">Fecha</span>
                     <select
                       value={dateFilter}
-                      onChange={(e) => setDateFilter(e.target.value)}
+                      onChange={(e) => resetTo(() => setDateFilter(e.target.value))}
                       className="rounded-xl border border-[#f5c6c2] bg-white px-3 py-2 text-sm text-[#1a0808] focus:outline-none focus:border-[#c0392b] min-h-[44px] numerals-tabular"
                     >
                       <option value="todas">Todas</option>
@@ -871,10 +905,10 @@ export default function AdminDashboard({
                   <span>Estado</span>
                 </div>
                 {filteredOrders.length === 0 ? (
-                  <p className="px-5 py-8 text-sm text-[#7a3a3a]/55 text-center">No hay pedidos con esos filtros.</p>
+                  <p className="px-5 py-8 text-sm text-[#7a3a3a]/55 text-center">No se encontraron pedidos.</p>
                 ) : (
                   <ul role="list">
-                    {filteredOrders.map((o) => (
+                    {pagedOrders.map((o) => (
                       <li
                         key={o.id}
                         className="grid grid-cols-2 md:grid-cols-[1fr_1.4fr_1.4fr_0.8fr_1fr] gap-x-3 gap-y-1 px-5 py-4 items-center text-sm"
@@ -901,6 +935,32 @@ export default function AdminDashboard({
                   </ul>
                 )}
               </div>
+
+              {filteredOrders.length > PAGE_SIZE && (
+                <div className="flex items-center justify-between gap-3 mt-4 text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage <= 1}
+                    className="px-3.5 min-h-[40px] rounded-xl font-semibold text-[#7a3a3a] disabled:opacity-40 transition-colors hover:bg-[rgba(245,198,194,0.25)]"
+                    style={{ border: "1px solid rgba(245,198,194,0.7)" }}
+                  >
+                    ← Anterior
+                  </button>
+                  <span className="text-[#7a3a3a]/60 numerals-tabular text-center">
+                    Página {currentPage} de {totalPages} · {filteredOrders.length} pedidos
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage >= totalPages}
+                    className="px-3.5 min-h-[40px] rounded-xl font-semibold text-[#7a3a3a] disabled:opacity-40 transition-colors hover:bg-[rgba(245,198,194,0.25)]"
+                    style={{ border: "1px solid rgba(245,198,194,0.7)" }}
+                  >
+                    Siguiente →
+                  </button>
+                </div>
+              )}
             </section>
           )}
 

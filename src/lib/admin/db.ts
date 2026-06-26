@@ -20,6 +20,7 @@ export type AdminOrder = {
   id: string; // nº de pedido visible, p. ej. "YM-2026-0001"
   customer: string;
   city: string;
+  email: string; // email del cliente (para búsqueda); "—" si no hay
   items: string; // "Mágnum ×2, Dream ×1"
   total: number;
   status: OrderStatus;
@@ -33,6 +34,7 @@ type AdminOrderRow = {
   status: string;
   created_at: unknown;
   shipping_address: unknown;
+  customer_email: string | null;
 };
 
 function asJson<T>(v: unknown): T {
@@ -42,9 +44,11 @@ function asJson<T>(v: unknown): T {
 export async function getAdminOrders(): Promise<AdminOrder[]> {
   const sql = getSql();
   const rows = (await sql`
-    SELECT number, items, status, created_at, shipping_address
-    FROM cuenta_orders
-    ORDER BY created_at DESC
+    SELECT o.number, o.items, o.status, o.created_at, o.shipping_address,
+           u.email AS customer_email
+    FROM cuenta_orders o
+    LEFT JOIN cuenta_users u ON u.id = o.user_id
+    ORDER BY o.created_at DESC
   `) as AdminOrderRow[];
 
   return rows.map((r) => {
@@ -57,6 +61,7 @@ export async function getAdminOrders(): Promise<AdminOrder[]> {
       id: r.number,
       customer: ship?.recipient ?? "—",
       city: ship?.city ?? "—",
+      email: r.customer_email ?? "—",
       items: items.map((it) => `${it.variety} ×${it.qty}`).join(", "),
       total,
       status: r.status as OrderStatus,
