@@ -2,6 +2,7 @@ import "server-only";
 import { getSql } from "@/lib/cuenta/sql";
 import { computeTotals, formatDateES } from "@/lib/cuenta/invoice";
 import type { Order, OrderItem, Address, OrderStatus } from "@/lib/cuenta/types";
+import { ORDER_TRANSITIONS, isOrderStatus } from "./status";
 
 /* TAREA 1 — Capa de datos del panel /admin sobre Neon.
  *
@@ -93,6 +94,50 @@ export async function getAdminStock(): Promise<AdminStock[]> {
     lowThreshold: r.low_threshold,
     outThreshold: r.out_threshold,
   }));
+}
+
+// ---- mutaciones de gestión (panel /admin) ----------------------------------
+
+/* TAREA 1 — transiciones de estado permitidas: regla de dominio compartida en
+ * @/lib/admin/status (la usa también el dashboard cliente). Se re-exporta aquí
+ * para que los route handlers la consuman desde un único módulo de datos. */
+export { ORDER_TRANSITIONS, isOrderStatus };
+
+export type UpdateOrderResult =
+  | { ok: true; from: OrderStatus; status: OrderStatus; updatedAt: string }
+  | { ok: false; code: "not_found" }
+  | { ok: false; code: "invalid_transition"; from: OrderStatus; allowed: OrderStatus[] };
+
+/** Cambia el estado de un pedido (identificado por su `number`, p. ej.
+ *  "YM-2026-0001") validando la transición. Sella `updated_at`. */
+export async function updateOrderStatus(
+  orderNumber: string,
+  next: OrderStatus,
+): Promise<UpdateOrderResult> {
+  const sql = getSql();
+  const current = (await sql`
+    SELECT status FROM cuenta_orders WHERE number = ${orderNumber} LIMIT 1
+  `) as { status: OrderStatus }[];
+  if (!current[0]) return { ok: false, code: "not_found" };
+
+  const from = current[0].status;
+  const allowed = ORDER_TRANSITIONS[from] ?? [];
+  if (!allowed.includes(next)) {
+    return { ok: false, code: "invalid_transition", from, allowed };
+  }
+
+  const updated = (await sql`
+    UPDATE cuenta_orders
+    SET status = ${next}, updated_at = now()
+    WHERE number = ${orderNumber}
+    RETURNING status, updated_at
+  `) as { status: OrderStatus; updated_at: unknown }[];
+  return {
+    ok: true,
+    from,
+    status: updated[0].status,
+    updatedAt: new Date(updated[0].updated_at as string).toISOString(),
+  };
 }
 
 // ---- admin_users -----------------------------------------------------------

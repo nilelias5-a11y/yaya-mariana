@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import type { OrderStatus } from "@/lib/cuenta/types";
 import type { AdminOrder, AdminStock } from "@/lib/admin/db";
+import { ORDER_TRANSITIONS } from "@/lib/admin/status";
 
 /* FASE A.5 · T2 — Dashboard del panel /admin (cliente).
  *
@@ -126,6 +127,86 @@ function StatCard({ label, value, accent }: { label: string; value: string; acce
   );
 }
 
+/* TAREA 1 — Selector de estado por pedido. Sólo ofrece las transiciones
+ * válidas (ORDER_TRANSITIONS); si el estado es terminal (entregado/cancelado)
+ * muestra el badge estático. Llama al endpoint protegido y avisa al padre para
+ * refrescar la fila sin recargar la página. */
+function OrderStatusControl({
+  order,
+  onUpdated,
+}: {
+  order: AdminOrder;
+  onUpdated: (status: OrderStatus) => void;
+}) {
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const st = STATUS_STYLE[order.status];
+  const allowed = ORDER_TRANSITIONS[order.status];
+
+  async function change(next: OrderStatus) {
+    if (next === order.status) return;
+    setPending(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${encodeURIComponent(order.id)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: next }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; status?: string };
+      if (!res.ok || !data.ok) {
+        setError(res.status === 422 ? "Transición no permitida" : "No se pudo actualizar");
+        return;
+      }
+      onUpdated((data.status as OrderStatus) ?? next);
+    } catch {
+      setError("Error de red");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  if (allowed.length === 0) {
+    return (
+      <span
+        className="inline-block text-xs font-bold px-2.5 py-1 rounded-full"
+        style={{ backgroundColor: st.bg, color: st.color }}
+        title="Estado final"
+      >
+        {st.label}
+      </span>
+    );
+  }
+
+  return (
+    <span className="flex flex-col gap-1 md:justify-self-start justify-self-end">
+      <select
+        value={order.status}
+        disabled={pending}
+        onChange={(e) => change(e.target.value as OrderStatus)}
+        aria-label={`Estado del pedido ${order.id}`}
+        className="rounded-full text-xs font-bold pl-2.5 pr-7 py-1 cursor-pointer focus:outline-none disabled:opacity-60 appearance-none bg-no-repeat"
+        style={{
+          backgroundColor: st.bg,
+          color: st.color,
+          border: `1px solid ${st.color}40`,
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a3a3a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
+          backgroundPosition: "right 0.5rem center",
+        }}
+      >
+        <option value={order.status}>{st.label}</option>
+        {allowed.map((s) => (
+          <option key={s} value={s}>
+            → {STATUS_STYLE[s].label}
+          </option>
+        ))}
+      </select>
+      {error && <span className="text-[11px] font-semibold text-[#c0392b]">{error}</span>}
+    </span>
+  );
+}
+
 export default function AdminDashboard({
   adminUser,
   orders,
@@ -140,15 +221,24 @@ export default function AdminDashboard({
   const [statusFilter, setStatusFilter] = useState<"todos" | OrderStatus>("todos");
   const [dateFilter, setDateFilter] = useState<string>("todas");
 
-  const dates = useMemo(() => Array.from(new Set(orders.map((o) => o.date))), [orders]);
+  // Props → estado local: las mutaciones del panel actualizan esta lista en
+  // sitio (feedback inmediato), sin recargar. El servidor revalida /admin en
+  // paralelo, de modo que una recarga muestra exactamente lo mismo.
+  const [orderList, setOrderList] = useState(orders);
+
+  function applyOrderStatus(orderId: string, status: OrderStatus) {
+    setOrderList((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
+  }
+
+  const dates = useMemo(() => Array.from(new Set(orderList.map((o) => o.date))), [orderList]);
   const filteredOrders = useMemo(
     () =>
-      orders.filter(
+      orderList.filter(
         (o) =>
           (statusFilter === "todos" || o.status === statusFilter) &&
           (dateFilter === "todas" || o.date === dateFilter),
       ),
-    [orders, statusFilter, dateFilter],
+    [orderList, statusFilter, dateFilter],
   );
 
   // Ventas del mes en curso (excluye cancelados).
@@ -156,15 +246,15 @@ export default function AdminDashboard({
     const now = new Date();
     const y = now.getFullYear();
     const m = now.getMonth();
-    return orders
+    return orderList
       .filter((o) => o.status !== "cancelado")
       .filter((o) => {
         const d = new Date(o.createdAt);
         return d.getFullYear() === y && d.getMonth() === m;
       })
       .reduce((s, o) => s + o.total, 0);
-  }, [orders]);
-  const pendientes = orders.filter((o) => PENDING_STATUSES.includes(o.status)).length;
+  }, [orderList]);
+  const pendientes = orderList.filter((o) => PENDING_STATUSES.includes(o.status)).length;
   const criticos = stock.filter(
     (s) => stockLevel(s.units, s.lowThreshold, s.outThreshold) !== "ok",
   ).length;
@@ -265,7 +355,7 @@ export default function AdminDashboard({
             <StatCard label="Ventas del mes" value={`${ingresos.toFixed(2)}€`} />
             <StatCard label="Pedidos pendientes" value={String(pendientes)} accent={pendientes > 0 ? "#c0392b" : undefined} />
             <StatCard label="Stock crítico" value={String(criticos)} accent={criticos > 0 ? "#c0392b" : undefined} />
-            <StatCard label="Pedidos totales" value={String(orders.length)} />
+            <StatCard label="Pedidos totales" value={String(orderList.length)} />
           </div>
 
           {section === "pedidos" && (
@@ -318,32 +408,25 @@ export default function AdminDashboard({
                   <p className="px-5 py-8 text-sm text-[#7a3a3a]/55 text-center">No hay pedidos con esos filtros.</p>
                 ) : (
                   <ul role="list">
-                    {filteredOrders.map((o) => {
-                      const st = STATUS_STYLE[o.status];
-                      return (
-                        <li
-                          key={o.id}
-                          className="grid grid-cols-2 md:grid-cols-[1fr_1.4fr_1.4fr_0.8fr_1fr] gap-x-3 gap-y-1 px-5 py-4 items-center text-sm"
-                          style={{ borderBottom: "1px solid rgba(245,198,194,0.35)" }}
-                        >
-                          <span className="font-semibold text-[#1a0808]">
-                            {o.id}
-                            <span className="block text-xs font-normal text-[#7a3a3a]/45 md:hidden numerals-tabular">{o.date}</span>
-                          </span>
-                          <span className="text-[#7a3a3a] text-right md:text-left">
-                            {o.customer}
-                            <span className="block text-xs text-[#7a3a3a]/45">{o.city}</span>
-                          </span>
-                          <span className="text-[#7a3a3a]/80 hidden md:block">{o.items}</span>
-                          <span className="font-semibold text-[#1a0808] numerals-tabular hidden md:block">{o.total.toFixed(2)}€</span>
-                          <span className="md:justify-self-start justify-self-end">
-                            <span className="inline-block text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: st.bg, color: st.color }}>
-                              {st.label}
-                            </span>
-                          </span>
-                        </li>
-                      );
-                    })}
+                    {filteredOrders.map((o) => (
+                      <li
+                        key={o.id}
+                        className="grid grid-cols-2 md:grid-cols-[1fr_1.4fr_1.4fr_0.8fr_1fr] gap-x-3 gap-y-1 px-5 py-4 items-center text-sm"
+                        style={{ borderBottom: "1px solid rgba(245,198,194,0.35)" }}
+                      >
+                        <span className="font-semibold text-[#1a0808]">
+                          {o.id}
+                          <span className="block text-xs font-normal text-[#7a3a3a]/45 md:hidden numerals-tabular">{o.date}</span>
+                        </span>
+                        <span className="text-[#7a3a3a] text-right md:text-left">
+                          {o.customer}
+                          <span className="block text-xs text-[#7a3a3a]/45">{o.city}</span>
+                        </span>
+                        <span className="text-[#7a3a3a]/80 hidden md:block">{o.items}</span>
+                        <span className="font-semibold text-[#1a0808] numerals-tabular hidden md:block">{o.total.toFixed(2)}€</span>
+                        <OrderStatusControl order={o} onUpdated={(s) => applyOrderStatus(o.id, s)} />
+                      </li>
+                    ))}
                   </ul>
                 )}
               </div>

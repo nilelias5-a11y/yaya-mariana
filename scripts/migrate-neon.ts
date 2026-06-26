@@ -78,6 +78,11 @@ async function createSchema() {
     ON cuenta_orders(payment_ref) WHERE payment_ref IS NOT NULL
   `;
 
+  /* 3ª tanda (panel /admin gestión) — additive. updated_at: marca la última
+   * vez que el panel cambió el estado del pedido (NULL = nunca tocado desde
+   * el panel). product_stock ya trae su propio updated_at. */
+  await sql`ALTER TABLE cuenta_orders ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ`;
+
   // admin_users: migra el admin de env var (ADMIN_PASS_HASH) a tabla (bcrypt).
   await sql`
     CREATE TABLE IF NOT EXISTS admin_users (
