@@ -226,6 +226,97 @@ export async function updateOrderStatus(
   };
 }
 
+/* PARTE 2 — editar la dirección de envío de un pedido.
+ *
+ * Solo editable ANTES de enviar (estados pagado/preparacion); en
+ * enviado/entregado/cancelado se rechaza. Valida campos obligatorios y
+ * longitudes. Preserva id/label de la dirección original. */
+export const ADDRESS_EDITABLE_STATUSES: OrderStatus[] = ["pagado", "preparacion"];
+
+export type ShippingAddressInput = {
+  recipient: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  region?: string;
+  country?: string;
+  phone?: string;
+};
+
+export type UpdateAddressResult =
+  | { ok: true; shippingAddress: Address }
+  | { ok: false; code: "not_found" }
+  | { ok: false; code: "not_editable"; status: OrderStatus }
+  | { ok: false; code: "invalid" };
+
+const ADDR_LIMITS = {
+  recipient: 120,
+  street: 200,
+  city: 80,
+  postalCode: 16,
+  region: 80,
+  country: 56,
+  phone: 32,
+};
+
+export async function updateOrderShippingAddress(
+  orderNumber: string,
+  input: ShippingAddressInput,
+): Promise<UpdateAddressResult> {
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT status, shipping_address FROM cuenta_orders WHERE number = ${orderNumber} LIMIT 1
+  `) as { status: OrderStatus; shipping_address: unknown }[];
+  if (!rows[0]) return { ok: false, code: "not_found" };
+
+  const status = rows[0].status;
+  if (!ADDRESS_EDITABLE_STATUSES.includes(status)) {
+    return { ok: false, code: "not_editable", status };
+  }
+
+  const recipient = (input.recipient ?? "").trim();
+  const street = (input.street ?? "").trim();
+  const city = (input.city ?? "").trim();
+  const postalCode = (input.postalCode ?? "").trim();
+  const region = (input.region ?? "").trim();
+  const country = (input.country ?? "").trim();
+  const phone = (input.phone ?? "").trim();
+
+  // Obligatorios.
+  if (!recipient || !street || !city || !postalCode) return { ok: false, code: "invalid" };
+  // Longitudes razonables.
+  if (
+    recipient.length > ADDR_LIMITS.recipient ||
+    street.length > ADDR_LIMITS.street ||
+    city.length > ADDR_LIMITS.city ||
+    postalCode.length > ADDR_LIMITS.postalCode ||
+    region.length > ADDR_LIMITS.region ||
+    country.length > ADDR_LIMITS.country ||
+    phone.length > ADDR_LIMITS.phone
+  ) {
+    return { ok: false, code: "invalid" };
+  }
+
+  const existing = asJson<Address>(rows[0].shipping_address);
+  const next: Address = {
+    ...existing, // preserva id y label
+    recipient,
+    street,
+    city,
+    postalCode,
+    region: region || existing.region,
+    country: country || existing.country,
+    phone: phone || undefined,
+  };
+
+  await sql`
+    UPDATE cuenta_orders
+    SET shipping_address = ${JSON.stringify(next)}::jsonb, updated_at = now()
+    WHERE number = ${orderNumber}
+  `;
+  return { ok: true, shippingAddress: next };
+}
+
 /* TAREA 2 — ajuste de existencias (product_stock.units). */
 export type UpdateStockResult =
   | { ok: true; units: number; lowThreshold: number; outThreshold: number; updatedAt: string }

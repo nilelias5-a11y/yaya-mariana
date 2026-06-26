@@ -364,10 +364,119 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function OrderDetailDrawer({ orderNumber, onClose }: { orderNumber: string; onClose: () => void }) {
+/* PARTE 2 — formulario de edición de la dirección de envío (dentro del drawer). */
+type AddrForm = {
+  recipient: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  region: string;
+  country: string;
+  phone: string;
+};
+const EMPTY_ADDR: AddrForm = {
+  recipient: "",
+  street: "",
+  city: "",
+  postalCode: "",
+  region: "",
+  country: "",
+  phone: "",
+};
+function AddrInput({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[11px] font-semibold text-[#7a3a3a]/55 uppercase tracking-wide mb-1">{label}</span>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-lg border border-[#f5c6c2] bg-white px-3 py-2 text-sm text-[#1a0808] focus:outline-none focus:border-[#c0392b]"
+      />
+    </label>
+  );
+}
+
+function OrderDetailDrawer({
+  orderNumber,
+  onClose,
+  onAddressSaved,
+}: {
+  orderNumber: string;
+  onClose: () => void;
+  onAddressSaved?: (recipient: string, city: string) => void;
+}) {
   const [detail, setDetail] = useState<AdminOrderDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const loading = !detail && !error;
+  // PARTE 2 — edición de dirección
+  const [editing, setEditing] = useState(false);
+  const [addr, setAddr] = useState<AddrForm>(EMPTY_ADDR);
+  const [saving, setSaving] = useState(false);
+  const [addrMsg, setAddrMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  // Solo editable antes de enviar.
+  const addressEditable = detail?.status === "pagado" || detail?.status === "preparacion";
+
+  function startEditAddress() {
+    if (!detail) return;
+    const a = detail.shippingAddress;
+    setAddr({
+      recipient: a.recipient ?? "",
+      street: a.street ?? "",
+      city: a.city ?? "",
+      postalCode: a.postalCode ?? "",
+      region: a.region ?? "",
+      country: a.country ?? "",
+      phone: a.phone ?? "",
+    });
+    setAddrMsg(null);
+    setEditing(true);
+  }
+
+  async function saveAddress() {
+    if (!addr.recipient.trim() || !addr.street.trim() || !addr.city.trim() || !addr.postalCode.trim()) {
+      setAddrMsg({ ok: false, text: "Rellena nombre, calle, ciudad y código postal." });
+      return;
+    }
+    setSaving(true);
+    setAddrMsg(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${encodeURIComponent(orderNumber)}/address`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(addr),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; shippingAddress?: AdminOrderDetail["shippingAddress"] };
+      if (!res.ok || !data.ok || !data.shippingAddress) {
+        setAddrMsg({
+          ok: false,
+          text:
+            res.status === 422
+              ? "Este pedido ya no se puede editar (ya enviado)."
+              : "No se pudo guardar. Revisa los campos.",
+        });
+        return;
+      }
+      const saved = data.shippingAddress;
+      setDetail((prev) => (prev ? { ...prev, shippingAddress: saved } : prev));
+      onAddressSaved?.(saved.recipient, saved.city);
+      setEditing(false);
+      setAddrMsg({ ok: true, text: "Dirección actualizada." });
+    } catch {
+      setAddrMsg({ ok: false, text: "Error de red." });
+    } finally {
+      setSaving(false);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -440,13 +549,73 @@ function OrderDetailDrawer({ orderNumber, onClose }: { orderNumber: string; onCl
                 <DetailRow label="Teléfono" value={detail.customer.telefono ?? "—"} />
               </DetailSection>
 
-              <DetailSection title="Dirección de envío">
-                <p className="text-[#1a0808] font-medium">{sa.recipient}</p>
-                <p className="text-[#7a3a3a]/75">{sa.street}</p>
-                <p className="text-[#7a3a3a]/75 numerals-tabular">{sa.postalCode} {sa.city}, {sa.region}</p>
-                <p className="text-[#7a3a3a]/75">{sa.country}</p>
-                {sa.phone && <p className="text-[#7a3a3a]/75 numerals-tabular">{sa.phone}</p>}
-              </DetailSection>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[#7a3a3a]/55">Dirección de envío</p>
+                  {addressEditable && !editing && (
+                    <button
+                      type="button"
+                      onClick={startEditAddress}
+                      className="text-xs font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors"
+                    >
+                      Editar
+                    </button>
+                  )}
+                </div>
+                {!editing ? (
+                  <div className="space-y-1">
+                    <p className="text-[#1a0808] font-medium">{sa.recipient}</p>
+                    <p className="text-[#7a3a3a]/75">{sa.street}</p>
+                    <p className="text-[#7a3a3a]/75 numerals-tabular">{sa.postalCode} {sa.city}{sa.region ? `, ${sa.region}` : ""}</p>
+                    {sa.country && <p className="text-[#7a3a3a]/75">{sa.country}</p>}
+                    {sa.phone && <p className="text-[#7a3a3a]/75 numerals-tabular">{sa.phone}</p>}
+                    {!addressEditable && (
+                      <p className="text-[11px] text-[#7a3a3a]/45 mt-1.5 italic">
+                        No editable: el pedido ya está {STATUS_STYLE[detail.status].label.toLowerCase()}.
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <AddrInput label="Nombre *" value={addr.recipient} onChange={(v) => setAddr({ ...addr, recipient: v })} />
+                    <AddrInput label="Calle y número *" value={addr.street} onChange={(v) => setAddr({ ...addr, street: v })} />
+                    <div className="grid grid-cols-2 gap-2">
+                      <AddrInput label="Cód. postal *" value={addr.postalCode} onChange={(v) => setAddr({ ...addr, postalCode: v })} />
+                      <AddrInput label="Ciudad *" value={addr.city} onChange={(v) => setAddr({ ...addr, city: v })} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <AddrInput label="Provincia" value={addr.region} onChange={(v) => setAddr({ ...addr, region: v })} />
+                      <AddrInput label="País" value={addr.country} onChange={(v) => setAddr({ ...addr, country: v })} />
+                    </div>
+                    <AddrInput label="Teléfono" value={addr.phone} onChange={(v) => setAddr({ ...addr, phone: v })} />
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={saveAddress}
+                        disabled={saving}
+                        className="flex-1 py-2 rounded-xl text-sm font-bold text-white transition-opacity disabled:opacity-50"
+                        style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
+                      >
+                        {saving ? "Guardando…" : "Guardar dirección"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setEditing(false); setAddrMsg(null); }}
+                        disabled={saving}
+                        className="px-4 py-2 rounded-xl text-sm font-semibold text-[#7a3a3a] transition-colors hover:bg-[rgba(245,198,194,0.25)]"
+                        style={{ border: "1px solid rgba(245,198,194,0.7)" }}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {addrMsg && (
+                  <p className={`text-xs mt-2 font-semibold ${addrMsg.ok ? "text-[#1f7a43]" : "text-[#c0392b]"}`}>
+                    {addrMsg.text}
+                  </p>
+                )}
+              </div>
 
               <DetailSection title="Facturación">
                 <DetailRow label="Nombre" value={detail.billing.nombre} />
@@ -519,6 +688,9 @@ export default function AdminDashboard({
 
   function applyOrderStatus(orderId: string, status: OrderStatus) {
     setOrderList((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
+  }
+  function applyOrderAddress(orderId: string, recipient: string, city: string) {
+    setOrderList((prev) => prev.map((o) => (o.id === orderId ? { ...o, customer: recipient, city } : o)));
   }
   function applyStockUnits(key: string, units: number) {
     setStockList((prev) => prev.map((s) => (s.key === key ? { ...s, units } : s)));
@@ -783,6 +955,7 @@ export default function AdminDashboard({
           key={detailNumber}
           orderNumber={detailNumber}
           onClose={() => setDetailNumber(null)}
+          onAddressSaved={(recipient, city) => applyOrderAddress(detailNumber, recipient, city)}
         />
       )}
     </div>
