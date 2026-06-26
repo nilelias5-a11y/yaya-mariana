@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import type { OrderStatus } from "@/lib/cuenta/types";
 import type { AdminOrder, AdminStock } from "@/lib/admin/db";
-import { ORDER_TRANSITIONS } from "@/lib/admin/status";
+import { ORDER_TRANSITIONS, isBackwardTransition } from "@/lib/admin/status";
 
 /* FASE A.5 · T2 — Dashboard del panel /admin (cliente).
  *
@@ -128,8 +128,9 @@ function StatCard({ label, value, accent }: { label: string; value: string; acce
 }
 
 /* TAREA 1 — Selector de estado por pedido. Sólo ofrece las transiciones
- * válidas (ORDER_TRANSITIONS); si el estado es terminal (entregado/cancelado)
- * muestra el badge estático. Llama al endpoint protegido y avisa al padre para
+ * válidas (ORDER_TRANSITIONS); si el estado es terminal (sólo `cancelado`)
+ * muestra el badge estático. Separa avances de correcciones (retroceso) en dos
+ * grupos del desplegable. Llama al endpoint protegido y avisa al padre para
  * refrescar la fila sin recargar la página. */
 function OrderStatusControl({
   order,
@@ -142,6 +143,9 @@ function OrderStatusControl({
   const [error, setError] = useState<string | null>(null);
   const st = STATUS_STYLE[order.status];
   const allowed = ORDER_TRANSITIONS[order.status];
+  // Avances (incluye cancelar) vs correcciones hacia atrás.
+  const forward = allowed.filter((s) => !isBackwardTransition(order.status, s));
+  const backward = allowed.filter((s) => isBackwardTransition(order.status, s));
 
   async function change(next: OrderStatus) {
     if (next === order.status) return;
@@ -196,11 +200,24 @@ function OrderStatusControl({
         }}
       >
         <option value={order.status}>{st.label}</option>
-        {allowed.map((s) => (
-          <option key={s} value={s}>
-            → {STATUS_STYLE[s].label}
-          </option>
-        ))}
+        {forward.length > 0 && (
+          <optgroup label="Avanzar">
+            {forward.map((s) => (
+              <option key={s} value={s}>
+                {s === "cancelado" ? "✕" : "→"} {STATUS_STYLE[s].label}
+              </option>
+            ))}
+          </optgroup>
+        )}
+        {backward.length > 0 && (
+          <optgroup label="Corregir (un paso atrás)">
+            {backward.map((s) => (
+              <option key={s} value={s}>
+                ↩ {STATUS_STYLE[s].label}
+              </option>
+            ))}
+          </optgroup>
+        )}
       </select>
       {error && <span className="text-[11px] font-semibold text-[#c0392b]">{error}</span>}
     </span>
