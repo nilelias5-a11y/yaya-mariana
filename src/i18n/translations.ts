@@ -62,11 +62,39 @@ export const translations = {
         goToPhoto: "Ir a la foto",
         photo: "foto",
       },
+      // PROVISIONAL: copy de ejemplo, reemplazar con texto real de J. Elías.
+      // Solo cualidades genéricas creíbles (sabor, frescura, cuidado); sin
+      // hechos verificables no confirmados (pueblos, premios, certificaciones).
       items: [
-        { description: "Fresa de gran tamaño y sabor intenso, cultivada en Tarragona. Recogida en su punto óptimo de madurez, sin pesticidas." },
-        { description: "Variedad Dream de sabor dulce y textura firme. Cultivo propio de Tarragona, directa del campo a tu mesa." },
-        { description: "Variedad exclusiva 1525, seleccionada por su calidad y dulzura excepcional. Sin químicos ni pesticidas." },
+        {
+          description: "Fresa de gran tamaño y sabor intenso, cultivada en Tarragona. Recogida en su punto óptimo de madurez, sin pesticidas.",
+          longDescription:
+            "Nuestra fresa más generosa: piezas grandes, de un rojo intenso y brillo natural. El sabor es profundo y equilibrado, con el dulzor en su punto y ese frescor de la fruta recién cogida. Cultivada con mimo en Tarragona, sin pesticidas, y recogida a mano en su momento óptimo.",
+        },
+        {
+          description: "Variedad Dream de sabor dulce y textura firme. Cultivo propio de Tarragona, directa del campo a tu mesa.",
+          longDescription:
+            "Una fresa de dulzor delicado y textura firme y jugosa. De tamaño medio y forma cuidada, es la elección de quien busca una pieza fina y aromática para disfrutar tal cual. Cultivo propio en Tarragona, sin químicos artificiales, tratada con el cuidado de siempre.",
+        },
+        {
+          description: "Variedad exclusiva 1525, seleccionada por su calidad y dulzura excepcional. Sin químicos ni pesticidas.",
+          longDescription:
+            "Nuestra selección más especial: una fresa de dulzura notable y aroma envolvente, firme y de sabor redondo. Un pequeño lujo de temporada, cultivado sin pesticidas en Tarragona y cuidado paso a paso, del campo a tu mesa.",
+        },
       ],
+    },
+    productDetail: {
+      breadcrumbHome: "Inicio",
+      breadcrumbProducts: "Productos",
+      buyNow: "Comprar ahora",
+      shippingTitle: "Envío y frescura",
+      shippingItems: [
+        "Entrega en 24-48h con cadena de frío",
+        "Cultivadas sin pesticidas en Tarragona",
+        "Envío a toda la península",
+      ],
+      otherVarieties: "Otras variedades",
+      backToProducts: "Volver a la tienda",
     },
     about: {
       eyebrow: "Nuestra historia",
@@ -564,11 +592,37 @@ export const translations = {
         goToPhoto: "Anar a la foto",
         photo: "foto",
       },
+      // PROVISIONAL: copy de exemple, substituir amb text real d'en J. Elías.
       items: [
-        { description: "Maduixa de gran mida i sabor intens, cultivada a Tarragona. Recollida en el seu punt òptim de maduresa, sense pesticides." },
-        { description: "Varietat Dream de sabor dolç i textura ferma. Cultiu propi de Tarragona, directa del camp a la teva taula." },
-        { description: "Varietat exclusiva 1525, seleccionada per la seva qualitat i dolçor excepcional. Sense químics ni pesticides." },
+        {
+          description: "Maduixa de gran mida i sabor intens, cultivada a Tarragona. Recollida en el seu punt òptim de maduresa, sense pesticides.",
+          longDescription:
+            "La nostra maduixa més generosa: peces grans, d'un vermell intens i brillantor natural. El sabor és profund i equilibrat, amb la dolçor al seu punt i aquella frescor de la fruita acabada de collir. Cultivada amb cura a Tarragona, sense pesticides, i collida a mà en el seu moment òptim.",
+        },
+        {
+          description: "Varietat Dream de sabor dolç i textura ferma. Cultiu propi de Tarragona, directa del camp a la teva taula.",
+          longDescription:
+            "Una maduixa de dolçor delicada i textura ferma i sucosa. De mida mitjana i forma acurada, és l'elecció de qui busca una peça fina i aromàtica per gaudir tal qual. Cultiu propi a Tarragona, sense químics artificials, tractada amb la cura de sempre.",
+        },
+        {
+          description: "Varietat exclusiva 1525, seleccionada per la seva qualitat i dolçor excepcional. Sense químics ni pesticides.",
+          longDescription:
+            "La nostra selecció més especial: una maduixa de dolçor notable i aroma envoltant, ferma i de sabor rodó. Un petit luxe de temporada, cultivat sense pesticides a Tarragona i cuidat pas a pas, del camp a la teva taula.",
+        },
       ],
+    },
+    productDetail: {
+      breadcrumbHome: "Inici",
+      breadcrumbProducts: "Productes",
+      buyNow: "Comprar ara",
+      shippingTitle: "Enviament i frescor",
+      shippingItems: [
+        "Lliurament en 24-48h amb cadena de fred",
+        "Cultivades sense pesticides a Tarragona",
+        "Enviament a tota la península",
+      ],
+      otherVarieties: "Altres varietats",
+      backToProducts: "Tornar a la botiga",
     },
     about: {
       eyebrow: "La nostra història",
@@ -1066,11 +1120,37 @@ export const translations = {
         goToPhoto: "Go to photo",
         photo: "photo",
       },
+      // PROVISIONAL: sample copy, replace with J. Elías's real text.
       items: [
-        { description: "Large strawberry with intense flavour, grown in Tarragona. Picked at its optimal ripeness, no pesticides." },
-        { description: "Dream variety with sweet flavour and firm texture. Own cultivation in Tarragona, straight from the field to your table." },
-        { description: "Exclusive 1525 variety, selected for its exceptional quality and sweetness. No chemicals or pesticides." },
+        {
+          description: "Large strawberry with intense flavour, grown in Tarragona. Picked at its optimal ripeness, no pesticides.",
+          longDescription:
+            "Our most generous strawberry: large berries with a deep red colour and natural shine. The flavour is rich and balanced, perfectly sweet with the freshness of just-picked fruit. Grown with care in Tarragona, without pesticides, and hand-picked at its peak.",
+        },
+        {
+          description: "Dream variety with sweet flavour and firm texture. Own cultivation in Tarragona, straight from the field to your table.",
+          longDescription:
+            "A strawberry with delicate sweetness and a firm, juicy texture. Medium-sized and neatly shaped, it's the choice for those after a fine, aromatic berry to enjoy as is. Our own crop in Tarragona, free of artificial chemicals, tended with the same care as always.",
+        },
+        {
+          description: "Exclusive 1525 variety, selected for its exceptional quality and sweetness. No chemicals or pesticides.",
+          longDescription:
+            "Our most special selection: a strawberry of remarkable sweetness and enveloping aroma, firm and round in flavour. A small seasonal luxury, grown without pesticides in Tarragona and cared for every step of the way, from field to table.",
+        },
       ],
+    },
+    productDetail: {
+      breadcrumbHome: "Home",
+      breadcrumbProducts: "Products",
+      buyNow: "Buy now",
+      shippingTitle: "Shipping & freshness",
+      shippingItems: [
+        "Delivery in 24-48h with cold chain",
+        "Grown without pesticides in Tarragona",
+        "Shipping across mainland Spain",
+      ],
+      otherVarieties: "Other varieties",
+      backToProducts: "Back to the shop",
     },
     about: {
       eyebrow: "Our story",

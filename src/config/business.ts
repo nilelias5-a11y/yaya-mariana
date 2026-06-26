@@ -20,6 +20,7 @@
 
 export type BusinessProduct = {
   variety: string; // clave de unión con product_stock (Neon): "Mágnum" | "Dream" | "1525"
+  slug: string; // segmento de URL de la página de detalle: /productos/<slug>
   cartName: string; // nombre visible / del carrito: "Fresa Mágnum"
   orderName: string; // nombre de línea en pedido/factura
   category: "Premium";
@@ -87,6 +88,7 @@ export const business = {
   products: [
     {
       variety: "Mágnum",
+      slug: "magnum",
       cartName: "Fresa Mágnum",
       orderName: "Caja fresas Yaya Mariana — Mágnum",
       category: "Premium",
@@ -101,6 +103,7 @@ export const business = {
     },
     {
       variety: "Dream",
+      slug: "dream",
       cartName: "Fresa Dream",
       orderName: "Caja fresas Yaya Mariana — Dream",
       category: "Premium",
@@ -115,6 +118,7 @@ export const business = {
     },
     {
       variety: "1525",
+      slug: "1525",
       cartName: "Fresa Variedad 1525",
       orderName: "Caja fresas Yaya Mariana — Variedad 1525",
       category: "Premium",
@@ -159,4 +163,13 @@ const BUSINESS_VARS: Record<string, string> = {
 
 export function withBusinessVars(text: string): string {
   return text.replace(/\{(email|phone|whatsapp|address)\}/g, (_, key) => BUSINESS_VARS[key] ?? `{${key}}`);
+}
+
+/** Producto + su índice (para mapear con la prosa i18n `t.products.items[i]`),
+ *  buscado por el `slug` de la URL. `undefined` si no existe. */
+export function findProductBySlug(
+  slug: string,
+): { product: BusinessProduct; index: number } | undefined {
+  const index = business.products.findIndex((p) => p.slug === slug);
+  return index === -1 ? undefined : { product: business.products[index], index };
 }

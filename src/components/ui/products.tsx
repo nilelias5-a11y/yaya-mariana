@@ -14,6 +14,7 @@ type Category = "all" | "Premium";
  * `business.products`. Las descripciones son prosa traducible (i18n). */
 const PRODUCTS_BASE = business.products.map((p) => ({
   name: p.cartName,
+  slug: p.slug,
   category: p.category,
   price: p.price,
   weight: p.weight,
@@ -275,13 +276,11 @@ function ProductCard({
               <span className="numerals-tabular text-lg font-bold text-[#1a0808]">{product.price.toFixed(2)}€</span>
               <span className="text-xs text-[#7a3a3a]/50 ml-1.5">/ {product.weight}</span>
             </div>
-            {/* "Ver más" lleva a la seccion de productos (#productos), NO al
-                pago: coherente con "Ver tienda" y el footer. Un boton de
-                "ver/explorar" nunca debe saltar al checkout; el pago real
-                solo desde el carrito / "Comprar ahora". (No existe pagina de
-                detalle de producto todavia; #productos es el destino seguro.) */}
+            {/* "Ver más" lleva a la página de detalle del producto
+                (/productos/[slug]). El pago real sigue solo desde el carrito /
+                "Comprar ahora"; "Ver más" es navegación, nunca salta al pago. */}
             <Link
-              href="#productos"
+              href={`/productos/${product.slug}`}
               className="group/btn inline-flex items-center gap-1 text-xs font-semibold text-[#c0392b]/70 hover:text-[#c0392b] transition-colors duration-200"
             >
               {viewMoreLabel}
