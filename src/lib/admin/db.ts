@@ -3,6 +3,8 @@ import { getSql } from "@/lib/cuenta/sql";
 import { computeTotals, formatDateES } from "@/lib/cuenta/invoice";
 import type { Order, OrderItem, Address, OrderStatus } from "@/lib/cuenta/types";
 import { ORDER_TRANSITIONS, isOrderStatus } from "./status";
+import { getOrderById } from "@/lib/cuenta/db";
+import type { InvoiceTotals } from "@/lib/cuenta/invoice";
 
 /* TAREA 1 — Capa de datos del panel /admin sobre Neon.
  *
@@ -62,6 +64,87 @@ export async function getAdminOrders(): Promise<AdminOrder[]> {
       createdAt,
     };
   });
+}
+
+// ---- detalle de pedido (PARTE 1 — drawer) ----------------------------------
+
+/** Detalle completo de un pedido para el drawer del panel. Incluye datos del
+ *  cliente (JOIN cuenta_users). Todo lo demás ya vive en cuenta_orders. */
+export type AdminOrderDetail = {
+  number: string;
+  status: OrderStatus;
+  date: string; // dd/mm/yyyy
+  createdAt: string; // ISO
+  updatedAt: string | null;
+  items: OrderItem[];
+  totals: InvoiceTotals;
+  shippingAddress: Address;
+  billing: { nombre: string; dni: string; address: Address };
+  invoiceNumber: string;
+  trackingUrl: string | null;
+  customer: { email: string; nombre: string; telefono: string | null };
+};
+
+type AdminOrderDetailRow = {
+  number: string;
+  status: string;
+  created_at: unknown;
+  updated_at: unknown;
+  items: unknown;
+  shipping_address: unknown;
+  billing: unknown;
+  invoice_number: string;
+  tracking_url: string | null;
+  customer_email: string | null;
+  customer_nombre: string | null;
+  customer_telefono: string | null;
+};
+
+export async function getAdminOrderDetail(orderNumber: string): Promise<AdminOrderDetail | null> {
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT o.number, o.status, o.created_at, o.updated_at, o.items, o.shipping_address,
+           o.billing, o.invoice_number, o.tracking_url,
+           u.email AS customer_email, u.nombre AS customer_nombre, u.telefono AS customer_telefono
+    FROM cuenta_orders o
+    LEFT JOIN cuenta_users u ON u.id = o.user_id
+    WHERE o.number = ${orderNumber}
+    LIMIT 1
+  `) as AdminOrderDetailRow[];
+  if (!rows[0]) return null;
+
+  const r = rows[0];
+  const items = asJson<OrderItem[]>(r.items);
+  const createdAt = new Date(r.created_at as string).toISOString();
+  return {
+    number: r.number,
+    status: r.status as OrderStatus,
+    date: formatDateES(createdAt),
+    createdAt,
+    updatedAt: r.updated_at ? new Date(r.updated_at as string).toISOString() : null,
+    items,
+    totals: computeTotals({ items } as Order),
+    shippingAddress: asJson<Address>(r.shipping_address),
+    billing: asJson<{ nombre: string; dni: string; address: Address }>(r.billing),
+    invoiceNumber: r.invoice_number,
+    trackingUrl: r.tracking_url ?? null,
+    customer: {
+      email: r.customer_email ?? "—",
+      nombre: r.customer_nombre ?? "—",
+      telefono: r.customer_telefono ?? null,
+    },
+  };
+}
+
+/** Pedido completo (tipo Order) por número, para generar la factura PDF en el
+ *  panel. Reutiliza el mapeo de cuenta/db (getOrderById, por `id`/slug). */
+export async function getAdminOrderForInvoice(orderNumber: string): Promise<Order | null> {
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT id FROM cuenta_orders WHERE number = ${orderNumber} LIMIT 1
+  `) as { id: string }[];
+  if (!rows[0]) return null;
+  return getOrderById(rows[0].id);
 }
 
 // ---- stock -----------------------------------------------------------------

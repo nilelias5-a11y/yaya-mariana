@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import type { OrderStatus } from "@/lib/cuenta/types";
-import type { AdminOrder, AdminStock } from "@/lib/admin/db";
+import type { AdminOrder, AdminStock, AdminOrderDetail } from "@/lib/admin/db";
 import { ORDER_TRANSITIONS, isBackwardTransition } from "@/lib/admin/status";
 
 /* FASE A.5 · T2 — Dashboard del panel /admin (cliente).
@@ -344,6 +344,158 @@ function StockControl({
   );
 }
 
+/* PARTE 1 — Detalle de pedido (drawer lateral). Lazy: pide el detalle al abrir
+ * (GET /api/admin/orders/[id], protegido). Solo lectura; el estado se gestiona
+ * desde la tabla. Botón a la factura PDF (ruta admin). */
+function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#7a3a3a]/55 mb-2">{title}</p>
+      <div className="space-y-1">{children}</div>
+    </div>
+  );
+}
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between gap-3">
+      <span className="text-[#7a3a3a]/60">{label}</span>
+      <span className="text-[#1a0808] text-right">{value}</span>
+    </div>
+  );
+}
+
+function OrderDetailDrawer({ orderNumber, onClose }: { orderNumber: string; onClose: () => void }) {
+  const [detail, setDetail] = useState<AdminOrderDetail | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const loading = !detail && !error;
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/admin/orders/${encodeURIComponent(orderNumber)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.ok && data.detail) setDetail(data.detail as AdminOrderDetail);
+        else setError("No se pudo cargar el pedido.");
+      })
+      .catch(() => {
+        if (!cancelled) setError("Error de red.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [orderNumber]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const sa = detail?.shippingAddress;
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-label={`Pedido ${orderNumber}`}>
+      <button type="button" aria-label="Cerrar" onClick={onClose} className="absolute inset-0 bg-[#1a0808]/30" />
+      <div
+        className="relative w-full max-w-md h-full bg-white overflow-y-auto"
+        style={{ borderLeft: "1px solid rgba(245,198,194,0.7)" }}
+      >
+        <div
+          className="sticky top-0 bg-white flex items-start justify-between px-5 py-4 z-10"
+          style={{ borderBottom: "1px solid rgba(245,198,194,0.7)" }}
+        >
+          <div>
+            <p className="font-serif text-lg text-[#1a0808] leading-none">{orderNumber}</p>
+            {detail && (
+              <span
+                className="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full mt-2"
+                style={{ backgroundColor: STATUS_STYLE[detail.status].bg, color: STATUS_STYLE[detail.status].color }}
+              >
+                {STATUS_STYLE[detail.status].label}
+              </span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Cerrar detalle"
+            className="w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-[#7a3a3a] hover:bg-[rgba(245,198,194,0.25)] transition-colors"
+            style={{ border: "1px solid rgba(245,198,194,0.7)" }}
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="px-5 py-5 space-y-5 text-sm">
+          {loading && <p className="text-[#7a3a3a]/55 text-center py-10">Cargando…</p>}
+          {error && <p className="text-[#c0392b] text-center py-10">{error}</p>}
+          {detail && sa && (
+            <>
+              <DetailSection title="Cliente">
+                <DetailRow label="Nombre" value={detail.customer.nombre} />
+                <DetailRow label="Email" value={detail.customer.email} />
+                <DetailRow label="Teléfono" value={detail.customer.telefono ?? "—"} />
+              </DetailSection>
+
+              <DetailSection title="Dirección de envío">
+                <p className="text-[#1a0808] font-medium">{sa.recipient}</p>
+                <p className="text-[#7a3a3a]/75">{sa.street}</p>
+                <p className="text-[#7a3a3a]/75 numerals-tabular">{sa.postalCode} {sa.city}, {sa.region}</p>
+                <p className="text-[#7a3a3a]/75">{sa.country}</p>
+                {sa.phone && <p className="text-[#7a3a3a]/75 numerals-tabular">{sa.phone}</p>}
+              </DetailSection>
+
+              <DetailSection title="Facturación">
+                <DetailRow label="Nombre" value={detail.billing.nombre} />
+                <DetailRow label="DNI / NIF" value={detail.billing.dni} />
+              </DetailSection>
+
+              <DetailSection title="Productos">
+                <ul className="space-y-1.5">
+                  {detail.items.map((it, i) => (
+                    <li key={i} className="flex justify-between gap-3">
+                      <span className="text-[#7a3a3a]">
+                        {it.variety} <span className="text-[#7a3a3a]/55 numerals-tabular">× {it.qty}</span>
+                      </span>
+                      <span className="numerals-tabular text-[#1a0808]">{(it.unitPrice * it.qty).toFixed(2)}€</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 pt-3 space-y-1" style={{ borderTop: "1px solid rgba(245,198,194,0.5)" }}>
+                  <DetailRow label={`Base (IVA ${Math.round(detail.totals.ivaRate * 100)}% incl.)`} value={`${detail.totals.base.toFixed(2)}€`} />
+                  <DetailRow label="IVA" value={`${detail.totals.iva.toFixed(2)}€`} />
+                  <div className="flex justify-between font-bold text-[#1a0808] pt-1">
+                    <span>Total</span>
+                    <span className="numerals-tabular">{detail.totals.total.toFixed(2)}€</span>
+                  </div>
+                </div>
+              </DetailSection>
+
+              <DetailSection title="Pedido">
+                <DetailRow label="Fecha" value={detail.date} />
+                <DetailRow label="Nº factura" value={detail.invoiceNumber} />
+              </DetailSection>
+
+              <a
+                href={`/api/admin/orders/${encodeURIComponent(orderNumber)}/invoice?download=1`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
+                style={{ background: "linear-gradient(125deg, #c0392b 0%, #e74c3c 100%)" }}
+              >
+                Descargar factura
+              </a>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard({
   adminUser,
   orders,
@@ -357,6 +509,7 @@ export default function AdminDashboard({
   const [navOpen, setNavOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<"todos" | OrderStatus>("todos");
   const [dateFilter, setDateFilter] = useState<string>("todas");
+  const [detailNumber, setDetailNumber] = useState<string | null>(null);
 
   // Props → estado local: las mutaciones del panel actualizan estas listas en
   // sitio (feedback inmediato), sin recargar. El servidor revalida /admin en
@@ -555,10 +708,15 @@ export default function AdminDashboard({
                         className="grid grid-cols-2 md:grid-cols-[1fr_1.4fr_1.4fr_0.8fr_1fr] gap-x-3 gap-y-1 px-5 py-4 items-center text-sm"
                         style={{ borderBottom: "1px solid rgba(245,198,194,0.35)" }}
                       >
-                        <span className="font-semibold text-[#1a0808]">
+                        <button
+                          type="button"
+                          onClick={() => setDetailNumber(o.id)}
+                          className="font-semibold text-[#1a0808] text-left hover:text-[#c0392b] transition-colors underline decoration-transparent hover:decoration-[#c0392b] underline-offset-2 focus:outline-none focus-visible:text-[#c0392b]"
+                          aria-label={`Ver detalle del pedido ${o.id}`}
+                        >
                           {o.id}
                           <span className="block text-xs font-normal text-[#7a3a3a]/45 md:hidden numerals-tabular">{o.date}</span>
-                        </span>
+                        </button>
                         <span className="text-[#7a3a3a] text-right md:text-left">
                           {o.customer}
                           <span className="block text-xs text-[#7a3a3a]/45">{o.city}</span>
@@ -619,6 +777,14 @@ export default function AdminDashboard({
           )}
         </main>
       </div>
+
+      {detailNumber && (
+        <OrderDetailDrawer
+          key={detailNumber}
+          orderNumber={detailNumber}
+          onClose={() => setDetailNumber(null)}
+        />
+      )}
     </div>
   );
 }
