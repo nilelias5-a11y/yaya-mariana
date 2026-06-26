@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildWhatsAppUrl, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 import { business, multilineAddress, withBusinessVars } from "@/config/business";
+
+type ContactStatus = "idle" | "sending" | "sent" | "fallback";
 
 function FocusField({ children }: { children: React.ReactNode }) {
   const [focused, setFocused] = useState(false);
@@ -91,7 +93,7 @@ export default function Contact() {
     subject: "",
     message: "",
   });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<ContactStatus>("idle");
   /* AP-08 — chips entrada escalonada: estado que se activa cuando
      el panel de info entra en viewport (via onViewportEnter del
      motion.div padre), para propagar data-revealed a cada chip. */
@@ -142,7 +144,7 @@ export default function Contact() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     /* #38 — Constraint Validation API: recolecta los campos invalidos
        sin reescribir el formulario; el `required` nativo se mantiene. */
@@ -159,7 +161,20 @@ export default function Contact() {
       return;
     }
     setErrors({});
-    setSent(true);
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; delivered?: boolean };
+      // Feedback HONESTO: "enviado" solo si se entregó de verdad (Resend on).
+      // Si fue mock (Resend off) o falló, dirigimos a un canal real (fallback).
+      setStatus(res.ok && data.delivered ? "sent" : "fallback");
+    } catch {
+      setStatus("fallback");
+    }
   }
 
   return (
@@ -399,7 +414,7 @@ export default function Contact() {
               "0 -1px 8px rgba(245,198,194,0.10), 0 1px 0 rgba(255,255,255,0.8) inset, 0 1px 12px rgba(192,57,43,0.04)",
           }}
         >
-          {sent ? (
+          {status === "sent" ? (
             /* a11y (#37) — bloque de exito anunciado por lectores de pantalla. */
             <div role="status" aria-live="polite" className="flex flex-col items-center justify-center h-full gap-4 text-center py-12">
               <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-3xl" aria-hidden>
@@ -410,8 +425,45 @@ export default function Contact() {
                 {t.contact.sentSubtitle}
               </p>
               <button
-                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); setErrors({}); }}
+                onClick={() => { setStatus("idle"); setForm({ name: "", email: "", subject: "", message: "" }); setErrors({}); }}
                 className="text-sm font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors mt-2"
+              >
+                {t.contact.sendAnother}
+              </button>
+            </div>
+          ) : status === "fallback" ? (
+            /* Fallback HONESTO: Resend aún no entrega (mock). No decimos "enviado";
+               dirigimos a canales reales (email/WhatsApp) con el mensaje pre-rellenado. */
+            <div role="status" aria-live="polite" className="flex flex-col items-center justify-center h-full gap-4 text-center py-10">
+              <div className="w-16 h-16 rounded-full bg-[#fdf0ef] flex items-center justify-center text-[#c0392b]" aria-hidden>
+                {EMAIL_ICON}
+              </div>
+              <h3 className="font-serif text-2xl text-[#1a0808]">{t.contact.fallback.title}</h3>
+              <p className="text-[#7a3a3a]/65 text-sm max-w-xs">{t.contact.fallback.text}</p>
+              <div className="flex flex-col sm:flex-row gap-3 mt-1 w-full max-w-xs">
+                <a
+                  href={`mailto:${business.contact.email}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(form.message)}`}
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)" }}
+                >
+                  {t.contact.fallback.email}
+                </a>
+                <a
+                  href={buildWhatsAppUrl(`Hola, soy ${form.name}. ${form.subject}\n\n${form.message}`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-colors hover:bg-[rgba(245,198,194,0.18)]"
+                  style={{ border: "1px solid rgba(192,57,43,0.42)", color: "#c0392b" }}
+                >
+                  {t.contact.fallback.whatsapp}
+                </a>
+              </div>
+              <p className="text-xs text-[#7a3a3a]/45 mt-1 numerals-tabular">
+                {business.contact.email} · {WHATSAPP_DISPLAY}
+              </p>
+              <button
+                onClick={() => setStatus("idle")}
+                className="text-sm font-semibold text-[#c0392b] hover:text-[#e74c3c] transition-colors mt-1"
               >
                 {t.contact.sendAnother}
               </button>
@@ -509,15 +561,16 @@ export default function Contact() {
               {/* AP-09 — micro-lift: y:-2 + shadow expansion on hover */}
               <motion.button
                 type="submit"
-                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer"
+                disabled={status === "sending"}
+                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
                 style={{
                   background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
                 }}
-                whileHover={{ y: -2, boxShadow: "0 8px 20px rgba(192,57,43,0.32)" }}
-                whileTap={{ scale: 0.98, y: 0 }}
+                whileHover={status === "sending" ? undefined : { y: -2, boxShadow: "0 8px 20px rgba(192,57,43,0.32)" }}
+                whileTap={status === "sending" ? undefined : { scale: 0.98, y: 0 }}
                 transition={{ duration: 0.22, ease: [0.6, 0.04, 0.24, 1] }}
               >
-                {t.contact.send}
+                {status === "sending" ? t.contact.sending : t.contact.send}
               </motion.button>
             </form>
           )}

@@ -14,7 +14,12 @@ import { business } from "@/config/business";
  * código sigue llamando igual. Los fallos de envío se registran pero NO se
  * propagan — un email es best-effort y no debe tumbar el registro/checkout.
  *
- * Plantillas: welcome, magic-link, order-confirmation, invoice-ready. */
+ * Plantillas: welcome, magic-link, order-confirmation, invoice-ready, contact.
+ *
+ * `sendEmail` devuelve `{ delivered }`: true SOLO si se entregó de verdad por
+ * Resend (key presente y sin error); false en mock o si el envío falló. Los
+ * llamantes que no lo necesiten pueden ignorar el valor (sigue siendo
+ * best-effort, no lanza). */
 
 const SITE_NAME = business.brand.name;
 const SITE_TAGLINE = business.brand.tagline;
@@ -24,13 +29,17 @@ const SITE_URL = business.brand.siteUrl;
  * un dominio VERIFICADO en Resend para que el envío real funcione. */
 const DEFAULT_FROM = business.email.fromFallback;
 
-type EmailTemplate = "welcome" | "magic-link" | "order-confirmation" | "invoice-ready";
+type EmailTemplate = "welcome" | "magic-link" | "order-confirmation" | "invoice-ready" | "contact";
 
 type SendArgs = {
   to: string;
   template: EmailTemplate;
   data?: Record<string, string>;
+  replyTo?: string; // dirección de respuesta (p. ej. el email del cliente en el formulario de contacto)
 };
+
+/** Resultado del envío. `delivered` = se entregó realmente por Resend. */
+export type SendResult = { delivered: boolean };
 
 // ---- paleta de marca (inline; los clientes de correo ignoran <style>) ------
 const C = {
@@ -148,6 +157,30 @@ function render(template: EmailTemplate, data: Record<string, string>): Rendered
         text: `Tu factura${ref ? ` ${ref}` : ""} ya está disponible en ${SITE_NAME}.\nDescárgala desde: ${SITE_URL}/cuenta/pedidos\n\nEl equipo de ${SITE_NAME}`,
       };
     }
+    case "contact": {
+      // Email que recibe el NEGOCIO con el mensaje del formulario de contacto.
+      const name = escapeHtml(data.name ?? "");
+      const fromEmail = escapeHtml(data.email ?? "");
+      const subj = escapeHtml(data.subject ?? "");
+      const message = escapeHtml(data.message ?? "").replace(/\n/g, "<br>");
+      const row = (label: string, value: string) =>
+        `<tr><td style="padding:4px 12px 4px 0;color:${C.muted};font-weight:bold;white-space:nowrap;vertical-align:top;">${label}</td><td style="padding:4px 0;color:${C.dark};">${value}</td></tr>`;
+      return {
+        subject: `Nuevo mensaje de contacto${subj ? ` — ${subj}` : ""}`,
+        html: shell(
+          `<p style="margin:0 0 16px;">Nuevo mensaje desde el formulario de contacto de <strong>${SITE_NAME}</strong>:</p>
+           <table role="presentation" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;margin:0 0 16px;">
+             ${row("De:", name || "—")}
+             ${row("Email:", fromEmail ? `<a href="mailto:${fromEmail}" style="color:${C.accent};text-decoration:none;">${fromEmail}</a>` : "—")}
+             ${row("Asunto:", subj || "—")}
+           </table>
+           <p style="margin:0 0 6px;color:${C.muted};font-weight:bold;">Mensaje:</p>
+           <p style="margin:0 0 16px;padding:12px 14px;background:${C.bg};border:1px solid ${C.border};border-radius:10px;">${message || "—"}</p>
+           <p style="margin:0;color:${C.muted};font-size:13px;">Responde directamente a este correo para contestar${name ? ` a ${name}` : ""}.</p>`,
+        ),
+        text: `Nuevo mensaje de contacto (${SITE_NAME})\n\nDe: ${data.name ?? "—"}\nEmail: ${data.email ?? "—"}\nAsunto: ${data.subject ?? "—"}\n\nMensaje:\n${data.message ?? "—"}`,
+      };
+    }
   }
 }
 
@@ -158,7 +191,7 @@ function getResend(apiKey: string): Resend {
   return _resend;
 }
 
-export async function sendEmail({ to, template, data }: SendArgs): Promise<void> {
+export async function sendEmail({ to, template, data, replyTo }: SendArgs): Promise<SendResult> {
   const from = process.env.EMAIL_FROM ?? DEFAULT_FROM;
   const apiKey = process.env.RESEND_API_KEY;
   const { subject, html, text } = render(template, data ?? {});
@@ -169,19 +202,28 @@ export async function sendEmail({ to, template, data }: SendArgs): Promise<void>
       `[email:mock] from=${from} to=${to} template=${template} subject="${subject}"` +
         (data ? ` data=${JSON.stringify(data)}` : ""),
     );
-    return;
+    return { delivered: false };
   }
 
   // Con key → envío real. Best-effort: nunca lanzamos al llamante.
   try {
-    const { error } = await getResend(apiKey).emails.send({ from, to, subject, html, text });
+    const { error } = await getResend(apiKey).emails.send({
+      from,
+      to,
+      subject,
+      html,
+      text,
+      ...(replyTo ? { replyTo } : {}),
+    });
     if (error) {
       console.error(`[email:resend] error template=${template} to=${to}:`, error);
-      return;
+      return { delivered: false };
     }
     console.log(`[email:resend] enviado template=${template} to=${to}`);
+    return { delivered: true };
   } catch (e) {
     console.error(`[email:resend] excepción template=${template} to=${to}:`, (e as Error).message);
+    return { delivered: false };
   }
 }
 

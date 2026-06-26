@@ -207,6 +207,13 @@ export const translations = {
       sent: "Mensaje enviado",
       sentSubtitle: "Gracias por escribirnos. Te leeremos pronto, con calma.",
       sendAnother: "Enviar otro mensaje",
+      sending: "Enviando…",
+      fallback: {
+        title: "Casi listo",
+        text: "Estamos terminando de configurar el envío del formulario. Mientras tanto, escríbenos directamente y te responderemos enseguida:",
+        email: "Escribir un email",
+        whatsapp: "Escribir por WhatsApp",
+      },
       whatsapp: {
         label: "WhatsApp",
         value: "{phone}",
@@ -735,6 +742,13 @@ export const translations = {
       sent: "Missatge enviat",
       sentSubtitle: "Gràcies per escriure'ns. Et llegirem aviat, amb calma.",
       sendAnother: "Enviar un altre missatge",
+      sending: "Enviant…",
+      fallback: {
+        title: "Gairebé a punt",
+        text: "Estem acabant de configurar l'enviament del formulari. Mentrestant, escriu-nos directament i et respondrem de seguida:",
+        email: "Escriure un email",
+        whatsapp: "Escriure per WhatsApp",
+      },
       whatsapp: {
         label: "WhatsApp",
         value: "{phone}",
@@ -1263,6 +1277,13 @@ export const translations = {
       sent: "Message sent",
       sentSubtitle: "Thank you for writing to us. We'll read your message soon, unhurriedly.",
       sendAnother: "Send another message",
+      sending: "Sending…",
+      fallback: {
+        title: "Almost there",
+        text: "We're finishing setting up the form's email. In the meantime, reach us directly and we'll reply right away:",
+        email: "Send an email",
+        whatsapp: "Message on WhatsApp",
+      },
       whatsapp: {
         label: "WhatsApp",
         value: "{phone}",
