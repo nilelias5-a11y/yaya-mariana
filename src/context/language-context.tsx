@@ -32,6 +32,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
        futuro). El primero válido gana. */
     const fromStorage = localStorage.getItem("lang");
     if (isLang(fromStorage)) {
+      // Hydration-safe: preferencia de idioma en localStorage, solo-cliente al montar.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLangState(fromStorage);
       return;
     }

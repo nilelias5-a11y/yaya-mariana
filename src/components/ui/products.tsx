@@ -24,6 +24,8 @@ const PRODUCTS_BASE = business.products.map((p) => ({
 function useTypewriter(text: string, speed = 55, startDelay = 250) {
   const [displayed, setDisplayed] = useState("");
   useEffect(() => {
+    // Reset de la animación de typewriter al cambiar el texto (intencional).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDisplayed("");
     if (!text) return;
     let i = 0;

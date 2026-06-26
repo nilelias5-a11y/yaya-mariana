@@ -61,6 +61,8 @@ export function InvoicePDF({ order, logoPath }: { order: Order; logoPath?: strin
         {/* Cabecera: logo/wordmark + datos de la factura */}
         <View style={s.headerRow}>
           <View>
+            {/* El <Image> de @react-pdf NO es un <img> HTML: no existe `alt` (falso positivo). */}
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             {logoPath ? <Image src={logoPath} style={s.logo} /> : <Text style={s.wordmark}>Yaya Mariana</Text>}
           </View>
           <View style={s.invoiceMeta}>

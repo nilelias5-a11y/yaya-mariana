@@ -21,7 +21,6 @@ export default function ConsoleTribute() {
          (modo restrictivo / iframe sandbox). Si falla, se loga sin
          deduplicacion — el coste es trivial. */
     }
-    /* eslint-disable no-console */
     console.log(
       "%c  ❦\n\n  Para Mariana.\n  Las fresas siguen sabiendo a ti.\n  ❦  ",
       [
@@ -35,7 +34,6 @@ export default function ConsoleTribute() {
         "border-left: 2px solid #c0392b",
       ].join(";"),
     );
-    /* eslint-enable no-console */
   }, []);
   return null;
 }

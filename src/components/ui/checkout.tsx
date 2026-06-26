@@ -127,6 +127,8 @@ function CheckoutForm() {
     setEmail(authUser.email ?? "");
     const first = authUser.addresses[0];
     if (first) {
+      // Prefill de datos del usuario logueado (cargados async); intencional.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedAddressId(first.id);
       setAddress(first.street ?? "");
       setCity(first.city ?? "");

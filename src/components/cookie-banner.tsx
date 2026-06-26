@@ -22,6 +22,8 @@ export default function CookieBanner() {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(CONSENT_KEY);
+      // Hydration-safe: consentimiento en localStorage, leído solo en cliente al montar.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (stored !== "accepted" && stored !== "rejected") setVisible(true);
     } catch {
       /* localStorage no disponible (modo privado estricto): mostrar igual. */

@@ -70,6 +70,7 @@ function AnimatedValue({ raw }: { raw: string }) {
 
   useEffect(() => {
     if (!numeric) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplayNum("");
       return;
     }

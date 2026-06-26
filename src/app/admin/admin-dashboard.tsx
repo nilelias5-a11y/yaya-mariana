@@ -91,6 +91,8 @@ function greeting(hour: number): string {
 function LiveClock({ adminUser }: { adminUser: string }) {
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
+    // Hydration-safe: la hora solo existe en cliente; init al montar (intencional).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setNow(new Date());
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
@@ -238,7 +240,8 @@ function StockControl({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Resincroniza si el valor guardado cambia (p. ej. tras guardar).
+  // Resincroniza si el valor guardado cambia (p. ej. tras guardar). Intencional.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setDraft(item.units), [item.units]);
 
   const level = stockLevel(draft, item.lowThreshold, item.outThreshold);

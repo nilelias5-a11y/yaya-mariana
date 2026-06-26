@@ -11,7 +11,6 @@ import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
  * SIEMPRE como parámetros vinculados (prepared statements) → sin inyección. */
 
 declare global {
-  // eslint-disable-next-line no-var
   var __neonSql: NeonQueryFunction<false, false> | undefined;
 }
 

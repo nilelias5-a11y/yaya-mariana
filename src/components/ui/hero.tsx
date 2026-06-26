@@ -213,6 +213,8 @@ export default function Hero() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     // Inicializar estado al montar (por si la página carga con scroll)
     const y0 = window.scrollY;
+    // Hydration-safe: scrollY solo existe en cliente; init al montar (intencional).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setScrolled(y0 > 8);
     if (y0 > 40) setScrollCueVisible(false);
     return () => {

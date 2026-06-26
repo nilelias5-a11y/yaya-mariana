@@ -27,6 +27,9 @@ export default function LoginForm() {
   useEffect(() => {
     const saved = window.localStorage.getItem(REMEMBER_KEY);
     if (saved) {
+      // Hydration-safe: preferencia recordada en localStorage, leída solo en
+      // cliente al montar (intencional).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUser(saved);
       setRemember(true);
     }

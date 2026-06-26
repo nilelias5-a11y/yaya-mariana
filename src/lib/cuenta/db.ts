@@ -15,6 +15,13 @@ import type { User, Order, Address, OrderItem, OrderStatus } from "./types";
  * ella temporalmente, revertir el commit de migración (ver README-CUENTA.md
  * §Rollback). */
 
+/* Log de depuración SOLO en desarrollo: no aparece en producción (evita ruido
+ * y no filtra ids/emails en los logs de prod). Los console.error/warn de
+ * errores se mantienen siempre. */
+function devLog(...args: unknown[]) {
+  if (process.env.NODE_ENV !== "production") console.log(...args);
+}
+
 // ---- helpers de mapeo (snake_case fila → camelCase tipo) -------------------
 
 /** JSONB llega ya parseado por el driver; si llega como texto, lo parseamos. */
@@ -125,7 +132,7 @@ export async function createUser(
     RETURNING *
   `) as UserRow[];
 
-  console.log(`[db:neon] createUser id=${id} email=${email}`);
+  devLog(`[db:neon] createUser id=${id} email=${email}`);
   return rowToUser(rows[0]);
 }
 
@@ -152,7 +159,7 @@ export async function updateUser(
     RETURNING *
   `) as UserRow[];
 
-  console.log(`[db:neon] updateUser id=${id}`);
+  devLog(`[db:neon] updateUser id=${id}`);
   return rows[0] ? rowToUser(rows[0]) : null;
 }
 
@@ -160,7 +167,7 @@ export async function deleteUser(id: string): Promise<void> {
   const sql = getSql();
   // ON DELETE CASCADE elimina también pedidos y facturas del usuario.
   await sql`DELETE FROM cuenta_users WHERE id = ${id}`;
-  console.log(`[db:neon] deleteUser id=${id}`);
+  devLog(`[db:neon] deleteUser id=${id}`);
 }
 
 // ---- pedidos ---------------------------------------------------------------
@@ -200,5 +207,5 @@ export async function saveInvoicePdf(invoiceNumber: string, pdf: Uint8Array): Pr
     SET pdf = ${b64}, pdf_generated_at = now()
     WHERE invoice_number = ${invoiceNumber}
   `;
-  console.log(`[db:neon] saveInvoicePdf ${invoiceNumber} (${pdf.length} bytes)`);
+  devLog(`[db:neon] saveInvoicePdf ${invoiceNumber} (${pdf.length} bytes)`);
 }
