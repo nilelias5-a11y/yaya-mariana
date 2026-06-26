@@ -67,6 +67,7 @@ export async function getAdminOrders(): Promise<AdminOrder[]> {
 // ---- stock -----------------------------------------------------------------
 
 export type AdminStock = {
+  key: string; // PK real (product_stock.variety): "Mágnum" | "Dream" | "1525"
   variety: string; // display: "Fresa Mágnum"
   units: number;
   lowThreshold: number;
@@ -74,6 +75,7 @@ export type AdminStock = {
 };
 
 type AdminStockRow = {
+  variety: string;
   display_name: string;
   units: number;
   low_threshold: number;
@@ -83,12 +85,13 @@ type AdminStockRow = {
 export async function getAdminStock(): Promise<AdminStock[]> {
   const sql = getSql();
   const rows = (await sql`
-    SELECT display_name, units, low_threshold, out_threshold
+    SELECT variety, display_name, units, low_threshold, out_threshold
     FROM product_stock
     ORDER BY units ASC
   `) as AdminStockRow[];
 
   return rows.map((r) => ({
+    key: r.variety,
     variety: r.display_name,
     units: r.units,
     lowThreshold: r.low_threshold,
@@ -137,6 +140,32 @@ export async function updateOrderStatus(
     from,
     status: updated[0].status,
     updatedAt: new Date(updated[0].updated_at as string).toISOString(),
+  };
+}
+
+/* TAREA 2 — ajuste de existencias (product_stock.units). */
+export type UpdateStockResult =
+  | { ok: true; units: number; lowThreshold: number; outThreshold: number; updatedAt: string }
+  | { ok: false; code: "not_found" | "invalid_units" };
+
+/** Fija las unidades de una variedad (PK `variety`). Rechaza no-enteros y
+ *  negativos. Sella `updated_at`. */
+export async function updateStock(variety: string, units: number): Promise<UpdateStockResult> {
+  if (!Number.isInteger(units) || units < 0) return { ok: false, code: "invalid_units" };
+  const sql = getSql();
+  const rows = (await sql`
+    UPDATE product_stock
+    SET units = ${units}, updated_at = now()
+    WHERE variety = ${variety}
+    RETURNING units, low_threshold, out_threshold, updated_at
+  `) as { units: number; low_threshold: number; out_threshold: number; updated_at: unknown }[];
+  if (!rows[0]) return { ok: false, code: "not_found" };
+  return {
+    ok: true,
+    units: rows[0].units,
+    lowThreshold: rows[0].low_threshold,
+    outThreshold: rows[0].out_threshold,
+    updatedAt: new Date(rows[0].updated_at as string).toISOString(),
   };
 }
 

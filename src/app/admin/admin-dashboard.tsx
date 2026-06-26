@@ -207,6 +207,123 @@ function OrderStatusControl({
   );
 }
 
+/* TAREA 2 — Ajuste de existencias por variedad. Stepper +/- e input directo
+ * (entero ≥ 0). El semáforo previsualiza el borrador en vivo; "Guardar" llama
+ * al endpoint protegido y persiste. */
+function StockControl({
+  item,
+  onUpdated,
+}: {
+  item: AdminStock;
+  onUpdated: (units: number) => void;
+}) {
+  const [draft, setDraft] = useState(item.units);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Resincroniza si el valor guardado cambia (p. ej. tras guardar).
+  useEffect(() => setDraft(item.units), [item.units]);
+
+  const level = stockLevel(draft, item.lowThreshold, item.outThreshold);
+  const st = STOCK_STYLE[level];
+  const dirty = draft !== item.units;
+
+  function setClamped(n: number) {
+    setDraft(Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0);
+  }
+
+  async function save() {
+    if (!dirty || pending) return;
+    setPending(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/stock/${encodeURIComponent(item.key)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ units: draft }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; units?: number };
+      if (!res.ok || !data.ok) {
+        setError("No se pudo guardar");
+        return;
+      }
+      onUpdated(data.units ?? draft);
+    } catch {
+      setError("Error de red");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  const stepBtn =
+    "w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-lg font-bold text-[#7a3a3a] disabled:opacity-40 transition-colors hover:bg-[rgba(245,198,194,0.25)]";
+
+  return (
+    <div
+      className="rounded-2xl bg-white p-5"
+      style={{ border: "1px solid rgba(245,198,194,0.7)", borderLeft: `4px solid ${st.color}` }}
+    >
+      <p className="font-semibold text-[#1a0808] mb-3">{item.variety}</p>
+
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          aria-label="Restar una unidad"
+          onClick={() => setClamped(draft - 1)}
+          disabled={pending || draft <= 0}
+          className={stepBtn}
+          style={{ border: "1px solid rgba(245,198,194,0.7)" }}
+        >
+          −
+        </button>
+        <input
+          type="number"
+          min={0}
+          step={1}
+          inputMode="numeric"
+          value={draft}
+          disabled={pending}
+          onChange={(e) => setClamped(e.target.valueAsNumber)}
+          aria-label={`Unidades de ${item.variety}`}
+          className="w-20 text-center text-2xl font-bold numerals-tabular rounded-xl py-1 focus:outline-none focus:border-[#c0392b]"
+          style={{ color: st.color, border: "1px solid rgba(245,198,194,0.7)" }}
+        />
+        <button
+          type="button"
+          aria-label="Sumar una unidad"
+          onClick={() => setClamped(draft + 1)}
+          disabled={pending}
+          className={stepBtn}
+          style={{ border: "1px solid rgba(245,198,194,0.7)" }}
+        >
+          +
+        </button>
+        <span className="text-sm text-[#7a3a3a]/50 ml-1">cajas 500g</span>
+      </div>
+
+      <div className="flex items-center justify-between mt-3">
+        <span
+          className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
+          style={{ backgroundColor: `${st.color}1a`, color: st.color }}
+        >
+          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: st.color }} aria-hidden />
+          {st.label}
+        </span>
+        <button
+          type="button"
+          onClick={save}
+          disabled={!dirty || pending}
+          className="text-xs font-bold px-3.5 min-h-[36px] rounded-xl text-white transition-opacity disabled:opacity-40"
+          style={{ backgroundColor: "#c0392b" }}
+        >
+          {pending ? "Guardando…" : "Guardar"}
+        </button>
+      </div>
+      {error && <p className="text-[11px] font-semibold text-[#c0392b] mt-2">{error}</p>}
+    </div>
+  );
+}
+
 export default function AdminDashboard({
   adminUser,
   orders,
@@ -221,13 +338,17 @@ export default function AdminDashboard({
   const [statusFilter, setStatusFilter] = useState<"todos" | OrderStatus>("todos");
   const [dateFilter, setDateFilter] = useState<string>("todas");
 
-  // Props → estado local: las mutaciones del panel actualizan esta lista en
+  // Props → estado local: las mutaciones del panel actualizan estas listas en
   // sitio (feedback inmediato), sin recargar. El servidor revalida /admin en
   // paralelo, de modo que una recarga muestra exactamente lo mismo.
   const [orderList, setOrderList] = useState(orders);
+  const [stockList, setStockList] = useState(stock);
 
   function applyOrderStatus(orderId: string, status: OrderStatus) {
     setOrderList((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
+  }
+  function applyStockUnits(key: string, units: number) {
+    setStockList((prev) => prev.map((s) => (s.key === key ? { ...s, units } : s)));
   }
 
   const dates = useMemo(() => Array.from(new Set(orderList.map((o) => o.date))), [orderList]);
@@ -255,7 +376,7 @@ export default function AdminDashboard({
       .reduce((s, o) => s + o.total, 0);
   }, [orderList]);
   const pendientes = orderList.filter((o) => PENDING_STATUSES.includes(o.status)).length;
-  const criticos = stock.filter(
+  const criticos = stockList.filter(
     (s) => stockLevel(s.units, s.lowThreshold, s.outThreshold) !== "ok",
   ).length;
 
@@ -437,30 +558,9 @@ export default function AdminDashboard({
             <section aria-labelledby="sec-stock">
               <h2 id="sec-stock" className="font-serif text-xl text-[#1a0808] mb-4">Stock por variedad</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {stock.map((s) => {
-                  const level = stockLevel(s.units, s.lowThreshold, s.outThreshold);
-                  const st = STOCK_STYLE[level];
-                  return (
-                    <div
-                      key={s.variety}
-                      className="rounded-2xl bg-white p-5"
-                      style={{ border: "1px solid rgba(245,198,194,0.7)", borderLeft: `4px solid ${st.color}` }}
-                    >
-                      <p className="font-semibold text-[#1a0808] mb-1">{s.variety}</p>
-                      <p className="text-2xl font-bold numerals-tabular" style={{ color: st.color }}>
-                        {s.units}
-                        <span className="text-sm font-normal text-[#7a3a3a]/50 ml-1.5">cajas 500g</span>
-                      </p>
-                      <span
-                        className="inline-flex items-center gap-1.5 mt-2 text-xs font-bold px-2.5 py-1 rounded-full"
-                        style={{ backgroundColor: `${st.color}1a`, color: st.color }}
-                      >
-                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: st.color }} aria-hidden />
-                        {st.label}
-                      </span>
-                    </div>
-                  );
-                })}
+                {stockList.map((s) => (
+                  <StockControl key={s.key} item={s} onUpdated={(u) => applyStockUnits(s.key, u)} />
+                ))}
               </div>
               <p className="text-xs text-[#7a3a3a]/50 mt-4">
                 Umbrales: <span className="text-[#1f7a43] font-semibold">verde &gt;20</span> ·{" "}
